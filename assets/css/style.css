@@ -1,0 +1,204 @@
+/* --------------------------------------------------
+   GLOBAL STYLE — COPPER × BLACK × CURSIVE × PRINT
+-------------------------------------------------- */
+
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:wght@300;400;600;700&display=swap');
+
+:root {
+  --bg: #000000;
+  --fg: #f5f5f5;
+  --muted: #8a8a8a;
+
+  --copper: #b87333;
+  --copper-light: #d28e5d;
+
+  --border: #2a2a2a;
+
+  --font-cursive: 'Great Vibes', cursive;
+  --font-print: 'Inter', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-print);
+}
+
+/* --------------------------------------------------
+   HEADERS
+-------------------------------------------------- */
+
+h1, h2, h3 {
+  font-family: var(--font-cursive);
+  color: var(--copper);
+  letter-spacing: 1px;
+}
+
+h1 {
+  font-size: 3rem;
+  margin-bottom: 0.25rem;
+}
+
+h2 {
+  font-size: 2.2rem;
+}
+
+h3 {
+  font-size: 1.6rem;
+}
+
+/* --------------------------------------------------
+   NAVIGATION
+-------------------------------------------------- */
+
+.rr-nav {
+  margin-top: 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.rr-nav a {
+  color: var(--copper-light);
+  font-weight: 600;
+  text-decoration: none;
+  font-family: var(--font-print);
+}
+
+.rr-nav a:hover {
+  color: var(--copper);
+}
+
+/* --------------------------------------------------
+   BUTTONS
+-------------------------------------------------- */
+
+.button,
+.button-secondary {
+  display: inline-block;
+  padding: 0.6rem 1.2rem;
+  border-radius: 999px;
+  border: 1px solid var(--copper);
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.button {
+  background: var(--copper);
+  color: #000;
+}
+
+.button:hover {
+  background: var(--copper-light);
+}
+
+.button-secondary {
+  background: transparent;
+  color: var(--copper);
+}
+
+.button-secondary:hover {
+  color: var(--copper-light);
+  border-color: var(--copper-light);
+}
+
+/* --------------------------------------------------
+   FORMS
+-------------------------------------------------- */
+
+.rr-form label {
+  font-size: 0.95rem;
+  color: var(--copper-light);
+}
+
+.rr-form input,
+.rr-form textarea,
+.rr-form select {
+  margin-top: 0.25rem;
+  padding: 0.6rem;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: #0a0a0a;
+  color: var(--fg);
+  font-family: var(--font-print);
+}
+
+.rr-form input:focus,
+.rr-form textarea:focus,
+.rr-form select:focus {
+  outline: 1px solid var(--copper);
+}
+
+/* --------------------------------------------------
+   LISTS
+-------------------------------------------------- */
+
+.rr-list-item {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.75rem;
+  margin-bottom: 0.5rem;
+  background: #0a0a0a;
+}
+
+.rr-list-item strong {
+  color: var(--copper-light);
+}
+
+/* --------------------------------------------------
+   OUTPUT BOXES
+-------------------------------------------------- */
+
+.rr-output {
+  width: 100%;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: #0a0a0a;
+  color: var(--copper-light);
+  font-family: ui-monospace, monospace;
+}
+
+/* --------------------------------------------------
+   CATALOG CARDS
+-------------------------------------------------- */
+
+.catalog-card {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background: #0a0a0a;
+}
+
+.catalog-card h3 {
+  font-family: var(--font-cursive);
+  color: var(--copper);
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+}
+
+/* --------------------------------------------------
+   LETTER BUTTONS
+-------------------------------------------------- */
+
+.letter-button {
+  padding: 0.3rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid var(--copper);
+  background: transparent;
+  color: var(--copper-light);
+  cursor: pointer;
+  font-family: var(--font-print);
+}
+
+.letter-button:hover {
+  background: var(--copper);
+  color: #000;
+}
