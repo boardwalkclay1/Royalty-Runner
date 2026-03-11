@@ -23,21 +23,41 @@
     <section class="catalog-intro">
       <p>
         This catalog explains major royalty organizations and platforms, with direct links to their
-        official sites. Use it as a map of where your music can earn money.
+        official sites. Click “Show My Info” to instantly generate your auto‑filled registration
+        details for that organization.
       </p>
+
       <input
         type="search"
         id="catalog-search"
         placeholder="Search by name, type, or region (e.g. ASCAP, PRO, UK, digital)"
       />
+
       <div class="catalog-letters" id="catalog-letters"></div>
     </section>
 
-    <section id="catalog-list" class="catalog-list">
-      <!-- Populated by app.js -->
-    </section>
+    <section id="catalog-list" class="catalog-list"></section>
   </main>
 
+  <!-- POPUP PANEL -->
+  <div id="catalog-popup" class="catalog-popup hidden">
+    <div class="catalog-popup-inner">
+      <button id="catalog-popup-close" class="popup-close">×</button>
+      <h2 id="popup-title"></h2>
+
+      <p>
+        <a id="popup-link" href="#" target="_blank" class="popup-link">
+          Open official site →
+        </a>
+      </p>
+
+      <textarea id="popup-autofill" class="popup-output" rows="14" readonly></textarea>
+
+      <button id="popup-copy" class="button-secondary">Copy Info</button>
+    </div>
+  </div>
+
   <script src="assets/js/app.js"></script>
+  <script src="assets/js/catalog.js"></script>
 </body>
 </html>
