@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" data-page="royalties">
+<head>
+  <meta charset="UTF-8" />
+  <title>Royalty Runner – Royalty Forms</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <header class="rr-header">
+    <h1>Royalty Forms</h1>
+    <nav class="rr-nav">
+      <a href="index.html">Home</a>
+      <a href="profile.html">Profile</a>
+      <a href="works.html">Works</a>
+      <a href="catalog.html">Catalog</a>
+      <a href="export.html">Exports</a>
+    </nav>
+  </header>
+
+  <main class="rr-main">
+    <section>
+      <p>
+        Choose a work and a destination. Royalty Runner will combine your profile and work data to
+        generate a pre‑filled form you can copy into the official registration site.
+      </p>
+    </section>
+
+    <form id="royalty-form" class="rr-form">
+      <label>
+        Select work
+        <select name="workId" id="royalty-work-select" required></select>
+      </label>
+
+      <label>
+        Destination
+        <select name="destination" id="royalty-destination" required>
+          <option value="">Select a destination</option>
+          <option value="ascap">ASCAP – Work Registration</option>
+          <option value="bmi">BMI – Work Registration</option>
+          <option value="soundexchange">SoundExchange – Repertoire</option>
+          <option value="mlc">MLC – Work Registration</option>
+          <option value="youtube_cid">YouTube Content ID – Metadata</option>
+        </select>
+      </label>
+
+      <div class="form-actions">
+        <button type="submit" class="button">Generate form</button>
+      </div>
+    </form>
+
+    <section>
+      <h2>Generated form</h2>
+      <textarea id="royalty-output" rows="12" class="rr-output" readonly></textarea>
+      <button id="copy-royalty-output" class="button-secondary">Copy to clipboard</button>
+      <p class="small-note">
+        This text is generated locally using your profile and works. Always review it before
+        submitting to any official site.
+      </p>
+    </section>
+  </main>
+
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
