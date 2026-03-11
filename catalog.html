@@ -6,8 +6,45 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="manifest" href="manifest.json" />
   <link rel="stylesheet" href="assets/css/style.css" />
+
+  <style>
+    /* Full-screen background */
+    body {
+      background: url("assets/img/royal-catalog.jpg") no-repeat center center fixed;
+      background-size: cover;
+      background-color: #000;
+    }
+
+    /* Dark overlay for readability */
+    .overlay {
+      background: rgba(0, 0, 0, 0.78);
+      min-height: 100vh;
+      width: 100%;
+      padding-bottom: 4rem;
+    }
+
+    /* Section cards */
+    .catalog-card,
+    .catalog-intro {
+      background: rgba(0, 0, 0, 0.65);
+      border: 1px solid var(--copper);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      backdrop-filter: blur(4px);
+    }
+
+    /* Popup panel override for background */
+    .catalog-popup {
+      background: rgba(0, 0, 0, 0.92);
+      border-left: 2px solid var(--copper);
+    }
+  </style>
 </head>
+
 <body>
+<div class="overlay">
+
   <header class="rr-header">
     <h1>Royalty Catalog A–Z</h1>
     <nav class="rr-nav">
@@ -20,11 +57,13 @@
   </header>
 
   <main class="rr-main">
+
+    <!-- INTRO -->
     <section class="catalog-intro">
       <p>
-        This catalog explains major royalty organizations and platforms, with direct links to their
-        official sites. Click “Show My Info” to instantly generate your auto‑filled registration
-        details for that organization.
+        Explore every major royalty organization, distributor, and rights platform.  
+        Click <strong>“Show My Info”</strong> to instantly generate your auto‑filled registration
+        details based on your profile and latest work.
       </p>
 
       <input
@@ -36,28 +75,33 @@
       <div class="catalog-letters" id="catalog-letters"></div>
     </section>
 
+    <!-- LIST -->
     <section id="catalog-list" class="catalog-list"></section>
+
   </main>
 
-  <!-- POPUP PANEL -->
-  <div id="catalog-popup" class="catalog-popup hidden">
-    <div class="catalog-popup-inner">
-      <button id="catalog-popup-close" class="popup-close">×</button>
-      <h2 id="popup-title"></h2>
+</div>
 
-      <p>
-        <a id="popup-link" href="#" target="_blank" class="popup-link">
-          Open official site →
-        </a>
-      </p>
+<!-- POPUP PANEL -->
+<div id="catalog-popup" class="catalog-popup hidden">
+  <div class="catalog-popup-inner">
+    <button id="catalog-popup-close" class="popup-close">×</button>
 
-      <textarea id="popup-autofill" class="popup-output" rows="14" readonly></textarea>
+    <h2 id="popup-title"></h2>
 
-      <button id="popup-copy" class="button-secondary">Copy Info</button>
-    </div>
+    <p>
+      <a id="popup-link" href="#" target="_blank" class="popup-link">
+        Open official site →
+      </a>
+    </p>
+
+    <textarea id="popup-autofill" class="popup-output" rows="14" readonly></textarea>
+
+    <button id="popup-copy" class="button-secondary">Copy Info</button>
   </div>
+</div>
 
-  <script src="assets/js/app.js"></script>
-  <script src="assets/js/catalog.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/catalog.js"></script>
 </body>
 </html>
