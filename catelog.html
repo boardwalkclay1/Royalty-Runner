@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" data-page="catalog">
+<head>
+  <meta charset="UTF-8" />
+  <title>Royalty Runner – Royalty Catalog A–Z</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <header class="rr-header">
+    <h1>Royalty Catalog A–Z</h1>
+    <nav class="rr-nav">
+      <a href="index.html">Home</a>
+      <a href="profile.html">Profile</a>
+      <a href="works.html">Works</a>
+      <a href="royalties.html">Royalty Forms</a>
+      <a href="export.html">Exports</a>
+    </nav>
+  </header>
+
+  <main class="rr-main">
+    <section class="catalog-intro">
+      <p>
+        This catalog explains the major royalty organizations and platforms you may want to register
+        with. It’s written for new artists—plain language, no fluff.
+      </p>
+      <input type="search" id="catalog-search" placeholder="Search by name or type (e.g. PRO, mechanical, digital)" />
+      <div class="catalog-letters" id="catalog-letters"></div>
+    </section>
+
+    <section id="catalog-list" class="catalog-list">
+      <!-- Populated by app.js -->
+    </section>
+  </main>
+
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
