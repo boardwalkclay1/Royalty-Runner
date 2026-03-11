@@ -6,8 +6,56 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="manifest" href="manifest.json" />
   <link rel="stylesheet" href="assets/css/style.css" />
+
+  <style>
+    /* Full-screen background */
+    body {
+      background: url("assets/img/royal-profile.jpg") no-repeat center center fixed;
+      background-size: cover;
+      background-color: #000;
+    }
+
+    /* Dark overlay for readability */
+    .overlay {
+      background: rgba(0, 0, 0, 0.78);
+      min-height: 100vh;
+      width: 100%;
+      padding-bottom: 4rem;
+    }
+
+    /* Section card styling */
+    .profile-card {
+      background: rgba(0, 0, 0, 0.65);
+      border: 1px solid var(--copper);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      backdrop-filter: blur(4px);
+    }
+
+    /* Form styling override */
+    .rr-form label {
+      color: var(--copper-light);
+      font-weight: 600;
+    }
+
+    .rr-form input,
+    .rr-form textarea {
+      background: rgba(0, 0, 0, 0.55);
+      border: 1px solid var(--border);
+      color: var(--fg);
+    }
+
+    .rr-form input:focus,
+    .rr-form textarea:focus {
+      outline: 1px solid var(--copper);
+    }
+  </style>
 </head>
+
 <body>
+<div class="overlay">
+
   <header class="rr-header">
     <h1>Artist Profile</h1>
     <nav class="rr-nav">
@@ -20,73 +68,83 @@
   </header>
 
   <main class="rr-main">
-    <section>
+
+    <!-- INTRO -->
+    <section class="profile-card">
       <p>
-        This profile is used to auto‑fill royalty forms. Fill out as much as you can. You can
-        update it anytime.
+        Your artist profile powers every auto‑filled form in Royalty Runner.  
+        Fill out as much as you can — the more complete your profile, the faster your registrations.
       </p>
     </section>
 
-    <form id="profile-form" class="rr-form">
-      <label>
-        Legal name
-        <input type="text" name="legalName" required />
-      </label>
+    <!-- FORM -->
+    <section class="profile-card">
+      <form id="profile-form" class="rr-form">
 
-      <label>
-        Stage name
-        <input type="text" name="stageName" />
-      </label>
+        <label>
+          Legal name
+          <input type="text" name="legalName" required />
+        </label>
 
-      <label>
-        Email
-        <input type="email" name="email" />
-      </label>
+        <label>
+          Stage name
+          <input type="text" name="stageName" />
+        </label>
 
-      <label>
-        Performing Rights Organization (PRO)
-        <input type="text" name="pro" placeholder="ASCAP, BMI, SESAC, PRS, etc." />
-      </label>
+        <label>
+          Email
+          <input type="email" name="email" />
+        </label>
 
-      <label>
-        IPI / CAE number
-        <input type="text" name="ipi" />
-      </label>
+        <label>
+          Performing Rights Organization (PRO)
+          <input type="text" name="pro" placeholder="ASCAP, BMI, SESAC, PRS, etc." />
+        </label>
 
-      <label>
-        Publishing entity
-        <input type="text" name="publisher" />
-      </label>
+        <label>
+          IPI / CAE number
+          <input type="text" name="ipi" />
+        </label>
 
-      <label>
-        Country
-        <input type="text" name="country" />
-      </label>
+        <label>
+          Publishing entity
+          <input type="text" name="publisher" />
+        </label>
 
-      <label>
-        Address
-        <textarea name="address" rows="2"></textarea>
-      </label>
+        <label>
+          Country
+          <input type="text" name="country" />
+        </label>
 
-      <label>
-        Social links (optional)
-        <textarea name="socials" rows="2" placeholder="Instagram, YouTube, website, etc."></textarea>
-      </label>
+        <label>
+          Address
+          <textarea name="address" rows="2"></textarea>
+        </label>
 
-      <div class="form-actions">
-        <button type="submit" class="button">Save profile</button>
-        <button type="button" id="delete-profile" class="button-secondary">Delete profile</button>
-      </div>
+        <label>
+          Social links (optional)
+          <textarea name="socials" rows="2" placeholder="Instagram, YouTube, website, etc."></textarea>
+        </label>
 
-      <p class="small-note">
-        Deleting your profile removes it from this browser only. Works and forms remain, but
-        auto‑fill will be limited until you create a new profile.
-      </p>
+        <div class="form-actions">
+          <button type="submit" class="button">Save profile</button>
+          <button type="button" id="delete-profile" class="button-secondary">Delete profile</button>
+        </div>
 
-      <p id="profile-missing" class="small-note warning"></p>
-    </form>
+        <p class="small-note">
+          Deleting your profile removes it from this browser only.  
+          Your works and forms remain, but auto‑fill will be limited until you create a new profile.
+        </p>
+
+        <p id="profile-missing" class="small-note warning"></p>
+
+      </form>
+    </section>
+
   </main>
 
-  <script src="assets/js/app.js"></script>
+</div>
+
+<script src="assets/js/app.js"></script>
 </body>
 </html>
