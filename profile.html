@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" data-page="profile">
+<head>
+  <meta charset="UTF-8" />
+  <title>Royalty Runner – Artist Profile</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <header class="rr-header">
+    <h1>Artist Profile</h1>
+    <nav class="rr-nav">
+      <a href="index.html">Home</a>
+      <a href="works.html">Works</a>
+      <a href="royalties.html">Royalty Forms</a>
+      <a href="catalog.html">Catalog</a>
+      <a href="export.html">Exports</a>
+    </nav>
+  </header>
+
+  <main class="rr-main">
+    <section>
+      <p>
+        Your profile is the foundation for auto‑filling royalty forms. Fill this out once, and
+        Royalty Runner will reuse it wherever possible.
+      </p>
+    </section>
+
+    <form id="profile-form" class="rr-form">
+      <label>
+        Legal name
+        <input type="text" name="legalName" required />
+      </label>
+
+      <label>
+        Stage name
+        <input type="text" name="stageName" />
+      </label>
+
+      <label>
+        Email
+        <input type="email" name="email" />
+      </label>
+
+      <label>
+        Performing Rights Organization (PRO)
+        <input type="text" name="pro" placeholder="ASCAP, BMI, SESAC, etc." />
+      </label>
+
+      <label>
+        IPI / CAE number
+        <input type="text" name="ipi" />
+      </label>
+
+      <label>
+        Publishing entity
+        <input type="text" name="publisher" />
+      </label>
+
+      <label>
+        Country
+        <input type="text" name="country" />
+      </label>
+
+      <label>
+        Address
+        <textarea name="address" rows="2"></textarea>
+      </label>
+
+      <label>
+        Social links (optional)
+        <textarea name="socials" rows="2" placeholder="Instagram, YouTube, etc."></textarea>
+      </label>
+
+      <div class="form-actions">
+        <button type="submit" class="button">Save profile</button>
+        <button type="button" id="delete-profile" class="button-secondary">Delete profile</button>
+      </div>
+
+      <p class="small-note">
+        Deleting your profile will remove it from this browser. It cannot be recovered. Your works
+        and forms will remain, but auto‑fill will be limited.
+      </p>
+    </form>
+  </main>
+
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
