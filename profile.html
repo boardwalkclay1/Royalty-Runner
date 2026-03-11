@@ -22,8 +22,8 @@
   <main class="rr-main">
     <section>
       <p>
-        Your profile is the foundation for auto‑filling royalty forms. Fill this out once, and
-        Royalty Runner will reuse it wherever possible.
+        This profile is used to auto‑fill royalty forms. Fill out as much as you can. You can
+        update it anytime.
       </p>
     </section>
 
@@ -45,7 +45,7 @@
 
       <label>
         Performing Rights Organization (PRO)
-        <input type="text" name="pro" placeholder="ASCAP, BMI, SESAC, etc." />
+        <input type="text" name="pro" placeholder="ASCAP, BMI, SESAC, PRS, etc." />
       </label>
 
       <label>
@@ -70,7 +70,7 @@
 
       <label>
         Social links (optional)
-        <textarea name="socials" rows="2" placeholder="Instagram, YouTube, etc."></textarea>
+        <textarea name="socials" rows="2" placeholder="Instagram, YouTube, website, etc."></textarea>
       </label>
 
       <div class="form-actions">
@@ -79,9 +79,11 @@
       </div>
 
       <p class="small-note">
-        Deleting your profile will remove it from this browser. It cannot be recovered. Your works
-        and forms will remain, but auto‑fill will be limited.
+        Deleting your profile removes it from this browser only. Works and forms remain, but
+        auto‑fill will be limited until you create a new profile.
       </p>
+
+      <p id="profile-missing" class="small-note warning"></p>
     </form>
   </main>
 
