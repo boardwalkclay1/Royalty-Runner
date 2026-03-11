@@ -6,8 +6,63 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="manifest" href="manifest.json" />
   <link rel="stylesheet" href="assets/css/style.css" />
+
+  <style>
+    /* Full-screen background */
+    body {
+      background: url("assets/img/royal-work.jpg") no-repeat center center fixed;
+      background-size: cover;
+      background-color: #000;
+    }
+
+    /* Dark overlay for readability */
+    .overlay {
+      background: rgba(0, 0, 0, 0.78);
+      min-height: 100vh;
+      width: 100%;
+      padding-bottom: 4rem;
+    }
+
+    /* Section cards */
+    .work-card {
+      background: rgba(0, 0, 0, 0.65);
+      border: 1px solid var(--copper);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      backdrop-filter: blur(4px);
+    }
+
+    /* Form overrides */
+    .rr-form label {
+      color: var(--copper-light);
+      font-weight: 600;
+    }
+
+    .rr-form input,
+    .rr-form textarea {
+      background: rgba(0, 0, 0, 0.55);
+      border: 1px solid var(--border);
+      color: var(--fg);
+    }
+
+    .rr-form input:focus,
+    .rr-form textarea:focus {
+      outline: 1px solid var(--copper);
+    }
+
+    /* Work list styling */
+    #works-list .rr-list-item {
+      background: rgba(0, 0, 0, 0.55);
+      border: 1px solid var(--copper);
+      border-radius: 8px;
+    }
+  </style>
 </head>
+
 <body>
+<div class="overlay">
+
   <header class="rr-header">
     <h1>Works (Songs)</h1>
     <nav class="rr-nav">
@@ -20,54 +75,66 @@
   </header>
 
   <main class="rr-main">
-    <section>
+
+    <!-- INTRO -->
+    <section class="work-card">
       <p>
-        Add each song you want to register for royalties. The most recently added work will be used
-        first when auto‑filling forms.
+        Add each song you want to register for royalties.  
+        Royalty Runner will always use your most recently added work first when auto‑filling forms.
       </p>
     </section>
 
-    <form id="work-form" class="rr-form">
-      <label>
-        Title
-        <input type="text" name="title" required />
-      </label>
+    <!-- FORM -->
+    <section class="work-card">
+      <form id="work-form" class="rr-form">
 
-      <label>
-        ISRC (optional)
-        <input type="text" name="isrc" />
-      </label>
+        <label>
+          Title
+          <input type="text" name="title" required />
+        </label>
 
-      <label>
-        Release date
-        <input type="date" name="releaseDate" />
-      </label>
+        <label>
+          ISRC (optional)
+          <input type="text" name="isrc" />
+        </label>
 
-      <label>
-        Writers and splits
-        <textarea name="writers" rows="3" placeholder="Example: Jane Doe – 50%, John Doe – 50%"></textarea>
-      </label>
+        <label>
+          Release date
+          <input type="date" name="releaseDate" />
+        </label>
 
-      <label>
-        Notes / links
-        <textarea name="notes" rows="2" placeholder="Spotify, YouTube, or other links"></textarea>
-      </label>
+        <label>
+          Writers and splits
+          <textarea name="writers" rows="3" placeholder="Example: Jane Doe – 50%, John Doe – 50%"></textarea>
+        </label>
 
-      <div class="form-actions">
-        <button type="submit" class="button">Add work</button>
-      </div>
-    </form>
+        <label>
+          Notes / links
+          <textarea name="notes" rows="2" placeholder="Spotify, YouTube, or other links"></textarea>
+        </label>
 
-    <section>
+        <div class="form-actions">
+          <button type="submit" class="button">Add work</button>
+        </div>
+
+      </form>
+    </section>
+
+    <!-- WORK LIST -->
+    <section class="work-card">
       <h2>Your works</h2>
       <ul id="works-list" class="rr-list"></ul>
+
       <p class="small-note">
-        Works are stored locally in this browser. Deleting a work removes it permanently from this
-        device.
+        Works are stored locally in this browser.  
+        Deleting a work removes it permanently from this device.
       </p>
     </section>
+
   </main>
 
-  <script src="assets/js/app.js"></script>
+</div>
+
+<script src="assets/js/app.js"></script>
 </body>
 </html>
