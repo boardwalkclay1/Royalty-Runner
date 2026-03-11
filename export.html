@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" data-page="export">
+<head>
+  <meta charset="UTF-8" />
+  <title>Royalty Runner – Exports</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <header class="rr-header">
+    <h1>Exports</h1>
+    <nav class="rr-nav">
+      <a href="index.html">Home</a>
+      <a href="profile.html">Profile</a>
+      <a href="works.html">Works</a>
+      <a href="royalties.html">Royalty Forms</a>
+      <a href="catalog.html">Catalog</a>
+    </nav>
+  </header>
+
+  <main class="rr-main">
+    <section>
+      <p>
+        Use this page to export your profile, works, and generated forms as JSON. You can keep these
+        as backups or use them to rebuild your data later.
+      </p>
+    </section>
+
+    <section class="export-section">
+      <button id="export-profile" class="button">Export profile JSON</button>
+      <textarea id="export-profile-output" class="rr-output" rows="6" readonly></textarea>
+    </section>
+
+    <section class="export-section">
+      <button id="export-works" class="button">Export works JSON</button>
+      <textarea id="export-works-output" class="rr-output" rows="6" readonly></textarea>
+    </section>
+
+    <section class="export-section">
+      <button id="export-forms" class="button">Export forms JSON</button>
+      <textarea id="export-forms-output" class="rr-output" rows="6" readonly></textarea>
+    </section>
+
+    <p class="small-note">
+      These exports are generated locally. Royalty Runner does not upload or send your data anywhere.
+    </p>
+  </main>
+
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
