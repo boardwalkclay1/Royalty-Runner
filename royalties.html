@@ -22,8 +22,9 @@
   <main class="rr-main">
     <section>
       <p>
-        Choose a work and a destination. Royalty Runner will combine your profile and work data to
-        generate a pre‑filled form you can copy into the official registration site.
+        Royalty Runner combines your artist profile and your works to generate pre‑filled text you
+        can paste into official registration forms. When possible, this page will auto‑fill using
+        your latest work and last used destination.
       </p>
     </section>
 
@@ -47,12 +48,15 @@
 
       <div class="form-actions">
         <button type="submit" class="button">Generate form</button>
+        <button type="button" id="one-click-complete" class="button-secondary">One‑Click Complete</button>
       </div>
+
+      <p id="royalty-missing" class="small-note warning"></p>
     </form>
 
     <section>
       <h2>Generated form</h2>
-      <textarea id="royalty-output" rows="12" class="rr-output" readonly></textarea>
+      <textarea id="royalty-output" rows="14" class="rr-output" readonly></textarea>
       <button id="copy-royalty-output" class="button-secondary">Copy to clipboard</button>
       <p class="small-note">
         This text is generated locally using your profile and works. Always review it before
