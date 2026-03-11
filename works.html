@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" data-page="works">
+<head>
+  <meta charset="UTF-8" />
+  <title>Royalty Runner – Works</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <header class="rr-header">
+    <h1>Works (Songs)</h1>
+    <nav class="rr-nav">
+      <a href="index.html">Home</a>
+      <a href="profile.html">Profile</a>
+      <a href="royalties.html">Royalty Forms</a>
+      <a href="catalog.html">Catalog</a>
+      <a href="export.html">Exports</a>
+    </nav>
+  </header>
+
+  <main class="rr-main">
+    <section>
+      <p>
+        Add each song you want to register for royalties. These entries will be used to auto‑fill
+        forms for PROs, SoundExchange, the MLC, and more.
+      </p>
+    </section>
+
+    <form id="work-form" class="rr-form">
+      <label>
+        Title
+        <input type="text" name="title" required />
+      </label>
+
+      <label>
+        ISRC (optional)
+        <input type="text" name="isrc" />
+      </label>
+
+      <label>
+        Release date
+        <input type="date" name="releaseDate" />
+      </label>
+
+      <label>
+        Writers and splits
+        <textarea name="writers" rows="3" placeholder="Example: Jane Doe – 50%, John Doe – 50%"></textarea>
+      </label>
+
+      <label>
+        Notes / links
+        <textarea name="notes" rows="2" placeholder="Spotify link, YouTube link, etc."></textarea>
+      </label>
+
+      <div class="form-actions">
+        <button type="submit" class="button">Add work</button>
+      </div>
+    </form>
+
+    <section>
+      <h2>Your works</h2>
+      <ul id="works-list" class="rr-list"></ul>
+      <p class="small-note">
+        Works are stored locally in your browser. Deleting a work removes it permanently from this
+        device.
+      </p>
+    </section>
+  </main>
+
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
