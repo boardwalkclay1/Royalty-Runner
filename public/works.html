@@ -2,139 +2,132 @@
 <html lang="en" data-page="works">
 <head>
   <meta charset="UTF-8" />
-  <title>Royalty Runner – Works (Songs)</title>
+  <title>Royalty Runner – Works & Protection Status</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="manifest" href="manifest.json" />
   <link rel="stylesheet" href="assets/css/style.css" />
-
-  <style>
-    /* Full-screen background */
-    body {
-      background: url("assets/img/royal-work.jpg") no-repeat center center fixed;
-      background-size: cover;
-      background-color: #000;
-    }
-
-    /* Dark overlay for readability */
-    .overlay {
-      background: rgba(0, 0, 0, 0.78);
-      min-height: 100vh;
-      width: 100%;
-      padding-bottom: 4rem;
-    }
-
-    /* Section cards */
-    .work-card {
-      background: rgba(0, 0, 0, 0.65);
-      border: 1px solid var(--copper);
-      border-radius: 10px;
-      padding: 1.5rem;
-      margin-bottom: 2rem;
-      backdrop-filter: blur(4px);
-    }
-
-    /* Form overrides */
-    .rr-form label {
-      color: var(--copper-light);
-      font-weight: 600;
-    }
-
-    .rr-form input,
-    .rr-form textarea {
-      background: rgba(0, 0, 0, 0.55);
-      border: 1px solid var(--border);
-      color: var(--fg);
-    }
-
-    .rr-form input:focus,
-    .rr-form textarea:focus {
-      outline: 1px solid var(--copper);
-    }
-
-    /* Work list styling */
-    #works-list .rr-list-item {
-      background: rgba(0, 0, 0, 0.55);
-      border: 1px solid var(--copper);
-      border-radius: 8px;
-    }
-  </style>
 </head>
-
 <body>
 <div class="overlay">
-
   <header class="rr-header">
-    <h1>Works (Songs)</h1>
+    <h1>Your Works</h1>
     <nav class="rr-nav">
       <a href="index.html">Home</a>
       <a href="profile.html">Profile</a>
-      <a href="royalties.html">Royalty Forms</a>
       <a href="catalog.html">Catalog</a>
-      <a href="export.html">Exports</a>
+      <a href="protection.html">Protect Your Work</a>
+      <a href="glossary.html">Glossary</a>
     </nav>
   </header>
 
   <main class="rr-main">
 
-    <!-- INTRO -->
-    <section class="work-card">
+    <section class="catalog-card">
+      <h2>Works & Protection Overview</h2>
       <p>
-        Add each song you want to register for royalties.  
-        Royalty Runner will always use your most recently added work first when auto‑filling forms.
+        This is where you keep every song and recording in order—creative details plus protection status.
+        When you’re not sure what a field means, the
+        <a href="glossary.html">Glossary</a>
+        explains it in plain language.
       </p>
     </section>
 
-    <!-- FORM -->
-    <section class="work-card">
-      <form id="work-form" class="rr-form">
-
+    <!-- NEW WORK FORM (static for now; you can wire IndexedDB later) -->
+    <section class="catalog-card">
+      <h3>Add a Work</h3>
+      <form class="rr-form">
         <label>
           Title
-          <input type="text" name="title" required />
+          <input type="text" name="title" placeholder="Song or project title" />
         </label>
 
         <label>
-          ISRC (optional)
-          <input type="text" name="isrc" />
+          Role
+          <select name="role">
+            <option>Artist</option>
+            <option>Writer</option>
+            <option>Producer</option>
+            <option>Composer</option>
+          </select>
         </label>
 
         <label>
-          Release date
-          <input type="date" name="releaseDate" />
+          ISRC (Recording)
+          <input type="text" name="isrc" placeholder="If assigned" />
         </label>
 
         <label>
-          Writers and splits
-          <textarea name="writers" rows="3" placeholder="Example: Jane Doe – 50%, John Doe – 50%"></textarea>
+          ISWC (Composition)
+          <input type="text" name="iswc" placeholder="If assigned" />
         </label>
 
         <label>
-          Notes / links
-          <textarea name="notes" rows="2" placeholder="Spotify, YouTube, or other links"></textarea>
+          PRO Work ID
+          <input type="text" name="pro_id" placeholder="From ASCAP/BMI/etc." />
         </label>
 
-        <div class="form-actions">
-          <button type="submit" class="button">Add work</button>
-        </div>
+        <label>
+          MLC / Mechanical ID
+          <input type="text" name="mlc_id" placeholder="If available" />
+        </label>
 
+        <label>
+          Release Date
+          <input type="date" name="release_date" />
+        </label>
+
+        <label>
+          Notes
+          <textarea name="notes" rows="3" placeholder="Splits, collaborators, special terms"></textarea>
+        </label>
+
+        <h4>Protection Status</h4>
+
+        <label>
+          <input type="checkbox" name="pro_registered" />
+          Registered with PRO
+        </label><br/>
+
+        <label>
+          <input type="checkbox" name="mechanical_registered" />
+          Registered with mechanical agency (like The MLC)
+        </label><br/>
+
+        <label>
+          <input type="checkbox" name="copyright_registered" />
+          Copyright registered
+        </label><br/>
+
+        <label>
+          <input type="checkbox" name="neighboring_registered" />
+          Registered with SoundExchange / neighboring rights org
+        </label><br/>
+
+        <label>
+          <input type="checkbox" name="split_sheet" />
+          Split sheet completed and saved
+        </label><br/>
+
+        <button type="button" class="button">Save Work (Local)</button>
       </form>
     </section>
 
-    <!-- WORK LIST -->
-    <section class="work-card">
-      <h2>Your works</h2>
-      <ul id="works-list" class="rr-list"></ul>
-
-      <p class="small-note">
-        Works are stored locally in this browser.  
-        Deleting a work removes it permanently from this device.
-      </p>
+    <!-- WORKS LIST (static placeholder; you’ll wire with JS/IndexedDB) -->
+    <section class="catalog-card">
+      <h3>Your Works</h3>
+      <p>This section will list your works with their protection status once wired to storage.</p>
+      <div class="rr-list-item">
+        <strong>Example Work:</strong> “Midnight Drive”<br/>
+        Role: Artist & Writer<br/>
+        PRO: Registered ✔<br/>
+        Mechanical: Registered ✔<br/>
+        Copyright: Not yet ❌<br/>
+        Neighboring Rights: Registered ✔<br/>
+        Split Sheet: Completed ✔
+      </div>
     </section>
 
   </main>
-
 </div>
-
-<script src="assets/js/app.js"></script>
 </body>
 </html>
