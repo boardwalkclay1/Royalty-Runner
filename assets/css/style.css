@@ -24,7 +24,9 @@
 
 body {
   margin: 0;
-  background: var(--bg);
+  background: url("assets/img/royal-catalog.jpg") no-repeat center center fixed;
+  background-size: cover;
+  background-color: var(--bg);
   color: var(--fg);
   font-family: var(--font-print);
 }
