@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" data-page="documents">
+<head>
+  <meta charset="UTF-8" />
+  <title>Royalty Runner – Document Vault</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+
+<body>
+<div class="overlay">
+
+  <header class="rr-header">
+    <h1>Document Vault</h1>
+
+    <nav class="rr-nav">
+      <a href="index.html">Home</a>
+      <a href="profile.html">Profile</a>
+      <a href="works.html">Works</a>
+      <a href="catalog.html">Catalog</a>
+      <a href="protection.html">Protect Your Work</a>
+      <a href="glossary.html">Glossary</a>
+    </nav>
+  </header>
+
+  <main class="rr-main">
+
+    <!-- INTRO -->
+    <section class="catalog-card">
+      <h2>Your Legal & Creative Documents</h2>
+      <p>
+        This vault stores everything that protects your music and your identity.
+        All files stay on your device using secure local storage.
+        If you don’t understand a term, the
+        <a href="glossary.html">Glossary</a>
+        explains it in plain language.
+      </p>
+    </section>
+
+    <!-- UPLOAD -->
+    <section class="catalog-card">
+      <h3>Upload a Document</h3>
+
+      <form id="doc-form" class="rr-form">
+        <label>
+          Document Name
+          <input type="text" id="doc-name" placeholder="e.g., Split Sheet for Midnight Drive" required />
+        </label>
+
+        <label>
+          Category
+          <select id="doc-category">
+            <option>Split Sheet</option>
+            <option>Work-for-Hire Agreement</option>
+            <option>Copyright Receipt</option>
+            <option>Trademark Filing</option>
+            <option>PRO Confirmation</option>
+            <option>Mechanical / MLC Confirmation</option>
+            <option>Neighboring Rights Confirmation</option>
+            <option>LLC / Business Documents</option>
+            <option>Other</option>
+          </select>
+        </label>
+
+        <label>
+          Upload File
+          <input type="file" id="doc-file" accept=".pdf,.jpg,.jpeg,.png,.txt,.doc,.docx" required />
+        </label>
+
+        <button type="submit" class="button">Save Document</button>
+      </form>
+    </section>
+
+    <!-- DOCUMENT LIST -->
+    <section class="catalog-card">
+      <h3>Your Documents</h3>
+      <div id="doc-list">
+        <p>No documents saved yet.</p>
+      </div>
+    </section>
+
+  </main>
+
+</div>
+
+<script src="assets/js/documents-db.js"></script>
+</body>
+</html>
