@@ -8,14 +8,12 @@
   <link rel="stylesheet" href="assets/css/style.css" />
 
   <style>
-    /* Full-screen background */
     body {
       background: url("assets/img/royal-catalog.jpg") no-repeat center center fixed;
       background-size: cover;
       background-color: #000;
     }
 
-    /* Dark overlay for readability */
     .overlay {
       background: rgba(0, 0, 0, 0.78);
       min-height: 100vh;
@@ -23,9 +21,9 @@
       padding-bottom: 4rem;
     }
 
-    /* Section cards */
     .catalog-card,
-    .catalog-intro {
+    .catalog-intro,
+    .catalog-definitions {
       background: rgba(0, 0, 0, 0.65);
       border: 1px solid var(--copper);
       border-radius: 10px;
@@ -34,10 +32,64 @@
       backdrop-filter: blur(4px);
     }
 
-    /* Popup panel override for background */
     .catalog-popup {
       background: rgba(0, 0, 0, 0.92);
       border-left: 2px solid var(--copper);
+    }
+
+    /* Hamburger button */
+    .rr-menu-btn {
+      position: absolute;
+      right: 1rem;
+      top: 1rem;
+      font-size: 2rem;
+      background: none;
+      border: none;
+      color: var(--copper);
+      cursor: pointer;
+      z-index: 9999;
+    }
+
+    /* Slide-out menu */
+    .rr-menu-panel {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 240px;
+      height: 100vh;
+      background: rgba(0,0,0,0.92);
+      border-left: 2px solid var(--copper);
+      padding: 2rem 1rem;
+      transition: transform 0.3s ease;
+      transform: translateX(100%);
+      z-index: 9998;
+    }
+
+    .rr-menu-panel ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .rr-menu-panel li {
+      margin-bottom: 1.5rem;
+    }
+
+    .rr-menu-panel a {
+      color: var(--copper);
+      font-family: var(--print-font);
+      font-size: 1.2rem;
+      text-decoration: none;
+    }
+
+    .rr-menu-panel.show {
+      transform: translateX(0);
+    }
+
+    .glossary-note {
+      margin-top: 1rem;
+      font-style: italic;
+      color: var(--copper);
     }
   </style>
 </head>
@@ -47,6 +99,7 @@
 
   <header class="rr-header">
     <h1>Royalty Catalog A–Z</h1>
+
     <nav class="rr-nav">
       <a href="index.html">Home</a>
       <a href="profile.html">Profile</a>
@@ -54,9 +107,33 @@
       <a href="royalties.html">Royalty Forms</a>
       <a href="export.html">Exports</a>
     </nav>
+
+    <!-- HAMBURGER -->
+    <button id="rr-menu-btn" class="rr-menu-btn">☰</button>
   </header>
 
   <main class="rr-main">
+
+    <!-- DEFINITIONS -->
+    <section class="catalog-definitions catalog-card">
+      <h2>Royalty Definitions</h2>
+
+      <p><strong>Performance Royalties</strong> – Earned when your music is played publicly (radio, TV, venues, streaming). Collected by PROs like ASCAP, BMI, SESAC.</p>
+
+      <p><strong>Mechanical Royalties</strong> – Earned when your music is reproduced (streaming, downloads, CDs). Collected by agencies like The MLC.</p>
+
+      <p><strong>Publishing Royalties</strong> – Earned from the songwriting/composition side. Publishers and administrators collect these globally.</p>
+
+      <p><strong>Neighboring Rights</strong> – Earned by performers and master owners when recordings are played publicly overseas.</p>
+
+      <p><strong>Digital Distributor</strong> – Platforms like DistroKid, TuneCore, and UnitedMasters that deliver your music to streaming services.</p>
+
+      <p class="glossary-note">
+        If you don’t understand something, the 
+        <a href="glossary.html">Royalty Runner Glossary</a>  
+        teaches you everything you need to know.
+      </p>
+    </section>
 
     <!-- INTRO -->
     <section class="catalog-intro">
@@ -101,7 +178,35 @@
   </div>
 </div>
 
+<!-- SLIDE-OUT MENU -->
+<div id="rr-menu-panel" class="rr-menu-panel hidden">
+  <ul>
+    <li><a href="#catalog-search">Search</a></li>
+    <li><a href="#catalog-letters">A–Z Index</a></li>
+    <li><a href="#catalog-list">Organizations</a></li>
+    <li><a href="glossary.html">Glossary</a></li>
+  </ul>
+</div>
+
 <script src="assets/js/app.js"></script>
 <script src="assets/js/catalog.js"></script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const btn = document.getElementById("rr-menu-btn");
+    const panel = document.getElementById("rr-menu-panel");
+
+    btn.addEventListener("click", () => {
+      panel.classList.toggle("show");
+    });
+
+    panel.querySelectorAll("a").forEach(link => {
+      link.addEventListener("click", () => {
+        panel.classList.remove("show");
+      });
+    });
+  });
+</script>
+
 </body>
 </html>
