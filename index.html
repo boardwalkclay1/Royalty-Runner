@@ -7,20 +7,28 @@
   <link rel="manifest" href="manifest.json" />
   <link rel="stylesheet" href="assets/css/style.css" />
 
+  <!-- Cursive Font (Dancing Script) -->
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600&display=swap" rel="stylesheet">
+
   <style>
-    /* Full-screen background image */
     body {
       background: url("assets/img/royal-index.jpg") no-repeat center center fixed;
       background-size: cover;
       background-color: #000;
+      font-family: var(--body-font);
     }
 
-    /* Dark overlay */
     .overlay {
       background: rgba(0, 0, 0, 0.72);
       min-height: 100vh;
       width: 100%;
       padding-bottom: 4rem;
+    }
+
+    /* Cursive nav + dropdown headers */
+    .cursive {
+      font-family: 'Dancing Script', cursive;
+      letter-spacing: 1px;
     }
 
     /* Section cards */
@@ -33,14 +41,15 @@
       backdrop-filter: blur(4px);
     }
 
-    /* Dropdown containers */
+    /* Dropdowns */
     .dropdown {
       margin-bottom: 1rem;
     }
 
     .dropdown-header {
       cursor: pointer;
-      font-weight: bold;
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.4rem;
       color: var(--copper);
       margin-bottom: 0.5rem;
     }
@@ -50,6 +59,20 @@
       padding-left: 1rem;
       border-left: 2px solid var(--copper);
       margin-bottom: 1rem;
+      color: #ddd;
+    }
+
+    /* Copper pill bubble buttons */
+    .bubble-btn {
+      display: inline-block;
+      padding: 0.4rem 1rem;
+      background: var(--copper);
+      color: #000;
+      border-radius: 999px;
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.1rem;
+      text-decoration: none;
+      margin-top: 0.5rem;
     }
 
     /* Burger menu */
@@ -87,7 +110,8 @@
       display: block;
       margin-bottom: 1.2rem;
       color: var(--copper);
-      font-size: 1.2rem;
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.5rem;
       text-decoration: none;
     }
   </style>
@@ -97,21 +121,21 @@
 <div class="overlay">
 
   <header class="rr-header">
-    <h1>Royalty Runner</h1>
-    <p class="tagline">Your private, offline artist rights command center.</p>
+    <h1 class="cursive" style="font-size:3rem;">Royalty Runner</h1>
+    <p class="tagline cursive" style="font-size:1.6rem;">Your private, offline artist rights command center.</p>
 
     <!-- BURGER MENU BUTTON -->
     <button id="rr-menu-btn" class="rr-menu-btn">☰</button>
 
-    <!-- TOP NAV (simple) -->
-    <nav class="rr-nav">
+    <!-- SIMPLE TOP NAV -->
+    <nav class="rr-nav cursive">
       <a href="profile.html">Profile</a>
       <a href="works.html">Works</a>
       <a href="rights-and-registration.html">Rights</a>
       <a href="manage.html">Manage</a>
       <a href="law.html">Law</a>
       <a href="contracts.html">Contracts</a>
-      <a href="documents.html">Documents</a>
+      <a href="documents.html">Docs</a>
     </nav>
   </header>
 
@@ -119,7 +143,7 @@
 
     <!-- HERO -->
     <section class="hero section-card">
-      <h2>Own your rights. Control your royalties. Protect your art.</h2>
+      <h2 class="cursive" style="font-size:2.2rem;">Own your rights. Control your royalties. Protect your art.</h2>
       <p>
         Royalty Runner is a fully static, offline‑ready rights and royalty assistant built for new
         and independent artists. It stores your information locally, auto‑fills industry forms,
@@ -129,14 +153,18 @@
 
     <!-- FEATURES WITH DROPDOWNS -->
     <section class="features section-card">
-      <h3>What you can do</h3>
+      <h3 class="cursive" style="font-size:2rem;">What you can do</h3>
 
       <!-- PROFILE -->
       <div class="dropdown">
         <div class="dropdown-header">Build your profile</div>
         <div class="dropdown-content">
-          <p>Store your legal name, stage name, PRO, IPI, publisher, and contact info.</p>
-          <a href="profile.html">Go to Profile →</a>
+          <p>
+            Your artist profile is the foundation of everything.  
+            Royalty Runner uses your legal name, stage name, PRO, IPI, publisher, and contact info  
+            to auto-fill every form across the platform.
+          </p>
+          <a href="profile.html" class="bubble-btn">Go to Profile</a>
         </div>
       </div>
 
@@ -144,8 +172,11 @@
       <div class="dropdown">
         <div class="dropdown-header">Store your works</div>
         <div class="dropdown-content">
-          <p>Save titles, ISRCs, splits, release dates, and metadata for every song.</p>
-          <a href="works.html">Go to Works →</a>
+          <p>
+            Save titles, ISRCs, splits, release dates, collaborators, and metadata.  
+            This powers your registrations, royalty forms, and catalog exports.
+          </p>
+          <a href="works.html" class="bubble-btn">Go to Works</a>
         </div>
       </div>
 
@@ -153,8 +184,11 @@
       <div class="dropdown">
         <div class="dropdown-header">Auto‑fill royalty forms</div>
         <div class="dropdown-content">
-          <p>Generate pre-filled text for ASCAP, BMI, SoundExchange, MLC, YouTube CID, and more.</p>
-          <a href="royalties.html">Go to Royalties →</a>
+          <p>
+            Instantly generate pre-filled text for ASCAP, BMI, SoundExchange, MLC, YouTube CID,  
+            and dozens of other organizations using your saved profile + works.
+          </p>
+          <a href="royalties.html" class="bubble-btn">Go to Royalties</a>
         </div>
       </div>
 
@@ -162,8 +196,11 @@
       <div class="dropdown">
         <div class="dropdown-header">Explore Rights & Registration</div>
         <div class="dropdown-content">
-          <p>A–Z directory of royalty organizations with official links and auto-fill tools.</p>
-          <a href="rights-and-registration.html">Go to Rights & Registration →</a>
+          <p>
+            A complete A–Z directory of royalty organizations with official links,  
+            auto-fill tools, and explanations of what each one does.
+          </p>
+          <a href="rights-and-registration.html" class="bubble-btn">Go to Rights</a>
         </div>
       </div>
 
@@ -171,8 +208,11 @@
       <div class="dropdown">
         <div class="dropdown-header">Manage your career</div>
         <div class="dropdown-content">
-          <p>Booking tools, publicist tools, career planning, and management resources.</p>
-          <a href="manage.html">Go to Manage →</a>
+          <p>
+            Booking tools, publicist tools, career planning, show routing,  
+            and everything a manager does — now in your hands.
+          </p>
+          <a href="manage.html" class="bubble-btn">Go to Manage</a>
         </div>
       </div>
 
@@ -180,8 +220,11 @@
       <div class="dropdown">
         <div class="dropdown-header">Learn the law</div>
         <div class="dropdown-content">
-          <p>Understand contracts, rights, publishing, and legal protections.</p>
-          <a href="law.html">Go to Legal Center →</a>
+          <p>
+            Understand contracts, publishing, copyright, royalties,  
+            and how to protect yourself from predatory deals.
+          </p>
+          <a href="law.html" class="bubble-btn">Go to Legal Center</a>
         </div>
       </div>
 
@@ -189,8 +232,11 @@
       <div class="dropdown">
         <div class="dropdown-header">Use real templates</div>
         <div class="dropdown-content">
-          <p>Contracts, agreements, notices, and red-flag checklists.</p>
-          <a href="contracts.html">Go to Contracts →</a>
+          <p>
+            Access real-world agreements, notices, red-flag checklists,  
+            and contract breakdowns written in artist-friendly language.
+          </p>
+          <a href="contracts.html" class="bubble-btn">Go to Contracts</a>
         </div>
       </div>
 
@@ -198,8 +244,11 @@
       <div class="dropdown">
         <div class="dropdown-header">Store your documents</div>
         <div class="dropdown-content">
-          <p>Keep contracts, EPKs, riders, invoices, and legal files in one place.</p>
-          <a href="documents.html">Go to Documents →</a>
+          <p>
+            Keep contracts, EPKs, riders, invoices, and legal files  
+            in your private offline vault.
+          </p>
+          <a href="documents.html" class="bubble-btn">Go to Documents</a>
         </div>
       </div>
 
@@ -207,8 +256,11 @@
       <div class="dropdown">
         <div class="dropdown-header">Export your data</div>
         <div class="dropdown-content">
-          <p>Download your profile, works, and forms as JSON backups.</p>
-          <a href="export.html">Go to Export →</a>
+          <p>
+            Download your profile, works, and forms as JSON backups  
+            to keep your information safe forever.
+          </p>
+          <a href="export.html" class="bubble-btn">Go to Export</a>
         </div>
       </div>
 
@@ -216,8 +268,8 @@
 
     <!-- CTA -->
     <section class="cta section-card">
-      <h3>Start with your artist profile</h3>
-      <a class="button" href="profile.html">Create your profile</a>
+      <h3 class="cursive" style="font-size:1.8rem;">Start with your artist profile</h3>
+      <a class="bubble-btn" href="profile.html">Create your profile</a>
     </section>
 
   </main>
@@ -231,7 +283,7 @@
   <a href="my-catalog.html">My Catalog</a>
   <a href="works.html">Works</a>
   <a href="royalties.html">Royalties</a>
-  <a href="rights-and-registration.html">Rights & Registration</a>
+  <a href="rights-and-registration.html">Rights</a>
   <a href="manage.html">Manage</a>
   <a href="law.html">Law</a>
   <a href="contracts.html">Contracts</a>
