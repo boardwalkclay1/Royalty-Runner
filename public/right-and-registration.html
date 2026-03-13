@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" data-page="catalog">
+<html lang="en" data-page="rights-and-registration">
 <head>
   <meta charset="UTF-8" />
-  <title>Royalty Runner – Royalty Catalog A–Z</title>
+  <title>Royalty Runner – Rights & Registration Command Center</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="manifest" href="manifest.json" />
   <link rel="stylesheet" href="assets/css/style.css" />
@@ -21,9 +21,7 @@
       padding-bottom: 4rem;
     }
 
-    .catalog-card,
-    .catalog-intro,
-    .catalog-definitions {
+    .section-card {
       background: rgba(0, 0, 0, 0.65);
       border: 1px solid var(--copper);
       border-radius: 10px;
@@ -55,7 +53,7 @@
       position: fixed;
       top: 0;
       right: 0;
-      width: 240px;
+      width: 260px;
       height: 100vh;
       background: rgba(0,0,0,0.92);
       border-left: 2px solid var(--copper);
@@ -97,65 +95,100 @@
 <body>
 <div class="overlay">
 
-  <header class="rr-header">
-    <h1>Royalty Catalog A–Z</h1>
+<header class="rr-header">
+  <h1>Rights & Registration</h1>
+  <p class="tagline">Every royalty. Every organization. Every registration you need as an artist.</p>
 
-    <nav class="rr-nav">
-      <a href="index.html">Home</a>
-      <a href="profile.html">Profile</a>
-      <a href="works.html">Works</a>
-      <a href="royalties.html">Royalty Forms</a>
-      <a href="export.html">Exports</a>
-    </nav>
+  <nav class="rr-nav">
+    <a href="index.html">Home</a>
+    <a href="profile.html">Profile</a>
+    <a href="works.html">Works</a>
+    <a href="royalties.html">Royalties</a>
+    <a href="manage.html">Manage</a>
+    <a href="law.html">Law</a>
+    <a href="contracts.html">Contracts</a>
+    <a href="documents.html">Documents</a>
+    <a href="protection.html">Protection</a>
+    <a href="glossary.html">Glossary</a>
+    <a href="the-game.html">The Game</a>
+    <a href="about-me.html">About Me</a>
+    <a href="export.html">Export</a>
+  </nav>
 
-    <!-- HAMBURGER -->
-    <button id="rr-menu-btn" class="rr-menu-btn">☰</button>
-  </header>
+  <!-- HAMBURGER -->
+  <button id="rr-menu-btn" class="rr-menu-btn">☰</button>
+</header>
 
-  <main class="rr-main">
+<main class="rr-main">
 
-    <!-- DEFINITIONS -->
-    <section class="catalog-definitions catalog-card">
-      <h2>Royalty Definitions</h2>
+<!-- DEFINITIONS -->
+<section class="section-card">
+  <h2>Understanding Your Rights</h2>
+  <p>
+    This page is your complete guide to every royalty, every rights organization, and every
+    registration step you need to protect your music. Each section includes direct links,
+    auto-fill tools, and connections to other Royalty Runner pages.
+  </p>
 
-      <p><strong>Performance Royalties</strong> – Earned when your music is played publicly (radio, TV, venues, streaming). Collected by PROs like ASCAP, BMI, SESAC.</p>
+  <p><strong>Performance Royalties</strong> – Earned when your music is played publicly.  
+    <a href="royalties.html">Learn more →</a></p>
 
-      <p><strong>Mechanical Royalties</strong> – Earned when your music is reproduced (streaming, downloads, CDs). Collected by agencies like The MLC.</p>
+  <p><strong>Mechanical Royalties</strong> – Earned when your music is reproduced or streamed.  
+    <a href="royalties.html">Learn more →</a></p>
 
-      <p><strong>Publishing Royalties</strong> – Earned from the songwriting/composition side. Publishers and administrators collect these globally.</p>
+  <p><strong>Publishing Royalties</strong> – Earned from songwriting and composition.  
+    <a href="manage.html">Publishing tools →</a></p>
 
-      <p><strong>Neighboring Rights</strong> – Earned by performers and master owners when recordings are played publicly overseas.</p>
+  <p><strong>Neighboring Rights</strong> – Earned by performers and master owners overseas.  
+    <a href="law.html">Legal breakdown →</a></p>
 
-      <p><strong>Digital Distributor</strong> – Platforms like DistroKid, TuneCore, and UnitedMasters that deliver your music to streaming services.</p>
+  <p><strong>Copyright Registration</strong> – Protects your ownership legally.  
+    <a href="law.html">Copyright law →</a></p>
 
-      <p class="glossary-note">
-        If you don’t understand something, the 
-        <a href="glossary.html">Royalty Runner Glossary</a>  
-        teaches you everything you need to know.
-      </p>
-    </section>
+  <p><strong>Digital Distribution</strong> – Sends your music to streaming platforms.  
+    <a href="manage.html">Manager tools →</a></p>
 
-    <!-- INTRO -->
-    <section class="catalog-intro">
-      <p>
-        Explore every major royalty organization, distributor, and rights platform.  
-        Click <strong>“Show My Info”</strong> to instantly generate your auto‑filled registration
-        details based on your profile and latest work.
-      </p>
+  <p class="glossary-note">
+    If you don’t understand something, the 
+    <a href="glossary.html">Royalty Runner Glossary</a>  
+    teaches you everything you need to know.
+  </p>
+</section>
 
-      <input
-        type="search"
-        id="catalog-search"
-        placeholder="Search by name, type, or region (e.g. ASCAP, PRO, UK, digital)"
-      />
+<!-- SEARCH -->
+<section class="section-card">
+  <h2>Search the Rights Directory</h2>
+  <input
+    type="search"
+    id="catalog-search"
+    placeholder="Search by name, type, or region (e.g. ASCAP, PRO, UK, digital)"
+  />
+  <div class="catalog-letters" id="catalog-letters"></div>
+</section>
 
-      <div class="catalog-letters" id="catalog-letters"></div>
-    </section>
+<!-- INTRO -->
+<section class="section-card">
+  <h2>How to Use This Directory</h2>
+  <p>
+    Click any organization to see:
+  </p>
+  <ul>
+    <li>What they do</li>
+    <li>Why they matter</li>
+    <li>Who should register</li>
+    <li>Direct official links</li>
+    <li>Your auto-filled registration info</li>
+  </ul>
+  <p>
+    This page connects to your <a href="profile.html">Profile</a> and <a href="works.html">Works</a>
+    to auto-fill forms instantly.
+  </p>
+</section>
 
-    <!-- LIST -->
-    <section id="catalog-list" class="catalog-list"></section>
+<!-- LIST -->
+<section id="catalog-list" class="catalog-list"></section>
 
-  </main>
+</main>
 
 </div>
 
@@ -184,6 +217,9 @@
     <li><a href="#catalog-search">Search</a></li>
     <li><a href="#catalog-letters">A–Z Index</a></li>
     <li><a href="#catalog-list">Organizations</a></li>
+    <li><a href="manage.html">Manager Tools</a></li>
+    <li><a href="law.html">Legal Center</a></li>
+    <li><a href="contracts.html">Contracts</a></li>
     <li><a href="glossary.html">Glossary</a></li>
   </ul>
 </div>
