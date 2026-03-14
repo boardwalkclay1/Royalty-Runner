@@ -1,7 +1,7 @@
 // assets/js/works-studio.js
-// ROYALTY RUNNER — WORKS STUDIO CORE
-// Handles: form wiring, recording, saving, progress, list rendering.
-// Future: delegate playback/record UI to a shared Studio Player module.
+// ROYALTY RUNNER — WORKS STUDIO CORE v2
+// Handles: form wiring, recording, saving, progress, list rendering,
+// and piping a Work’s audio into the Studio Player (RRStudioEngine).
 
 (function () {
   const form = document.getElementById("work-form");
@@ -12,7 +12,7 @@
   let recordedChunks = [];
   let currentAudioBlob = null;
 
-  // ---- RECORDING CORE (can later be extracted into studioPlayer.js) ----
+  // ---- RECORDING CORE ----
 
   async function ensureMediaRecorder() {
     if (mediaRecorder) return mediaRecorder;
@@ -72,6 +72,7 @@
 
     let audioBlob = null;
     if (file) {
+      // Prefer modern formats (webm/wav), but allow any audio/*
       audioBlob = file;
     } else if (currentAudioBlob) {
       audioBlob = currentAudioBlob;
@@ -101,13 +102,15 @@
         neighboring_registered: !!fd.get("neighboring_registered"),
         split_sheet: !!fd.get("split_sheet"),
       },
-      studioState: work?.studioState || {},
-      createdAt: id ? (work?.createdAt || now) : now,
+      studioState: {}, // reserved for future studio metadata
+      createdAt: id ? (form.dataset.createdAt || now) : now,
       updatedAt: now,
     };
 
     if (audioBlob) {
       work.audioBlob = audioBlob;
+      work.audioType = audioBlob.type || "audio/unknown";
+      work.audioSize = audioBlob.size || 0;
     }
 
     return work;
@@ -162,11 +165,16 @@
 
           const created = work.createdAt ? new Date(work.createdAt).toLocaleString() : "";
           const updated = work.updatedAt ? new Date(work.updatedAt).toLocaleString() : "";
+          const sizeKb = work.audioSize ? (work.audioSize / 1024).toFixed(1) : null;
 
           card.innerHTML = `
             <h4>${work.title || "(Untitled Work)"}</h4>
             <p>${work.role || ""}</p>
-            <p><small>Created: ${created}</small><br><small>Updated: ${updated}</small></p>
+            <p>
+              <small>Created: ${created}</small><br>
+              <small>Updated: ${updated}</small><br>
+              ${sizeKb ? `<small>Audio: ${sizeKb} KB</small>` : ""}
+            </p>
             ${audioUrl ? `<audio controls src="${audioUrl}"></audio>` : "<p>No audio attached.</p>"}
 
             <div style="margin-top:0.5rem;">
@@ -179,7 +187,8 @@
             </div>
 
             <div style="margin-top:0.5rem;">
-              <button type="button" class="bubble-btn" data-action="edit">Edit in Studio</button>
+              <button type="button" class="bubble-btn" data-action="edit">Edit</button>
+              <button type="button" class="bubble-btn" data-action="studio" style="background:#0a4;color:#000;">Open in Studio</button>
               <button type="button" class="bubble-btn" data-action="delete" style="background:#400;color:#fff;">Delete</button>
             </div>
           `;
@@ -206,6 +215,25 @@
         if (!work) return;
         fillFormFromWork(work);
         window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+    }
+
+    if (action === "studio") {
+      RRDB.getWorkById(id).then((work) => {
+        if (!work || !work.audioBlob) {
+          alert("This work has no audio to send to the studio.");
+          return;
+        }
+
+        // Dispatch a custom event so the Studio Player can pick it up
+        const evt = new CustomEvent("RR_STUDIO_LOAD_WORK", {
+          detail: {
+            id: work.id,
+            title: work.title || "Untitled Work",
+            blob: work.audioBlob,
+          },
+        });
+        window.dispatchEvent(evt);
       });
     }
 
@@ -259,6 +287,5 @@
     if (resetBtn) resetBtn.addEventListener("click", resetForm);
   }
 
-  // Script is loaded at the bottom of the page, so DOM is ready.
   init();
 })();
