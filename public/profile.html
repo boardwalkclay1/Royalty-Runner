@@ -7,15 +7,16 @@
   <link rel="manifest" href="manifest.json" />
   <link rel="stylesheet" href="assets/css/style.css" />
 
+  <!-- Cursive Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600&display=swap" rel="stylesheet">
+
   <style>
-    /* Full-screen background */
     body {
-      background: url("assets/img/royal-profile.jpg") no-repeat center center fixed;
+      background: url("public/assets/img/royal-profile.jpg") no-repeat center center fixed;
       background-size: cover;
       background-color: #000;
     }
 
-    /* Dark overlay for readability */
     .overlay {
       background: rgba(0, 0, 0, 0.78);
       min-height: 100vh;
@@ -23,7 +24,11 @@
       padding-bottom: 4rem;
     }
 
-    /* Section card styling */
+    .cursive {
+      font-family: 'Dancing Script', cursive;
+      letter-spacing: 1px;
+    }
+
     .profile-card {
       background: rgba(0, 0, 0, 0.65);
       border: 1px solid var(--copper);
@@ -33,22 +38,72 @@
       backdrop-filter: blur(4px);
     }
 
-    /* Form styling override */
-    .rr-form label {
-      color: var(--copper-light);
-      font-weight: 600;
+    .flash-box {
+      background: rgba(255, 140, 0, 0.15);
+      border-left: 3px solid var(--copper);
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-radius: 6px;
     }
 
-    .rr-form input,
-    .rr-form textarea {
-      background: rgba(0, 0, 0, 0.55);
-      border: 1px solid var(--border);
-      color: var(--fg);
+    .flash-box a {
+      color: var(--copper);
+      font-weight: bold;
+      text-decoration: underline;
     }
 
-    .rr-form input:focus,
-    .rr-form textarea:focus {
-      outline: 1px solid var(--copper);
+    .strength-bar {
+      height: 10px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 5px;
+      margin-top: 0.5rem;
+      overflow: hidden;
+    }
+
+    .strength-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--copper);
+      transition: width 0.4s ease;
+    }
+
+    .rr-menu-btn {
+      position: absolute;
+      right: 1rem;
+      top: 1rem;
+      font-size: 2rem;
+      background: none;
+      border: none;
+      color: var(--copper);
+      cursor: pointer;
+      z-index: 9999;
+    }
+
+    .rr-menu-panel {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 260px;
+      height: 100vh;
+      background: rgba(0,0,0,0.92);
+      border-left: 2px solid var(--copper);
+      padding: 2rem 1rem;
+      transition: transform 0.3s ease;
+      transform: translateX(100%);
+      z-index: 9998;
+    }
+
+    .rr-menu-panel.show {
+      transform: translateX(0);
+    }
+
+    .rr-menu-panel a {
+      display: block;
+      margin-bottom: 1.2rem;
+      color: var(--copper);
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.5rem;
+      text-decoration: none;
     }
   </style>
 </head>
@@ -57,72 +112,77 @@
 <div class="overlay">
 
   <header class="rr-header">
-    <h1>Artist Profile</h1>
-    <nav class="rr-nav">
+    <h1 class="cursive" style="font-size:3rem;">Artist Profile</h1>
+
+    <button id="rr-menu-btn" class="rr-menu-btn">☰</button>
+
+    <nav class="rr-nav cursive">
       <a href="index.html">Home</a>
       <a href="works.html">Works</a>
-      <a href="royalties.html">Royalty Forms</a>
-      <a href="catalog.html">Catalog</a>
-      <a href="export.html">Exports</a>
+      <a href="rights-and-registration.html">Rights</a>
+      <a href="contracts.html">Contracts</a>
+      <a href="documents.html">Documents</a>
+      <a href="glossary.html">Glossary</a>
     </nav>
   </header>
 
   <main class="rr-main">
 
-    <!-- INTRO -->
+    <!-- PROFILE STRENGTH -->
     <section class="profile-card">
-      <p>
-        Your artist profile powers every auto‑filled form in Royalty Runner.  
-        Fill out as much as you can — the more complete your profile, the faster your registrations.
-      </p>
+      <h2 class="cursive" style="font-size:2rem;">Profile Strength</h2>
+      <p>Your profile powers auto‑fill across the entire app.</p>
+
+      <div class="strength-bar">
+        <div id="strength-fill" class="strength-fill"></div>
+      </div>
+
+      <p id="strength-label" style="margin-top:0.5rem; color:var(--copper-light);"></p>
     </section>
 
-    <!-- FORM -->
+    <!-- FLASH NOTIFICATIONS -->
+    <section id="flash-section" class="profile-card">
+      <h3 class="cursive" style="font-size:1.8rem;">Recommended Actions</h3>
+      <div id="flash-container"></div>
+    </section>
+
+    <!-- PROFILE FORM -->
     <section class="profile-card">
       <form id="profile-form" class="rr-form">
 
-        <label>
-          Legal name
+        <label>Legal name
           <input type="text" name="legalName" required />
         </label>
 
-        <label>
-          Stage name
+        <label>Stage name
           <input type="text" name="stageName" />
         </label>
 
-        <label>
-          Email
+        <label>Email
           <input type="email" name="email" />
         </label>
 
-        <label>
-          Performing Rights Organization (PRO)
+        <label>Performing Rights Organization (PRO)
           <input type="text" name="pro" placeholder="ASCAP, BMI, SESAC, PRS, etc." />
         </label>
 
-        <label>
-          IPI / CAE number
+        <label>IPI / CAE number
           <input type="text" name="ipi" />
         </label>
 
-        <label>
-          Publishing entity
+        <label>Publishing entity
           <input type="text" name="publisher" />
         </label>
 
-        <label>
-          Country
+        <label>Country
           <input type="text" name="country" />
         </label>
 
-        <label>
-          Address
+        <label>Address
           <textarea name="address" rows="2"></textarea>
         </label>
 
-        <label>
-          Social links (optional)
+        <label>Social links
           <textarea name="socials" rows="2" placeholder="Instagram, YouTube, website, etc."></textarea>
         </label>
 
@@ -132,11 +192,8 @@
         </div>
 
         <p class="small-note">
-          Deleting your profile removes it from this browser only.  
-          Your works and forms remain, but auto‑fill will be limited until you create a new profile.
+          Deleting your profile removes it from this browser only.
         </p>
-
-        <p id="profile-missing" class="small-note warning"></p>
 
       </form>
     </section>
@@ -145,6 +202,26 @@
 
 </div>
 
-<script src="assets/js/app.js"></script>
+<!-- BURGER MENU PANEL -->
+<div id="rr-menu-panel" class="rr-menu-panel">
+  <a href="index.html">Home</a>
+  <a href="profile.html">Profile</a>
+  <a href="works.html">Works</a>
+  <a href="rights-and-registration.html">Rights</a>
+  <a href="contracts.html">Contracts</a>
+  <a href="documents.html">Documents</a>
+  <a href="protection.html">Protection</a>
+  <a href="glossary.html">Glossary</a>
+  <a href="export.html">Export</a>
+</div>
+
+<script src="assets/js/profile.js"></script>
+
+<script>
+  document.getElementById("rr-menu-btn").addEventListener("click", () => {
+    document.getElementById("rr-menu-panel").classList.toggle("show");
+  });
+</script>
+
 </body>
 </html>
