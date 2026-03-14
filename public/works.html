@@ -2,113 +2,19 @@
 <html lang="en" data-page="works">
 <head>
   <meta charset="UTF-8" />
-  <title>Royalty Runner – Works Manager</title>
+  <title>Royalty Runner – Works Studio</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="manifest" href="manifest.json" />
   <link rel="stylesheet" href="assets/css/style.css" />
-
-  <!-- Cursive Font -->
   <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600&display=swap" rel="stylesheet">
-
-  <style>
-    body {
-      background: url("public/assets/img/royal-catalog.jpg") no-repeat center center fixed;
-      background-size: cover;
-      background-color: #000;
-    }
-
-    .overlay {
-      background: rgba(0, 0, 0, 0.78);
-      min-height: 100vh;
-      padding-bottom: 4rem;
-    }
-
-    .cursive {
-      font-family: 'Dancing Script', cursive;
-      letter-spacing: 1px;
-    }
-
-    .section-card {
-      background: rgba(0, 0, 0, 0.65);
-      border: 1px solid var(--copper);
-      border-radius: 12px;
-      padding: 1.5rem;
-      margin-bottom: 2rem;
-      backdrop-filter: blur(4px);
-    }
-
-    .bubble-btn {
-      display: inline-block;
-      padding: 0.4rem 1rem;
-      background: var(--copper);
-      color: #000;
-      border-radius: 999px;
-      font-family: 'Dancing Script', cursive;
-      font-size: 1.1rem;
-      text-decoration: none;
-      margin-top: 0.5rem;
-      cursor: pointer;
-    }
-
-    audio {
-      width: 100%;
-      margin-top: 0.5rem;
-    }
-
-    .rr-menu-btn {
-      position: absolute;
-      right: 1rem;
-      top: 1rem;
-      font-size: 2rem;
-      background: none;
-      border: none;
-      color: var(--copper);
-      cursor: pointer;
-      z-index: 9999;
-    }
-
-    .rr-menu-panel {
-      position: fixed;
-      top: 0;
-      right: 0;
-      width: 260px;
-      height: 100vh;
-      background: rgba(0,0,0,0.92);
-      border-left: 2px solid var(--copper);
-      padding: 2rem 1rem;
-      transition: transform 0.3s ease;
-      transform: translateX(100%);
-      z-index: 9998;
-    }
-
-    .rr-menu-panel.show {
-      transform: translateX(0);
-    }
-
-    .rr-menu-panel a {
-      display: block;
-      margin-bottom: 1.2rem;
-      color: var(--copper);
-      font-family: 'Dancing Script', cursive;
-      font-size: 1.5rem;
-      text-decoration: none;
-    }
-
-    .work-card {
-      background: rgba(0,0,0,0.55);
-      border: 1px solid var(--copper);
-      padding: 1rem;
-      border-radius: 10px;
-      margin-bottom: 1rem;
-    }
-  </style>
+  <!-- keep your existing styles here -->
 </head>
 
 <body>
 <div class="overlay">
 
   <header class="rr-header">
-    <h1 class="cursive" style="font-size:3rem;">Your Works</h1>
+    <h1 class="cursive" style="font-size:3rem;">Studio – Your Works</h1>
 
     <button id="rr-menu-btn" class="rr-menu-btn">☰</button>
 
@@ -125,16 +31,17 @@
   <main class="rr-main">
 
     <section class="section-card">
-      <h2 class="cursive" style="font-size:2rem;">Works Dashboard</h2>
+      <h2 class="cursive" style="font-size:2rem;">Works Studio</h2>
       <p>
-        Upload WAV files, store metadata, track protection status, and manage your entire catalog offline.
+        Record, upload, edit, and manage your works. Everything is saved locally in your Royalty Runner studio.
       </p>
     </section>
 
     <section class="section-card">
-      <h3 class="cursive" style="font-size:1.8rem;">Add a Work</h3>
+      <h3 class="cursive" style="font-size:1.8rem;">Create / Edit Work</h3>
 
       <form id="work-form" class="rr-form">
+        <input type="hidden" name="id" />
 
         <label>Title
           <input type="text" name="title" required />
@@ -150,8 +57,10 @@
         </label>
 
         <label>Upload WAV Audio File
-          <input type="file" name="audio" accept=".wav" required />
+          <input type="file" name="audio" accept=".wav,audio/*" />
         </label>
+
+        <!-- record button will be injected by JS -->
 
         <label>ISRC
           <input type="text" name="isrc" />
@@ -185,12 +94,13 @@
         <label><input type="checkbox" name="neighboring_registered" /> SoundExchange Registered</label><br/>
         <label><input type="checkbox" name="split_sheet" /> Split Sheet Completed</label><br/>
 
-        <button type="submit" class="bubble-btn">Save Work</button>
+        <button type="submit" class="bubble-btn">Save Work to Catalog</button>
+        <button type="button" id="reset-work-form" class="bubble-btn" style="background:#444;color:#fff;">New Work</button>
       </form>
     </section>
 
     <section class="section-card">
-      <h3 class="cursive" style="font-size:1.8rem;">Your Works</h3>
+      <h3 class="cursive" style="font-size:1.8rem;">Your Works (Studio + Catalog)</h3>
       <div id="works-list"></div>
     </section>
 
@@ -213,7 +123,8 @@
   <a href="export.html">Export</a>
 </div>
 
-<script src="assets/js/works.js"></script>
+<script src="assets/js/db.js"></script>
+<script src="assets/js/works-studio.js"></script>
 
 <script>
   document.getElementById("rr-menu-btn").addEventListener("click", () => {
