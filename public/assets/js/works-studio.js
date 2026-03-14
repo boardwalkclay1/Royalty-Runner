@@ -1,4 +1,7 @@
 // assets/js/works-studio.js
+// ROYALTY RUNNER — WORKS STUDIO CORE
+// Handles: form wiring, recording, saving, progress, list rendering.
+// Future: delegate playback/record UI to a shared Studio Player module.
 
 (function () {
   const form = document.getElementById("work-form");
@@ -9,21 +12,25 @@
   let recordedChunks = [];
   let currentAudioBlob = null;
 
-  function ensureMediaRecorder() {
-    if (mediaRecorder) return Promise.resolve(mediaRecorder);
+  // ---- RECORDING CORE (can later be extracted into studioPlayer.js) ----
 
-    return navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-      mediaRecorder = new MediaRecorder(stream);
-      mediaRecorder.ondataavailable = (e) => {
-        if (e.data.size > 0) recordedChunks.push(e.data);
-      };
-      mediaRecorder.onstop = () => {
-        if (recordedChunks.length > 0) {
-          currentAudioBlob = new Blob(recordedChunks, { type: "audio/webm" });
-        }
-      };
-      return mediaRecorder;
-    });
+  async function ensureMediaRecorder() {
+    if (mediaRecorder) return mediaRecorder;
+
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    mediaRecorder = new MediaRecorder(stream, { mimeType: "audio/webm" });
+
+    mediaRecorder.ondataavailable = (e) => {
+      if (e.data.size > 0) recordedChunks.push(e.data);
+    };
+
+    mediaRecorder.onstop = () => {
+      if (recordedChunks.length > 0) {
+        currentAudioBlob = new Blob(recordedChunks, { type: "audio/webm" });
+      }
+    };
+
+    return mediaRecorder;
   }
 
   function injectRecordButton() {
@@ -35,24 +42,26 @@
 
     let recording = false;
 
-    recordBtn.addEventListener("click", () => {
-      ensureMediaRecorder().then((rec) => {
-        if (!recording) {
-          recordedChunks = [];
-          currentAudioBlob = null;
-          rec.start();
-          recording = true;
-          recordBtn.textContent = "Stop Recording";
-        } else {
-          rec.stop();
-          recording = false;
-          recordBtn.textContent = "Start Recording";
-        }
-      });
+    recordBtn.addEventListener("click", async () => {
+      const rec = await ensureMediaRecorder();
+
+      if (!recording) {
+        recordedChunks = [];
+        currentAudioBlob = null;
+        rec.start();
+        recording = true;
+        recordBtn.textContent = "Stop Recording";
+      } else {
+        rec.stop();
+        recording = false;
+        recordBtn.textContent = "Start Recording";
+      }
     });
 
     audioLabel.insertAdjacentElement("afterend", recordBtn);
   }
+
+  // ---- FORM <-> WORK OBJECT ----
 
   function getFormDataAsWork() {
     const fd = new FormData(form);
@@ -73,8 +82,10 @@
       return null;
     }
 
+    const now = new Date().toISOString();
+
     const work = {
-      id: id || undefined,
+      id: id || crypto.randomUUID(),
       title: fd.get("title") || "",
       role: fd.get("role") || "",
       isrc: fd.get("isrc") || "",
@@ -90,8 +101,9 @@
         neighboring_registered: !!fd.get("neighboring_registered"),
         split_sheet: !!fd.get("split_sheet"),
       },
-      // studioState can hold extra info later (markers, edits, etc.)
-      studioState: {},
+      studioState: work?.studioState || {},
+      createdAt: id ? (work?.createdAt || now) : now,
+      updatedAt: now,
     };
 
     if (audioBlob) {
@@ -130,6 +142,8 @@
     recordedChunks = [];
   }
 
+  // ---- RENDER WORKS LIST ----
+
   function renderWorksList() {
     RRDB.getAllWorks().then((works) => {
       worksList.innerHTML = "";
@@ -146,9 +160,13 @@
             audioUrl = URL.createObjectURL(work.audioBlob);
           }
 
+          const created = work.createdAt ? new Date(work.createdAt).toLocaleString() : "";
+          const updated = work.updatedAt ? new Date(work.updatedAt).toLocaleString() : "";
+
           card.innerHTML = `
             <h4>${work.title || "(Untitled Work)"}</h4>
             <p>${work.role || ""}</p>
+            <p><small>Created: ${created}</small><br><small>Updated: ${updated}</small></p>
             ${audioUrl ? `<audio controls src="${audioUrl}"></audio>` : "<p>No audio attached.</p>"}
 
             <div style="margin-top:0.5rem;">
@@ -170,6 +188,8 @@
         });
     });
   }
+
+  // ---- LIST INTERACTIONS ----
 
   function handleWorksListClick(e) {
     const btn = e.target.closest("button[data-action]");
@@ -213,6 +233,8 @@
     RRDB.updateWorkProgress(id, field, value);
   }
 
+  // ---- FORM SUBMIT ----
+
   function handleFormSubmit(e) {
     e.preventDefault();
     const work = getFormDataAsWork();
@@ -221,17 +243,22 @@
     RRDB.saveWork(work).then(() => {
       resetForm();
       renderWorksList();
-      alert("Work saved to your catalog.");
+      alert("Work saved to your studio catalog.");
     });
   }
 
-  document.addEventListener("DOMContentLoaded", () => {
+  // ---- INIT ----
+
+  function init() {
     injectRecordButton();
     renderWorksList();
 
     form.addEventListener("submit", handleFormSubmit);
     worksList.addEventListener("click", handleWorksListClick);
     worksList.addEventListener("change", handleProgressChange);
-    resetBtn.addEventListener("click", resetForm);
-  });
+    if (resetBtn) resetBtn.addEventListener("click", resetForm);
+  }
+
+  // Script is loaded at the bottom of the page, so DOM is ready.
+  init();
 })();
