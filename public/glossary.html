@@ -2,110 +2,314 @@
 <html lang="en" data-page="glossary">
 <head>
   <meta charset="UTF-8" />
-  <title>Royalty Runner – Glossary</title>
+  <title>Royalty Runner – Glossary & Knowledge Center</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="manifest" href="manifest.json" />
   <link rel="stylesheet" href="assets/css/style.css" />
+
+  <!-- Cursive Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      background: url("public/assets/img/royal-catalog.jpg") no-repeat center center fixed;
+      background-size: cover;
+      background-color: #000;
+    }
+
+    .overlay {
+      background: rgba(0, 0, 0, 0.78);
+      min-height: 100vh;
+      padding-bottom: 4rem;
+    }
+
+    .cursive {
+      font-family: 'Dancing Script', cursive;
+      letter-spacing: 1px;
+    }
+
+    .section-card {
+      background: rgba(0, 0, 0, 0.65);
+      border: 1px solid var(--copper);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      backdrop-filter: blur(4px);
+    }
+
+    /* Search bar */
+    #glossary-search {
+      width: 100%;
+      padding: 0.7rem;
+      border-radius: 8px;
+      border: 1px solid var(--copper);
+      background: rgba(0,0,0,0.4);
+      color: #fff;
+      margin-bottom: 1rem;
+    }
+
+    /* Dropdowns */
+    .dropdown-header {
+      cursor: pointer;
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.6rem;
+      color: var(--copper);
+      margin-bottom: 0.5rem;
+    }
+
+    .dropdown-content {
+      display: none;
+      padding-left: 1rem;
+      border-left: 2px solid var(--copper);
+      margin-bottom: 1rem;
+      color: #ddd;
+    }
+
+    /* Bubble buttons */
+    .bubble-btn {
+      display: inline-block;
+      padding: 0.4rem 1rem;
+      background: var(--copper);
+      color: #000;
+      border-radius: 999px;
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.1rem;
+      text-decoration: none;
+      margin-top: 0.5rem;
+    }
+
+    /* Burger menu */
+    .rr-menu-btn {
+      position: absolute;
+      right: 1rem;
+      top: 1rem;
+      font-size: 2rem;
+      background: none;
+      border: none;
+      color: var(--copper);
+      cursor: pointer;
+      z-index: 9999;
+    }
+
+    .rr-menu-panel {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 260px;
+      height: 100vh;
+      background: rgba(0,0,0,0.92);
+      border-left: 2px solid var(--copper);
+      padding: 2rem 1rem;
+      transition: transform 0.3s ease;
+      transform: translateX(100%);
+      z-index: 9998;
+    }
+
+    .rr-menu-panel.show {
+      transform: translateX(0);
+    }
+
+    .rr-menu-panel a {
+      display: block;
+      margin-bottom: 1.2rem;
+      color: var(--copper);
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.5rem;
+      text-decoration: none;
+    }
+  </style>
 </head>
+
 <body>
 <div class="overlay">
+
+  <!-- HEADER -->
   <header class="rr-header">
-    <h1>Royalty Runner Glossary</h1>
-    <nav class="rr-nav">
+    <h1 class="cursive" style="font-size:3rem;">Royalty Runner Glossary</h1>
+
+    <!-- BURGER MENU BUTTON -->
+    <button id="rr-menu-btn" class="rr-menu-btn">☰</button>
+
+    <nav class="rr-nav cursive">
       <a href="index.html">Home</a>
       <a href="profile.html">Profile</a>
       <a href="works.html">Works</a>
-      <a href="catalog.html">Catalog</a>
-      <a href="protection.html">Protect Your Work</a>
+      <a href="rights-and-registration.html">Rights</a>
+      <a href="protection.html">Protection</a>
     </nav>
   </header>
 
   <main class="rr-main">
 
-    <section class="catalog-card">
-      <h2>Learn the Language</h2>
+    <!-- INTRO -->
+    <section class="section-card">
+      <h2 class="cursive" style="font-size:2rem;">Learn the Language</h2>
       <p>
-        This glossary is here so you never have to pretend you understand something.
-        If a word feels confusing anywhere in Royalty Runner, you can come here and get
-        a clear, honest explanation.
+        This glossary is your personal translator for the music industry.  
+        Every confusing term, every legal phrase, every royalty type — broken down in plain,
+        artist‑friendly language.
       </p>
+      <p>
+        Use the search bar below to instantly filter terms.
+      </p>
+
+      <input type="search" id="glossary-search" placeholder="Search terms (e.g. ISRC, PRO, publishing)">
     </section>
 
-    <section class="catalog-card">
-      <h3>Key Terms</h3>
+    <!-- TERMS -->
+    <section class="section-card" id="glossary-list">
 
-      <h4>Performance Royalty</h4>
-      <p>
-        Money earned when your music is performed publicly—on radio, TV, live venues,
-        or streaming services. Collected by PROs like ASCAP, BMI, SESAC, PRS, SOCAN.
-      </p>
+      <!-- PERFORMANCE ROYALTY -->
+      <div class="dropdown">
+        <div class="dropdown-header">Performance Royalty</div>
+        <div class="dropdown-content">
+          <p>
+            Money earned when your music is performed publicly — radio, TV, live venues,
+            streaming, bars, restaurants, and more.
+          </p>
+          <p>Collected by PROs:</p>
+          <a href="https://www.ascap.com" class="bubble-btn" target="_blank">ASCAP</a>
+          <a href="https://www.bmi.com" class="bubble-btn" target="_blank">BMI</a>
+          <a href="https://www.sesac.com" class="bubble-btn" target="_blank">SESAC</a>
+        </div>
+      </div>
 
-      <h4>Mechanical Royalty</h4>
-      <p>
-        Money earned when your music is reproduced—streaming, downloads, CDs, vinyl.
-        Collected by mechanical agencies like The MLC or Harry Fox, depending on your region.
-      </p>
+      <!-- MECHANICAL ROYALTY -->
+      <div class="dropdown">
+        <div class="dropdown-header">Mechanical Royalty</div>
+        <div class="dropdown-content">
+          <p>
+            Earned when your music is reproduced — streaming, downloads, CDs, vinyl.
+          </p>
+          <a href="https://www.themlc.com" class="bubble-btn" target="_blank">The MLC</a>
+        </div>
+      </div>
 
-      <h4>Publishing</h4>
-      <p>
-        The business side of your songwriting and composition rights. A publisher or
-        administrator helps register your works and collect royalties worldwide.
-      </p>
+      <!-- PUBLISHING -->
+      <div class="dropdown">
+        <div class="dropdown-header">Publishing</div>
+        <div class="dropdown-content">
+          <p>
+            The business side of your songwriting rights.  
+            Publishers register your works, collect royalties, and protect your compositions.
+          </p>
+          <a href="manage.html" class="bubble-btn">Publishing Tools</a>
+        </div>
+      </div>
 
-      <h4>Neighboring Rights</h4>
-      <p>
-        Royalties paid to performers and master owners when recordings are played publicly
-        in certain territories. Organizations like SoundExchange and PPL handle these.
-      </p>
+      <!-- NEIGHBORING RIGHTS -->
+      <div class="dropdown">
+        <div class="dropdown-header">Neighboring Rights</div>
+        <div class="dropdown-content">
+          <p>
+            Royalties paid to performers and master owners when recordings are played publicly
+            in certain territories.
+          </p>
+          <a href="https://www.soundexchange.com" class="bubble-btn" target="_blank">SoundExchange</a>
+        </div>
+      </div>
 
-      <h4>PRO (Performance Rights Organization)</h4>
-      <p>
-        An organization that collects performance royalties for songwriters and publishers.
-        Examples: ASCAP, BMI, SESAC, PRS, SOCAN.
-      </p>
+      <!-- PRO -->
+      <div class="dropdown">
+        <div class="dropdown-header">PRO (Performance Rights Organization)</div>
+        <div class="dropdown-content">
+          <p>
+            Organizations that collect performance royalties for songwriters and publishers.
+          </p>
+          <a href="rights-and-registration.html" class="bubble-btn">See All PROs</a>
+        </div>
+      </div>
 
-      <h4>ISRC</h4>
-      <p>
-        International Standard Recording Code. A unique ID for each sound recording.
-        Used to track plays and royalties for the master.
-      </p>
+      <!-- ISRC -->
+      <div class="dropdown">
+        <div class="dropdown-header">ISRC</div>
+        <div class="dropdown-content">
+          <p>
+            International Standard Recording Code — the unique ID for each sound recording.
+          </p>
+          <a href="https://www.usisrc.org" class="bubble-btn" target="_blank">Official ISRC Site</a>
+        </div>
+      </div>
 
-      <h4>ISWC</h4>
-      <p>
-        International Standard Musical Work Code. A unique ID for the composition (songwriting).
-      </p>
+      <!-- ISWC -->
+      <div class="dropdown">
+        <div class="dropdown-header">ISWC</div>
+        <div class="dropdown-content">
+          <p>
+            International Standard Musical Work Code — the unique ID for the composition.
+          </p>
+        </div>
+      </div>
 
-      <h4>Split Sheet</h4>
-      <p>
-        A document that lists all contributors to a song and their percentage of ownership.
-        This protects everyone and prevents fights later.
-      </p>
+      <!-- SPLIT SHEET -->
+      <div class="dropdown">
+        <div class="dropdown-header">Split Sheet</div>
+        <div class="dropdown-content">
+          <p>
+            A document listing all contributors to a song and their ownership percentages.
+          </p>
+          <a href="contracts.html" class="bubble-btn">Split Sheet Template</a>
+        </div>
+      </div>
 
-      <h4>Work‑for‑Hire</h4>
-      <p>
-        An agreement where someone is paid to create something and does not own the rights.
-        The person or company paying owns the final work.
-      </p>
+      <!-- COPYRIGHT -->
+      <div class="dropdown">
+        <div class="dropdown-header">Copyright</div>
+        <div class="dropdown-content">
+          <p>
+            Legal protection for original works of authorship.  
+            Registration strengthens your rights and your ability to enforce them.
+          </p>
+          <a href="https://www.copyright.gov" class="bubble-btn" target="_blank">U.S. Copyright Office</a>
+        </div>
+      </div>
 
-      <h4>Trademark</h4>
-      <p>
-        Legal protection for names, logos, and brand identifiers. Used to protect your
-        artist name, logo, and brand from being used by others in confusing ways.
-      </p>
-
-      <h4>Copyright</h4>
-      <p>
-        Legal protection for original works of authorship, like songs and recordings.
-        Registration strengthens your rights and your ability to enforce them.
-      </p>
-
-      <p>
-        As you build out Royalty Runner, you can keep adding terms here and link back
-        to this page from any word that might confuse an artist.
-      </p>
     </section>
 
   </main>
 </div>
+
+<!-- BURGER MENU PANEL -->
+<div id="rr-menu-panel" class="rr-menu-panel">
+  <a href="index.html">Home</a>
+  <a href="profile.html">Profile</a>
+  <a href="my-catalog.html">My Catalog</a>
+  <a href="works.html">Works</a>
+  <a href="rights-and-registration.html">Rights</a>
+  <a href="manage.html">Manage</a>
+  <a href="law.html">Law</a>
+  <a href="contracts.html">Contracts</a>
+  <a href="documents.html">Documents</a>
+  <a href="protection.html">Protection</a>
+  <a href="glossary.html">Glossary</a>
+  <a href="the-game.html">The Game</a>
+  <a href="about-me.html">About Me</a>
+  <a href="export.html">Export</a>
+</div>
+
+<script>
+  // Burger menu toggle
+  document.getElementById("rr-menu-btn").addEventListener("click", () => {
+    document.getElementById("rr-menu-panel").classList.toggle("show");
+  });
+
+  // Dropdown logic
+  document.querySelectorAll(".dropdown-header").forEach(header => {
+    header.addEventListener("click", () => {
+      const content = header.nextElementSibling;
+      content.style.display = content.style.display === "block" ? "none" : "block";
+    });
+  });
+
+  // Search filter
+  document.getElementById("glossary-search").addEventListener("input", function () {
+    const term = this.value.toLowerCase();
+    document.querySelectorAll(".dropdown").forEach(drop => {
+      const header = drop.querySelector(".dropdown-header").textContent.toLowerCase();
+      drop.style.display = header.includes(term) ? "block" : "none";
+    });
+  });
+</script>
+
 </body>
 </html>
