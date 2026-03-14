@@ -2,47 +2,170 @@
 <html lang="en" data-page="works">
 <head>
   <meta charset="UTF-8" />
-  <title>Royalty Runner – Works & Protection Status</title>
+  <title>Royalty Runner – Works Manager</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="manifest" href="manifest.json" />
   <link rel="stylesheet" href="assets/css/style.css" />
+
+  <!-- Cursive Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      background: url("public/assets/img/royal-catalog.jpg") no-repeat center center fixed;
+      background-size: cover;
+      background-color: #000;
+    }
+
+    .overlay {
+      background: rgba(0, 0, 0, 0.78);
+      min-height: 100vh;
+      padding-bottom: 4rem;
+    }
+
+    .cursive {
+      font-family: 'Dancing Script', cursive;
+      letter-spacing: 1px;
+    }
+
+    .section-card {
+      background: rgba(0, 0, 0, 0.65);
+      border: 1px solid var(--copper);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      backdrop-filter: blur(4px);
+    }
+
+    /* Dropdowns */
+    .dropdown-header {
+      cursor: pointer;
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.5rem;
+      color: var(--copper);
+      margin-bottom: 0.5rem;
+    }
+
+    .dropdown-content {
+      display: none;
+      padding-left: 1rem;
+      border-left: 2px solid var(--copper);
+      margin-bottom: 1rem;
+      color: #ddd;
+    }
+
+    /* Bubble buttons */
+    .bubble-btn {
+      display: inline-block;
+      padding: 0.4rem 1rem;
+      background: var(--copper);
+      color: #000;
+      border-radius: 999px;
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.1rem;
+      text-decoration: none;
+      margin-top: 0.5rem;
+    }
+
+    /* Audio player */
+    audio {
+      width: 100%;
+      margin-top: 0.5rem;
+    }
+
+    /* Burger menu */
+    .rr-menu-btn {
+      position: absolute;
+      right: 1rem;
+      top: 1rem;
+      font-size: 2rem;
+      background: none;
+      border: none;
+      color: var(--copper);
+      cursor: pointer;
+      z-index: 9999;
+    }
+
+    .rr-menu-panel {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 260px;
+      height: 100vh;
+      background: rgba(0,0,0,0.92);
+      border-left: 2px solid var(--copper);
+      padding: 2rem 1rem;
+      transition: transform 0.3s ease;
+      transform: translateX(100%);
+      z-index: 9998;
+    }
+
+    .rr-menu-panel.show {
+      transform: translateX(0);
+    }
+
+    .rr-menu-panel a {
+      display: block;
+      margin-bottom: 1.2rem;
+      color: var(--copper);
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.5rem;
+      text-decoration: none;
+    }
+
+    /* Work card */
+    .work-card {
+      background: rgba(0,0,0,0.55);
+      border: 1px solid var(--copper);
+      padding: 1rem;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+    }
+  </style>
 </head>
+
 <body>
 <div class="overlay">
+
+  <!-- HEADER -->
   <header class="rr-header">
-    <h1>Your Works</h1>
-    <nav class="rr-nav">
+    <h1 class="cursive" style="font-size:3rem;">Your Works</h1>
+
+    <!-- BURGER MENU BUTTON -->
+    <button id="rr-menu-btn" class="rr-menu-btn">☰</button>
+
+    <nav class="rr-nav cursive">
       <a href="index.html">Home</a>
       <a href="profile.html">Profile</a>
-      <a href="catalog.html">Catalog</a>
-      <a href="protection.html">Protect Your Work</a>
+      <a href="rights-and-registration.html">Rights</a>
+      <a href="manage.html">Manage</a>
+      <a href="law.html">Law</a>
       <a href="glossary.html">Glossary</a>
     </nav>
   </header>
 
   <main class="rr-main">
 
-    <section class="catalog-card">
-      <h2>Works & Protection Overview</h2>
+    <!-- INTRO -->
+    <section class="section-card">
+      <h2 class="cursive" style="font-size:2rem;">Works Dashboard</h2>
       <p>
-        This is where you keep every song and recording in order—creative details plus protection status.
-        When you’re not sure what a field means, the
-        <a href="glossary.html">Glossary</a>
-        explains it in plain language.
+        This is your complete creative vault — every song, beat, composition, and recording you’ve made.
+        Upload audio, track protection status, store metadata, and share your work instantly.
       </p>
     </section>
 
-    <!-- NEW WORK FORM (static for now; you can wire IndexedDB later) -->
-    <section class="catalog-card">
-      <h3>Add a Work</h3>
+    <!-- ADD WORK FORM -->
+    <section class="section-card">
+      <h3 class="cursive" style="font-size:1.8rem;">Add a Work</h3>
+
       <form class="rr-form">
-        <label>
-          Title
+
+        <label>Title
           <input type="text" name="title" placeholder="Song or project title" />
         </label>
 
-        <label>
-          Role
+        <label>Role
           <select name="role">
             <option>Artist</option>
             <option>Writer</option>
@@ -51,83 +174,98 @@
           </select>
         </label>
 
-        <label>
-          ISRC (Recording)
+        <label>Upload Audio File
+          <input type="file" name="audio" accept="audio/*" />
+        </label>
+
+        <label>ISRC (Recording)
           <input type="text" name="isrc" placeholder="If assigned" />
         </label>
 
-        <label>
-          ISWC (Composition)
+        <label>ISWC (Composition)
           <input type="text" name="iswc" placeholder="If assigned" />
         </label>
 
-        <label>
-          PRO Work ID
+        <label>PRO Work ID
           <input type="text" name="pro_id" placeholder="From ASCAP/BMI/etc." />
         </label>
 
-        <label>
-          MLC / Mechanical ID
+        <label>MLC / Mechanical ID
           <input type="text" name="mlc_id" placeholder="If available" />
         </label>
 
-        <label>
-          Release Date
+        <label>Release Date
           <input type="date" name="release_date" />
         </label>
 
-        <label>
-          Notes
+        <label>Notes
           <textarea name="notes" rows="3" placeholder="Splits, collaborators, special terms"></textarea>
         </label>
 
-        <h4>Protection Status</h4>
+        <h4 class="cursive" style="font-size:1.4rem;">Protection Status</h4>
 
-        <label>
-          <input type="checkbox" name="pro_registered" />
-          Registered with PRO
-        </label><br/>
+        <label><input type="checkbox" name="pro_registered" /> Registered with PRO</label><br/>
+        <label><input type="checkbox" name="mechanical_registered" /> Registered with MLC</label><br/>
+        <label><input type="checkbox" name="copyright_registered" /> Copyright Registered</label><br/>
+        <label><input type="checkbox" name="neighboring_registered" /> SoundExchange Registered</label><br/>
+        <label><input type="checkbox" name="split_sheet" /> Split Sheet Completed</label><br/>
 
-        <label>
-          <input type="checkbox" name="mechanical_registered" />
-          Registered with mechanical agency (like The MLC)
-        </label><br/>
-
-        <label>
-          <input type="checkbox" name="copyright_registered" />
-          Copyright registered
-        </label><br/>
-
-        <label>
-          <input type="checkbox" name="neighboring_registered" />
-          Registered with SoundExchange / neighboring rights org
-        </label><br/>
-
-        <label>
-          <input type="checkbox" name="split_sheet" />
-          Split sheet completed and saved
-        </label><br/>
-
-        <button type="button" class="button">Save Work (Local)</button>
+        <button type="button" class="bubble-btn">Save Work</button>
       </form>
     </section>
 
-    <!-- WORKS LIST (static placeholder; you’ll wire with JS/IndexedDB) -->
-    <section class="catalog-card">
-      <h3>Your Works</h3>
-      <p>This section will list your works with their protection status once wired to storage.</p>
-      <div class="rr-list-item">
-        <strong>Example Work:</strong> “Midnight Drive”<br/>
+    <!-- WORKS LIST -->
+    <section class="section-card">
+      <h3 class="cursive" style="font-size:1.8rem;">Your Works</h3>
+      <p>Your saved works will appear here once IndexedDB is wired in.</p>
+
+      <div class="work-card">
+        <strong class="cursive" style="font-size:1.4rem;">Midnight Drive</strong><br/>
         Role: Artist & Writer<br/>
-        PRO: Registered ✔<br/>
-        Mechanical: Registered ✔<br/>
-        Copyright: Not yet ❌<br/>
-        Neighboring Rights: Registered ✔<br/>
-        Split Sheet: Completed ✔
+        <audio controls src=""></audio>
+        <br/>
+        PRO: ✔ Mechanical: ✔ Copyright: ❌  
+        <br/>
+        Neighboring Rights: ✔ Split Sheet: ✔
+        <br/><br/>
+        <a class="bubble-btn" href="#">Share</a>
       </div>
     </section>
 
   </main>
 </div>
+
+<!-- BURGER MENU PANEL -->
+<div id="rr-menu-panel" class="rr-menu-panel">
+  <a href="index.html">Home</a>
+  <a href="profile.html">Profile</a>
+  <a href="my-catalog.html">My Catalog</a>
+  <a href="rights-and-registration.html">Rights</a>
+  <a href="manage.html">Manage</a>
+  <a href="law.html">Law</a>
+  <a href="contracts.html">Contracts</a>
+  <a href="documents.html">Documents</a>
+  <a href="protection.html">Protection</a>
+  <a href="glossary.html">Glossary</a>
+  <a href="the-game.html">The Game</a>
+  <a href="about-me.html">About Me</a>
+  <a href="export.html">Export</a>
+</div>
+
+<script>
+  // Burger menu toggle
+  document.getElementById("rr-menu-btn").addEventListener("click", () => {
+    document.getElementById("rr-menu-panel").classList.toggle("show");
+  });
+
+  // Dropdown logic
+  document.querySelectorAll(".dropdown-header").forEach(header => {
+    header.addEventListener("click", () => {
+      const content = header.nextElementSibling;
+      content.style.display = content.style.display === "block" ? "none" : "block";
+    });
+  });
+</script>
+
 </body>
 </html>
