@@ -37,7 +37,6 @@
       backdrop-filter: blur(4px);
     }
 
-    /* Search bar */
     #glossary-search {
       width: 100%;
       padding: 0.7rem;
@@ -48,37 +47,70 @@
       margin-bottom: 1rem;
     }
 
-    /* Dropdowns */
+    .dropdown {
+      margin-bottom: 1rem;
+    }
+
     .dropdown-header {
       cursor: pointer;
       font-family: 'Dancing Script', cursive;
       font-size: 1.6rem;
       color: var(--copper);
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .dropdown-header span.term-label {
+      font-size: 0.9rem;
+      color: #aaa;
+      font-family: system-ui, sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
     }
 
     .dropdown-content {
       display: none;
       padding-left: 1rem;
       border-left: 2px solid var(--copper);
-      margin-bottom: 1rem;
+      margin-bottom: 0.5rem;
       color: #ddd;
+      font-size: 0.95rem;
     }
 
-    /* Bubble buttons */
+    .dropdown-content p {
+      margin-bottom: 0.4rem;
+    }
+
+    .tag-row {
+      margin-top: 0.4rem;
+      font-size: 0.8rem;
+      color: #bbb;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 0.1rem 0.5rem;
+      border-radius: 999px;
+      border: 1px solid var(--copper);
+      margin-right: 0.3rem;
+      margin-top: 0.2rem;
+    }
+
     .bubble-btn {
       display: inline-block;
-      padding: 0.4rem 1rem;
+      padding: 0.35rem 0.9rem;
       background: var(--copper);
       color: #000;
       border-radius: 999px;
-      font-family: 'Dancing Script', cursive;
-      font-size: 1.1rem;
+      font-family: 'Dancing+Script', cursive;
+      font-size: 1.05rem;
       text-decoration: none;
-      margin-top: 0.5rem;
+      margin-top: 0.4rem;
+      margin-right: 0.4rem;
     }
 
-    /* Burger menu */
     .rr-menu-btn {
       position: absolute;
       right: 1rem;
@@ -117,17 +149,43 @@
       font-size: 1.5rem;
       text-decoration: none;
     }
+
+    .glossary-section-title {
+      font-size: 1.4rem;
+      margin: 1rem 0 0.5rem;
+      color: var(--copper);
+      font-family: 'Dancing Script', cursive;
+    }
+
+    .pill-nav {
+      margin-top: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .pill-nav button {
+      background: transparent;
+      border: 1px solid var(--copper);
+      color: var(--copper);
+      border-radius: 999px;
+      padding: 0.2rem 0.7rem;
+      margin: 0.1rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+
+    .pill-nav button.active {
+      background: var(--copper);
+      color: #000;
+    }
   </style>
 </head>
 
 <body>
 <div class="overlay">
 
-  <!-- HEADER -->
   <header class="rr-header">
     <h1 class="cursive" style="font-size:3rem;">Royalty Runner Glossary</h1>
 
-    <!-- BURGER MENU BUTTON -->
     <button id="rr-menu-btn" class="rr-menu-btn">☰</button>
 
     <nav class="rr-nav cursive">
@@ -141,126 +199,523 @@
 
   <main class="rr-main">
 
-    <!-- INTRO -->
     <section class="section-card">
       <h2 class="cursive" style="font-size:2rem;">Learn the Language</h2>
       <p>
-        This glossary is your personal translator for the music industry.  
-        Every confusing term, every legal phrase, every royalty type — broken down in plain,
-        artist‑friendly language.
+        This is your private dictionary for the music business. Every contract term, royalty type,
+        and legal phrase translated into plain, artist‑first language.
       </p>
       <p>
-        Use the search bar below to instantly filter terms.
+        Search by keyword, or tap a term to expand it. Use this page while you’re in the studio,
+        signing deals, or registering works.
       </p>
 
-      <input type="search" id="glossary-search" placeholder="Search terms (e.g. ISRC, PRO, publishing)">
+      <input type="search" id="glossary-search" placeholder="Search terms (e.g. ISRC, PRO, 360 deal, sync, master)">
+      <div class="pill-nav" id="glossary-filters">
+        <button data-filter="all" class="active">All</button>
+        <button data-filter="royalties">Royalties</button>
+        <button data-filter="contracts">Contracts</button>
+        <button data-filter="rights">Rights</button>
+        <button data-filter="business">Business</button>
+        <button data-filter="codes">Codes & IDs</button>
+      </div>
     </section>
 
-    <!-- TERMS -->
     <section class="section-card" id="glossary-list">
 
-      <!-- PERFORMANCE ROYALTY -->
-      <div class="dropdown">
-        <div class="dropdown-header">Performance Royalty</div>
+      <div class="glossary-section-title">Royalties & Money Flows</div>
+
+      <div class="dropdown" data-tags="royalties rights">
+        <div class="dropdown-header">
+          Performance Royalty
+          <span class="term-label">Royalties</span>
+        </div>
         <div class="dropdown-content">
           <p>
-            Money earned when your music is performed publicly — radio, TV, live venues,
-            streaming, bars, restaurants, and more.
+            Money earned when your music is performed publicly — radio, TV, live venues, streaming,
+            bars, restaurants, gyms, and more.
           </p>
-          <p>Collected by PROs:</p>
+          <p>
+            These royalties are paid to songwriters and publishers, not the master owner. They are
+            tracked and collected by Performance Rights Organizations (PROs).
+          </p>
+          <p><strong>Collected by:</strong></p>
           <a href="https://www.ascap.com" class="bubble-btn" target="_blank">ASCAP</a>
           <a href="https://www.bmi.com" class="bubble-btn" target="_blank">BMI</a>
           <a href="https://www.sesac.com" class="bubble-btn" target="_blank">SESAC</a>
+          <div class="tag-row">
+            <span class="tag">Songwriter</span>
+            <span class="tag">Publisher</span>
+            <span class="tag">PRO</span>
+          </div>
         </div>
       </div>
 
-      <!-- MECHANICAL ROYALTY -->
-      <div class="dropdown">
-        <div class="dropdown-header">Mechanical Royalty</div>
+      <div class="dropdown" data-tags="royalties rights">
+        <div class="dropdown-header">
+          Mechanical Royalty
+          <span class="term-label">Royalties</span>
+        </div>
         <div class="dropdown-content">
           <p>
-            Earned when your music is reproduced — streaming, downloads, CDs, vinyl.
+            Money earned when your composition is reproduced — streaming, downloads, CDs, vinyl,
+            ringtones, and more.
+          </p>
+          <p>
+            In the U.S., digital mechanicals from interactive streaming services are collected and
+            paid out by The Mechanical Licensing Collective (The MLC).
           </p>
           <a href="https://www.themlc.com" class="bubble-btn" target="_blank">The MLC</a>
+          <div class="tag-row">
+            <span class="tag">Composition</span>
+            <span class="tag">Streaming</span>
+            <span class="tag">Mechanical</span>
+          </div>
         </div>
       </div>
 
-      <!-- PUBLISHING -->
-      <div class="dropdown">
-        <div class="dropdown-header">Publishing</div>
+      <div class="dropdown" data-tags="royalties rights neighboring">
+        <div class="dropdown-header">
+          Neighboring Rights
+          <span class="term-label">Royalties</span>
+        </div>
         <div class="dropdown-content">
           <p>
-            The business side of your songwriting rights.  
-            Publishers register your works, collect royalties, and protect your compositions.
+            Royalties paid to performers and master owners when sound recordings are played
+            publicly in certain territories (radio, TV, public venues).
           </p>
-          <a href="manage.html" class="bubble-btn">Publishing Tools</a>
-        </div>
-      </div>
-
-      <!-- NEIGHBORING RIGHTS -->
-      <div class="dropdown">
-        <div class="dropdown-header">Neighboring Rights</div>
-        <div class="dropdown-content">
           <p>
-            Royalties paid to performers and master owners when recordings are played publicly
-            in certain territories.
+            In the U.S., digital performance royalties for sound recordings (like Pandora, SiriusXM)
+            are collected by SoundExchange.
           </p>
           <a href="https://www.soundexchange.com" class="bubble-btn" target="_blank">SoundExchange</a>
+          <div class="tag-row">
+            <span class="tag">Master Owner</span>
+            <span class="tag">Performer</span>
+            <span class="tag">Digital Radio</span>
+          </div>
         </div>
       </div>
 
-      <!-- PRO -->
-      <div class="dropdown">
-        <div class="dropdown-header">PRO (Performance Rights Organization)</div>
+      <div class="dropdown" data-tags="royalties business">
+        <div class="dropdown-header">
+          Sync (Synchronization) License
+          <span class="term-label">Royalties</span>
+        </div>
         <div class="dropdown-content">
           <p>
-            Organizations that collect performance royalties for songwriters and publishers.
+            A license that allows your music to be used with visual media — film, TV, ads, games,
+            trailers, YouTube, etc.
           </p>
-          <a href="rights-and-registration.html" class="bubble-btn">See All PROs</a>
-        </div>
-      </div>
-
-      <!-- ISRC -->
-      <div class="dropdown">
-        <div class="dropdown-header">ISRC</div>
-        <div class="dropdown-content">
           <p>
-            International Standard Recording Code — the unique ID for each sound recording.
+            Sync deals usually involve an upfront fee and may also generate performance royalties
+            when the content is broadcast.
           </p>
-          <a href="https://www.usisrc.org" class="bubble-btn" target="_blank">Official ISRC Site</a>
+          <a href="manage.html" class="bubble-btn">Manage Sync Opportunities</a>
+          <div class="tag-row">
+            <span class="tag">Film & TV</span>
+            <span class="tag">Advertising</span>
+            <span class="tag">Licensing</span>
+          </div>
         </div>
       </div>
 
-      <!-- ISWC -->
-      <div class="dropdown">
-        <div class="dropdown-header">ISWC</div>
+      <div class="dropdown" data-tags="royalties business">
+        <div class="dropdown-header">
+          Advance
+          <span class="term-label">Business</span>
+        </div>
         <div class="dropdown-content">
           <p>
-            International Standard Musical Work Code — the unique ID for the composition.
+            Money paid to you upfront by a label, publisher, or distributor, usually recoupable
+            from your future royalties.
           </p>
-        </div>
-      </div>
-
-      <!-- SPLIT SHEET -->
-      <div class="dropdown">
-        <div class="dropdown-header">Split Sheet</div>
-        <div class="dropdown-content">
           <p>
-            A document listing all contributors to a song and their ownership percentages.
+            An advance is not free money — it’s a loan against your future income. You may not see
+            additional royalties until the advance is fully recouped.
           </p>
-          <a href="contracts.html" class="bubble-btn">Split Sheet Template</a>
+          <div class="tag-row">
+            <span class="tag">Recoupment</span>
+            <span class="tag">Label</span>
+            <span class="tag">Publisher</span>
+          </div>
         </div>
       </div>
 
-      <!-- COPYRIGHT -->
-      <div class="dropdown">
-        <div class="dropdown-header">Copyright</div>
+      <div class="glossary-section-title">Rights & Ownership</div>
+
+      <div class="dropdown" data-tags="rights business">
+        <div class="dropdown-header">
+          Copyright
+          <span class="term-label">Rights</span>
+        </div>
         <div class="dropdown-content">
           <p>
-            Legal protection for original works of authorship.  
-            Registration strengthens your rights and your ability to enforce them.
+            Legal protection for original works of authorship — including songs, lyrics, recordings,
+            artwork, and more.
+          </p>
+          <p>
+            In many countries, copyright exists automatically when the work is created, but
+            registration strengthens your legal position and your ability to enforce your rights.
           </p>
           <a href="https://www.copyright.gov" class="bubble-btn" target="_blank">U.S. Copyright Office</a>
+          <div class="tag-row">
+            <span class="tag">Legal</span>
+            <span class="tag">Registration</span>
+            <span class="tag">Ownership</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dropdown" data-tags="rights business">
+        <div class="dropdown-header">
+          Master Rights
+          <span class="term-label">Rights</span>
+        </div>
+        <div class="dropdown-content">
+          <p>
+            Ownership of the actual sound recording — the final audio file. Whoever owns the master
+            controls how the recording is used and licensed.
+          </p>
+          <p>
+            Labels often own masters in traditional deals. In independent setups, the artist or
+            their company may own the masters.
+          </p>
+          <div class="tag-row">
+            <span class="tag">Sound Recording</span>
+            <span class="tag">Label</span>
+            <span class="tag">Ownership</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dropdown" data-tags="rights business">
+        <div class="dropdown-header">
+          Publishing Rights
+          <span class="term-label">Rights</span>
+        </div>
+        <div class="dropdown-content">
+          <p>
+            Rights tied to the underlying composition — melody, lyrics, and structure of the song.
+          </p>
+          <p>
+            Publishers help register works, collect royalties, and enforce your rights. You can
+            self‑publish or sign with a publisher.
+          </p>
+          <a href="manage.html" class="bubble-btn">Publishing Tools</a>
+          <div class="tag-row">
+            <span class="tag">Songwriting</span>
+            <span class="tag">PRO</span>
+            <span class="tag">Publisher</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dropdown" data-tags="rights business contracts">
+        <div class="dropdown-header">
+          Work for Hire
+          <span class="term-label">Contracts</span>
+        </div>
+        <div class="dropdown-content">
+          <p>
+            A legal arrangement where you are paid to create something, but the person or company
+            paying you owns the copyright from the start.
+          </p>
+          <p>
+            Common in production, custom compositions, and some session work. Read these clauses
+            carefully — you may be giving up ownership.
+          </p>
+          <a href="contracts.html" class="bubble-btn">Review Contract Templates</a>
+          <div class="tag-row">
+            <span class="tag">Ownership</span>
+            <span class="tag">Session Work</span>
+            <span class="tag">Legal</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="glossary-section-title">Codes, IDs & Registrations</div>
+
+      <div class="dropdown" data-tags="codes rights">
+        <div class="dropdown-header">
+          ISRC (International Standard Recording Code)
+          <span class="term-label">Codes & IDs</span>
+        </div>
+        <div class="dropdown-content">
+          <p>
+            A unique identifier for each sound recording. Think of it as a serial number for the
+            master.
+          </p>
+          <p>
+            ISRCs help track plays, sales, and royalties for specific recordings across platforms.
+          </p>
+          <a href="https://www.usisrc.org" class="bubble-btn" target="_blank">Official ISRC Site</a>
+          <div class="tag-row">
+            <span class="tag">Master</span>
+            <span class="tag">Tracking</span>
+            <span class="tag">Metadata</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dropdown" data-tags="codes rights">
+        <div class="dropdown-header">
+          ISWC (International Standard Musical Work Code)
+          <span class="term-label">Codes & IDs</span>
+        </div>
+        <div class="dropdown-content">
+          <p>
+            A unique identifier for the composition (the song itself), separate from any specific
+            recording.
+          </p>
+          <p>
+            Used by PROs and publishers to track and pay royalties for the underlying work.
+          </p>
+          <div class="tag-row">
+            <span class="tag">Composition</span>
+            <span class="tag">PRO</span>
+            <span class="tag">Metadata</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dropdown" data-tags="codes business">
+        <div class="dropdown-header">
+          IPI / CAE Number
+          <span class="term-label">Codes & IDs</span>
+        </div>
+        <div class="dropdown-content">
+          <p>
+            A unique number assigned to songwriters and publishers by PROs. It identifies you as a
+            rights holder worldwide.
+          </p>
+          <p>
+            You’ll see this on your PRO account (ASCAP, BMI, SESAC, etc.).
+          </p>
+          <a href="rights-and-registration.html" class="bubble-btn">Check PRO Setup</a>
+          <div class="tag-row">
+            <span class="tag">Songwriter</span>
+            <span class="tag">Publisher</span>
+            <span class="tag">PRO</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dropdown" data-tags="codes business">
+        <div class="dropdown-header">
+          UPC / EAN
+          <span class="term-label">Codes & IDs</span>
+        </div>
+        <div class="dropdown-content">
+          <p>
+            Barcodes used to identify releases (albums, singles, EPs) in stores and digital
+            platforms.
+          </p>
+          <p>
+            Distributors often assign these when you upload your release.
+          </p>
+          <div class="tag-row">
+            <span class="tag">Release</span>
+            <span class="tag">Distribution</span>
+            <span class="tag">Metadata</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="glossary-section-title">Contracts & Deal Types</div>
+
+      <div class="dropdown" data-tags="contracts business">
+        <div class="dropdown-header">
+          Split Sheet
+          <span class="term-label">Contracts</span>
+        </div>
+        <div class="dropdown-content">
+          <p>
+            A document listing all contributors to a song and their ownership percentages for the
+            composition.
+          </p>
+          <p>
+            This should be filled out as soon as the song is finished — before anyone forgets who
+            did what.
+          </p>
+          <a href="contracts.html" class="bubble-btn">Split Sheet Template</a>
+          <div class="tag-row">
+            <span class="tag">Songwriting</span>
+            <span class="tag">Ownership</span>
+            <span class="tag">Collaboration</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dropdown" data-tags="contracts business">
+        <div class="dropdown-header">
+          360 Deal
+          <span class="term-label">Contracts</span>
+        </div>
+        <div class="dropdown-content">
+          <p>
+            A record deal where the label takes a percentage of multiple income streams — not just
+            recorded music, but also touring, merch, brand deals, and more.
+          </p>
+          <p>
+            These deals can provide big support but can also be very expensive in terms of control
+            and revenue share.
+          </p>
+          <div class="tag-row">
+            <span class="tag">Label</span>
+            <span class="tag">Touring</span>
+            <span class="tag">Merch</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dropdown" data-tags="contracts business">
+        <div class="dropdown-header">
+          Distribution Deal
+          <span class="term-label">Contracts</span>
+        </div>
+        <div class="dropdown-content">
+          <p>
+            An agreement where a distributor gets your music onto platforms (Spotify, Apple Music,
+            etc.) and pays you a share of revenue.
+          </p>
+          <p>
+            Some distributors are flat‑fee, some take a percentage, some offer label‑style services.
+          </p>
+          <div class="tag-row">
+            <span class="tag">DSPs</span>
+            <span class="tag">Revenue Share</span>
+            <span class="tag">Indie</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dropdown" data-tags="contracts business">
+        <div class="dropdown-header">
+          Producer Agreement
+          <span class="term-label">Contracts</span>
+        </div>
+        <div class="dropdown-content">
+          <p>
+            A contract that defines how a producer is paid (fee, points/percentage, or both) and
+            what rights they have in the master and composition.
+          </p>
+          <p>
+            Often includes ownership splits, recoupment terms, and credit language.
+          </p>
+          <a href="contracts.html" class="bubble-btn">Producer Contract Template</a>
+          <div class="tag-row">
+            <span class="tag">Points</span>
+            <span class="tag">Master</span>
+            <span class="tag">Collaboration</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dropdown" data-tags="contracts business">
+        <div class="dropdown-header">
+          Management Agreement
+          <span class="term-label">Contracts</span>
+        </div>
+        <div class="dropdown-content">
+          <p>
+            A contract between an artist and a manager that defines responsibilities, commission
+            percentage, and length of the relationship.
+          </p>
+          <p>
+            Managers typically earn a percentage of the artist’s gross or net income.
+          </p>
+          <div class="tag-row">
+            <span class="tag">Manager</span>
+            <span class="tag">Commission</span>
+            <span class="tag">Career</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="glossary-section-title">Business & Admin</div>
+
+      <div class="dropdown" data-tags="business">
+        <div class="dropdown-header">
+          Recoupment
+          <span class="term-label">Business</span>
+        </div>
+        <div class="dropdown-content">
+          <p>
+            The process where a label, publisher, or company recovers money they advanced to you
+            from your future royalties.
+          </p>
+          <p>
+            Until recoupment is complete, you may not see additional royalty payments.
+          </p>
+          <div class="tag-row">
+            <span class="tag">Advance</span>
+            <span class="tag">Royalties</span>
+            <span class="tag">Deals</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dropdown" data-tags="business">
+        <div class="dropdown-header">
+          Backend / Points
+          <span class="term-label">Business</span>
+        </div>
+        <div class="dropdown-content">
+          <p>
+            “Points” usually refer to a percentage of revenue from a master recording (e.g., a
+            producer getting 3 points = 3% of certain income).
+          </p>
+          <p>
+            Always read how “points” are defined in the contract — gross vs net, which income
+            streams, and after what recoupment.
+          </p>
+          <div class="tag-row">
+            <span class="tag">Producer</span>
+            <span class="tag">Master</span>
+            <span class="tag">Royalties</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dropdown" data-tags="business rights">
+        <div class="dropdown-header">
+          Territory
+          <span class="term-label">Business</span>
+        </div>
+        <div class="dropdown-content">
+          <p>
+            The geographic area where a contract applies (e.g., “World,” “North America,” “EU”).
+          </p>
+          <p>
+            A deal limited to one territory may leave you free to sign other deals elsewhere.
+          </p>
+          <div class="tag-row">
+            <span class="tag">Contracts</span>
+            <span class="tag">Licensing</span>
+            <span class="tag">Global</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dropdown" data-tags="business rights">
+        <div class="dropdown-header">
+          Term
+          <span class="term-label">Business</span>
+        </div>
+        <div class="dropdown-content">
+          <p>
+            How long a contract lasts. Can be a fixed number of years, album cycles, or options
+            controlled by the label/publisher.
+          </p>
+          <p>
+            Term + territory + rights = the core of what you’re giving up or sharing.
+          </p>
+          <div class="tag-row">
+            <span class="tag">Duration</span>
+            <span class="tag">Options</span>
+            <span class="tag">Deals</span>
+          </div>
         </div>
       </div>
 
@@ -269,7 +724,6 @@
   </main>
 </div>
 
-<!-- BURGER MENU PANEL -->
 <div id="rr-menu-panel" class="rr-menu-panel">
   <a href="index.html">Home</a>
   <a href="profile.html">Profile</a>
@@ -288,12 +742,10 @@
 </div>
 
 <script>
-  // Burger menu toggle
   document.getElementById("rr-menu-btn").addEventListener("click", () => {
     document.getElementById("rr-menu-panel").classList.toggle("show");
   });
 
-  // Dropdown logic
   document.querySelectorAll(".dropdown-header").forEach(header => {
     header.addEventListener("click", () => {
       const content = header.nextElementSibling;
@@ -301,13 +753,35 @@
     });
   });
 
-  // Search filter
-  document.getElementById("glossary-search").addEventListener("input", function () {
-    const term = this.value.toLowerCase();
-    document.querySelectorAll(".dropdown").forEach(drop => {
-      const header = drop.querySelector(".dropdown-header").textContent.toLowerCase();
-      drop.style.display = header.includes(term) ? "block" : "none";
+  const searchInput = document.getElementById("glossary-search");
+  const filterBar = document.getElementById("glossary-filters");
+  const dropdowns = Array.from(document.querySelectorAll(".dropdown"));
+
+  function applyFilters() {
+    const term = searchInput.value.toLowerCase();
+    const activeFilterBtn = filterBar.querySelector("button.active");
+    const filterTag = activeFilterBtn ? activeFilterBtn.dataset.filter : "all";
+
+    dropdowns.forEach(drop => {
+      const headerText = drop.querySelector(".dropdown-header").textContent.toLowerCase();
+      const tags = (drop.dataset.tags || "").toLowerCase();
+
+      const matchesSearch = !term || headerText.includes(term) || tags.includes(term);
+      const matchesFilter = filterTag === "all" || tags.includes(filterTag);
+
+      drop.style.display = matchesSearch && matchesFilter ? "block" : "none";
     });
+  }
+
+  searchInput.addEventListener("input", applyFilters);
+
+  filterBar.addEventListener("click", (e) => {
+    const btn = e.target.closest("button[data-filter]");
+    if (!btn) return;
+
+    filterBar.querySelectorAll("button").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    applyFilters();
   });
 </script>
 
