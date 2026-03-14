@@ -1,24 +1,27 @@
-// NEW CATALOG JS — CLEAN, MODULAR, CONNECTED
+// RIGHTS & REGISTRATION ENGINE — CLEAN, MODULAR, CINEMATIC
 
 document.addEventListener("DOMContentLoaded", () => {
-  const listEl = document.getElementById("catalog-list");
-  const lettersEl = document.getElementById("catalog-letters");
-  const searchInput = document.getElementById("catalog-search");
 
-  const popup = document.getElementById("catalog-popup");
-  const popupTitle = document.getElementById("popup-title");
-  const popupLink = document.getElementById("popup-link");
-  const popupOutput = document.getElementById("popup-autofill");
-  const popupCopy = document.getElementById("popup-copy");
-  const popupClose = document.getElementById("catalog-popup-close");
+  // ELEMENTS
+  const listEl = document.getElementById("rr-directory-list");
+  const lettersEl = document.getElementById("rr-directory-letters");
+  const searchInput = document.getElementById("rr-directory-search");
 
-  // Pull catalog data from app.js
-  const entries = window.getCatalogEntries();
+  const popup = document.getElementById("rr-directory-popup");
+  const popupTitle = document.getElementById("rr-popup-title");
+  const popupLink = document.getElementById("rr-popup-link");
+  const popupOutput = document.getElementById("rr-popup-autofill");
+  const popupCopy = document.getElementById("rr-popup-copy");
+  const popupClose = document.getElementById("rr-popup-close");
 
-  renderLetters(entries);
-  renderCatalog(entries);
+  // LOAD DIRECTORY DATA
+  const entries = window.getCatalogEntries(); // still using your existing data source
 
-  // SEARCH
+  // INITIAL RENDER
+  renderLetterBar(entries);
+  renderDirectory(entries);
+
+  // SEARCH FILTER
   searchInput.addEventListener("input", () => {
     const q = searchInput.value.toLowerCase();
     const filtered = entries.filter((e) =>
@@ -26,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
       e.type.toLowerCase().includes(q) ||
       e.region.toLowerCase().includes(q)
     );
-    renderCatalog(filtered);
+    renderDirectory(filtered);
   });
 
   // CLOSE POPUP
@@ -35,28 +38,30 @@ document.addEventListener("DOMContentLoaded", () => {
   // COPY BUTTON
   popupCopy.addEventListener("click", () => {
     navigator.clipboard.writeText(popupOutput.value);
-    alert("Copied!");
+    alert("Copied to clipboard");
   });
 
-  // RENDER LETTER BUTTONS
-  function renderLetters(entries) {
+  // BUILD LETTER BAR
+  function renderLetterBar(entries) {
     const letters = [...new Set(entries.map(e => e.name[0].toUpperCase()))].sort();
     lettersEl.innerHTML = "";
 
     letters.forEach(letter => {
       const btn = document.createElement("button");
       btn.textContent = letter;
-      btn.className = "letter-button";
+      btn.className = "rr-letter-button";
+
       btn.addEventListener("click", () => {
         const target = document.querySelector(`[data-letter="${letter}"]`);
         if (target) target.scrollIntoView({ behavior: "smooth" });
       });
+
       lettersEl.appendChild(btn);
     });
   }
 
-  // RENDER CATALOG CARDS
-  function renderCatalog(entries) {
+  // BUILD DIRECTORY CARDS
+  function renderDirectory(entries) {
     listEl.innerHTML = "";
     let currentLetter = null;
 
@@ -64,18 +69,22 @@ document.addEventListener("DOMContentLoaded", () => {
       .slice()
       .sort((a, b) => a.name.localeCompare(b.name))
       .forEach(entry => {
+
         const letter = entry.name[0].toUpperCase();
 
+        // NEW LETTER HEADER
         if (letter !== currentLetter) {
           currentLetter = letter;
           const h2 = document.createElement("h2");
           h2.textContent = letter;
           h2.dataset.letter = letter;
+          h2.className = "rr-letter-header";
           listEl.appendChild(h2);
         }
 
+        // CARD
         const card = document.createElement("article");
-        card.className = "catalog-card";
+        card.className = "rr-directory-card";
 
         card.innerHTML = `
           <h3>${entry.name}</h3>
@@ -85,11 +94,11 @@ document.addEventListener("DOMContentLoaded", () => {
           <p><strong>Who should sign up:</strong> ${entry.who}</p>
           <p><strong>What you need:</strong> ${entry.requirements}</p>
 
-          <button class="button-secondary show-info" data-name="${entry.name}">
+          <button class="rr-button show-info" data-name="${entry.name}">
             Show My Info
           </button>
 
-          <a href="${entry.url}" target="_blank" class="catalog-link">
+          <a href="${entry.url}" target="_blank" class="rr-directory-link">
             Visit official site →
           </a>
         `;
@@ -97,17 +106,19 @@ document.addEventListener("DOMContentLoaded", () => {
         listEl.appendChild(card);
       });
 
-    // HOOK UP "SHOW MY INFO" BUTTONS
+    // HOOK UP POPUP BUTTONS
     document.querySelectorAll(".show-info").forEach(btn => {
       btn.addEventListener("click", async () => {
         const name = btn.dataset.name;
 
+        // LOAD PROFILE + WORKS
         const profile = await window.dbGet("profile", "artist");
         const works = await window.dbGetAll("works");
         const latest = works[works.length - 1];
 
         const entry = entries.find(e => e.name === name);
 
+        // POPUP CONTENT
         popupTitle.textContent = name;
         popupLink.href = entry.url;
 
