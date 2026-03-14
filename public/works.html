@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-page="works">
+<html lang="en" data-page="works-studio">
 <head>
   <meta charset="UTF-8" />
   <title>Royalty Runner – Works Studio</title>
@@ -7,14 +7,114 @@
   <link rel="manifest" href="manifest.json" />
   <link rel="stylesheet" href="assets/css/style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600&display=swap" rel="stylesheet">
-  <!-- keep your existing styles here -->
+
+  <style>
+    body {
+      background: url("public/assets/img/royal-catalog.jpg") no-repeat center center fixed;
+      background-size: cover;
+      background-color: #000;
+    }
+
+    .overlay {
+      background: rgba(0, 0, 0, 0.78);
+      min-height: 100vh;
+      padding-bottom: 4rem;
+    }
+
+    .cursive {
+      font-family: 'Dancing Script', cursive;
+      letter-spacing: 1px;
+    }
+
+    .section-card {
+      background: rgba(0, 0, 0, 0.65);
+      border: 1px solid var(--copper);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      backdrop-filter: blur(4px);
+    }
+
+    .bubble-btn {
+      display: inline-block;
+      padding: 0.4rem 1rem;
+      background: var(--copper);
+      color: #000;
+      border-radius: 999px;
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.1rem;
+      text-decoration: none;
+      margin-top: 0.5rem;
+      cursor: pointer;
+    }
+
+    .rr-menu-btn {
+      position: absolute;
+      right: 1rem;
+      top: 1rem;
+      font-size: 2rem;
+      background: none;
+      border: none;
+      color: var(--copper);
+      cursor: pointer;
+      z-index: 9999;
+    }
+
+    .rr-menu-panel {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 260px;
+      height: 100vh;
+      background: rgba(0,0,0,0.92);
+      border-left: 2px solid var(--copper);
+      padding: 2rem 1rem;
+      transition: transform 0.3s ease;
+      transform: translateX(100%);
+      z-index: 9998;
+    }
+
+    .rr-menu-panel.show {
+      transform: translateX(0);
+    }
+
+    .rr-menu-panel a {
+      display: block;
+      margin-bottom: 1.2rem;
+      color: var(--copper);
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.5rem;
+      text-decoration: none;
+    }
+
+    .work-card {
+      background: rgba(0,0,0,0.55);
+      border: 1px solid var(--copper);
+      padding: 1rem;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+    }
+
+    .studio-track-row {
+      background: rgba(0,0,0,0.5);
+      border: 1px solid var(--copper);
+      border-radius: 8px;
+      padding: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+
+    audio {
+      width: 100%;
+      margin-top: 0.5rem;
+    }
+  </style>
 </head>
 
 <body>
 <div class="overlay">
 
   <header class="rr-header">
-    <h1 class="cursive" style="font-size:3rem;">Studio – Your Works</h1>
+    <h1 class="cursive" style="font-size:3rem;">Works Studio</h1>
 
     <button id="rr-menu-btn" class="rr-menu-btn">☰</button>
 
@@ -31,12 +131,14 @@
   <main class="rr-main">
 
     <section class="section-card">
-      <h2 class="cursive" style="font-size:2rem;">Works Studio</h2>
+      <h2 class="cursive" style="font-size:2rem;">Your Studio & Catalog</h2>
       <p>
-        Record, upload, edit, and manage your works. Everything is saved locally in your Royalty Runner studio.
+        Capture ideas, record takes, upload finished WAVs, and track protection status.
+        Every work you save here lives in your local Royalty Runner studio.
       </p>
     </section>
 
+    <!-- CREATE / EDIT WORK -->
     <section class="section-card">
       <h3 class="cursive" style="font-size:1.8rem;">Create / Edit Work</h3>
 
@@ -56,11 +158,10 @@
           </select>
         </label>
 
-        <label>Upload WAV Audio File
+        <label>Upload Audio File (WAV or recorded)
           <input type="file" name="audio" accept=".wav,audio/*" />
         </label>
-
-        <!-- record button will be injected by JS -->
+        <!-- Record button injected by works-studio.js -->
 
         <label>ISRC
           <input type="text" name="isrc" />
@@ -99,6 +200,29 @@
       </form>
     </section>
 
+    <!-- STUDIO PLAYER SHELL (for layering / mixing module later) -->
+    <section class="section-card">
+      <h3 class="cursive" style="font-size:1.8rem;">Studio Player (Layers & Mix)</h3>
+      <p>
+        Load multiple audio files, balance levels, and build rough mixes. This is your in‑browser studio rack.
+      </p>
+
+      <input id="studio-file-input" type="file" accept="audio/*" multiple />
+
+      <div style="margin-top:1rem;">
+        Master Volume:
+        <input id="studio-master-volume" type="range" min="0" max="1" step="0.01" value="0.9" />
+      </div>
+
+      <div style="margin-top:1rem;">
+        <button id="studio-play" class="bubble-btn">Play All</button>
+        <button id="studio-stop" class="bubble-btn" style="background:#444;color:#fff;">Stop</button>
+      </div>
+
+      <div id="studio-tracks" style="margin-top:1rem;"></div>
+    </section>
+
+    <!-- WORKS LIST -->
     <section class="section-card">
       <h3 class="cursive" style="font-size:1.8rem;">Your Works (Studio + Catalog)</h3>
       <div id="works-list"></div>
@@ -125,6 +249,7 @@
 
 <script src="assets/js/db.js"></script>
 <script src="assets/js/works-studio.js"></script>
+<script src="assets/js/studio-ui.js" type="module"></script>
 
 <script>
   document.getElementById("rr-menu-btn").addEventListener("click", () => {
