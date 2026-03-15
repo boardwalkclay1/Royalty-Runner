@@ -1,5 +1,7 @@
 /* --------------------------------------------------
-   GLOBAL STYLE — COPPER × BLACK × CURSIVE × PRINT
+   ROYALTY RUNNER — GLOBAL STYLE SYSTEM
+   Copper × Black × Cursive × Print
+   (NO BACKGROUND IMAGES — HTML controls backgrounds)
 -------------------------------------------------- */
 
 @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:wght@300;400;600;700&display=swap');
@@ -11,48 +13,49 @@
 
   --copper: #b87333;
   --copper-light: #d28e5d;
+  --copper-dark: #8a5524;
 
   --border: #2a2a2a;
 
   --font-cursive: 'Great Vibes', cursive;
   --font-print: 'Inter', sans-serif;
+
+  --card-bg: rgba(0, 0, 0, 0.65);
+  --card-blur: blur(4px);
 }
+
+/* --------------------------------------------------
+   RESET
+-------------------------------------------------- */
 
 * {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
   margin: 0;
-  background: url("assets/img/royal-catalog.jpg") no-repeat center center fixed;
-  background-size: cover;
-  background-color: var(--bg);
+  background-color: var(--bg); /* HTML sets the image */
   color: var(--fg);
   font-family: var(--font-print);
+  line-height: 1.5;
 }
 
 /* --------------------------------------------------
    HEADERS
 -------------------------------------------------- */
 
-h1, h2, h3 {
+h1, h2, h3, h4 {
   font-family: var(--font-cursive);
   color: var(--copper);
   letter-spacing: 1px;
 }
 
-h1 {
-  font-size: 3rem;
-  margin-bottom: 0.25rem;
-}
-
-h2 {
-  font-size: 2.2rem;
-}
-
-h3 {
-  font-size: 1.6rem;
-}
+h1 { font-size: 3rem; margin-bottom: 0.25rem; }
+h2 { font-size: 2.2rem; margin-bottom: 0.5rem; }
+h3 { font-size: 1.6rem; margin-bottom: 0.5rem; }
+h4 { font-size: 1.3rem; margin-bottom: 0.4rem; }
 
 /* --------------------------------------------------
    NAVIGATION
@@ -70,6 +73,7 @@ h3 {
   font-weight: 600;
   text-decoration: none;
   font-family: var(--font-print);
+  transition: 0.2s ease;
 }
 
 .rr-nav a:hover {
@@ -77,11 +81,73 @@ h3 {
 }
 
 /* --------------------------------------------------
+   BURGER MENU
+-------------------------------------------------- */
+
+.rr-menu-btn {
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  font-size: 2rem;
+  background: none;
+  border: none;
+  color: var(--copper);
+  cursor: pointer;
+  z-index: 9999;
+}
+
+.rr-menu-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 260px;
+  height: 100vh;
+  background: rgba(0,0,0,0.92);
+  border-left: 2px solid var(--copper);
+  padding: 2rem 1rem;
+  transition: transform 0.3s ease;
+  transform: translateX(100%);
+  z-index: 9998;
+}
+
+.rr-menu-panel.show {
+  transform: translateX(0);
+}
+
+.rr-menu-panel a {
+  display: block;
+  margin-bottom: 1.2rem;
+  color: var(--copper-light);
+  font-family: var(--font-cursive);
+  font-size: 1.6rem;
+  text-decoration: none;
+  transition: 0.2s ease;
+}
+
+.rr-menu-panel a:hover {
+  color: var(--copper);
+}
+
+/* --------------------------------------------------
+   CARDS / SECTIONS
+-------------------------------------------------- */
+
+.section-card {
+  background: var(--card-bg);
+  border: 1px solid var(--copper-dark);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  backdrop-filter: var(--card-blur);
+}
+
+/* --------------------------------------------------
    BUTTONS
 -------------------------------------------------- */
 
 .button,
-.button-secondary {
+.button-secondary,
+.bubble-btn {
   display: inline-block;
   padding: 0.6rem 1.2rem;
   border-radius: 999px;
@@ -89,14 +155,17 @@ h3 {
   font-weight: 600;
   cursor: pointer;
   transition: 0.2s ease;
+  font-family: var(--font-print);
 }
 
-.button {
+.button,
+.bubble-btn {
   background: var(--copper);
   color: #000;
 }
 
-.button:hover {
+.button:hover,
+.bubble-btn:hover {
   background: var(--copper-light);
 }
 
@@ -117,6 +186,8 @@ h3 {
 .rr-form label {
   font-size: 0.95rem;
   color: var(--copper-light);
+  display: block;
+  margin-bottom: 0.75rem;
 }
 
 .rr-form input,
@@ -128,6 +199,7 @@ h3 {
   border: 1px solid var(--border);
   background: #0a0a0a;
   color: var(--fg);
+  width: 100%;
   font-family: var(--font-print);
 }
 
@@ -138,19 +210,23 @@ h3 {
 }
 
 /* --------------------------------------------------
-   LISTS
+   LIST ITEMS
 -------------------------------------------------- */
 
-.rr-list-item {
+.rr-list-item,
+.work-card,
+.catalog-card {
   border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 0.75rem;
-  margin-bottom: 0.5rem;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
   background: #0a0a0a;
 }
 
-.rr-list-item strong {
-  color: var(--copper-light);
+.work-card h4,
+.catalog-card h3 {
+  font-family: var(--font-cursive);
+  color: var(--copper);
 }
 
 /* --------------------------------------------------
@@ -168,25 +244,6 @@ h3 {
 }
 
 /* --------------------------------------------------
-   CATALOG CARDS
--------------------------------------------------- */
-
-.catalog-card {
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  background: #0a0a0a;
-}
-
-.catalog-card h3 {
-  font-family: var(--font-cursive);
-  color: var(--copper);
-  font-size: 1.8rem;
-  margin-bottom: 0.5rem;
-}
-
-/* --------------------------------------------------
    LETTER BUTTONS
 -------------------------------------------------- */
 
@@ -198,6 +255,7 @@ h3 {
   color: var(--copper-light);
   cursor: pointer;
   font-family: var(--font-print);
+  transition: 0.2s ease;
 }
 
 .letter-button:hover {
