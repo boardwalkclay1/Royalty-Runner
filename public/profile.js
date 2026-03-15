@@ -1,7 +1,6 @@
-// PROFILE ENGINE — IndexedDB + Flash Notifications + Strength Meter
+// ROYALTY RUNNER — PROFILE PAGE LOGIC
 
 document.addEventListener("DOMContentLoaded", () => {
-
   const form = document.getElementById("profile-form");
   const deleteBtn = document.getElementById("delete-profile");
   const flashContainer = document.getElementById("flash-container");
@@ -10,107 +9,91 @@ document.addEventListener("DOMContentLoaded", () => {
 
   loadProfile();
 
-  // SAVE PROFILE
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
+  form.addEventListener("submit", saveProfile);
+  deleteBtn.addEventListener("click", deleteProfile);
 
-    const data = Object.fromEntries(new FormData(form).entries());
+  function loadProfile() {
+    const data = JSON.parse(localStorage.getItem("rr_profile") || "{}");
 
-    await window.dbSet("profile", "artist", data);
-
-    loadProfile();
-  });
-
-  // DELETE PROFILE
-  deleteBtn.addEventListener("click", async () => {
-    await window.dbDelete("profile", "artist");
-    form.reset();
-    loadProfile();
-  });
-
-  // LOAD PROFILE + FLASHES
-  async function loadProfile() {
-    const profile = await window.dbGet("profile", "artist");
-
-    if (profile) {
-      Object.keys(profile).forEach(key => {
-        if (form[key]) form[key].value = profile[key];
-      });
+    for (const key in data) {
+      if (form.elements[key]) {
+        form.elements[key].value = data[key];
+      }
     }
 
-    updateStrength(profile);
-    updateFlash(profile);
+    updateStrength();
+    updateFlash();
   }
 
-  // PROFILE STRENGTH
-  function updateStrength(profile) {
-    if (!profile) {
-      strengthFill.style.width = "0%";
-      strengthLabel.textContent = "Profile incomplete";
+  function saveProfile(e) {
+    e.preventDefault();
+
+    const data = {};
+    new FormData(form).forEach((v, k) => (data[k] = v));
+
+    localStorage.setItem("rr_profile", JSON.stringify(data));
+
+    updateStrength();
+    updateFlash();
+
+    alert("Profile saved.");
+  }
+
+  function deleteProfile() {
+    if (!confirm("Delete your profile from this browser?")) return;
+
+    localStorage.removeItem("rr_profile");
+    form.reset();
+    updateStrength();
+    updateFlash();
+  }
+
+  function updateStrength() {
+    const data = JSON.parse(localStorage.getItem("rr_profile") || "{}");
+
+    const fields = [
+      "legalName",
+      "stageName",
+      "email",
+      "pro",
+      "ipi",
+      "publisher",
+      "country",
+      "address",
+      "socials",
+    ];
+
+    let filled = fields.filter(f => data[f] && data[f].trim() !== "").length;
+    let pct = Math.round((filled / fields.length) * 100);
+
+    strengthFill.style.width = pct + "%";
+    strengthLabel.textContent = pct + "% complete";
+  }
+
+  function updateFlash() {
+    flashContainer.innerHTML = "";
+
+    const data = JSON.parse(localStorage.getItem("rr_profile") || "{}");
+
+    const missing = [];
+
+    if (!data.legalName) missing.push("Add your legal name");
+    if (!data.stageName) missing.push("Add your stage name");
+    if (!data.pro) missing.push("Add your PRO affiliation");
+    if (!data.ipi) missing.push("Add your IPI/CAE number");
+    if (!data.publisher) missing.push("Add your publishing entity");
+    if (!data.socials) missing.push("Add your social links");
+
+    if (missing.length === 0) {
+      flashContainer.innerHTML = `<p style="color:var(--copper-light);">Your profile is complete.</p>`;
       return;
     }
 
-    const fields = [
-      "legalName", "stageName", "email", "pro",
-      "ipi", "publisher", "country", "address", "socials"
-    ];
-
-    const filled = fields.filter(f => profile[f] && profile[f].trim() !== "").length;
-    const percent = Math.round((filled / fields.length) * 100);
-
-    strengthFill.style.width = percent + "%";
-
-    if (percent < 40) strengthLabel.textContent = "Weak profile — many features limited";
-    else if (percent < 80) strengthLabel.textContent = "Good profile — most features unlocked";
-    else strengthLabel.textContent = "Strong profile — full auto‑fill power";
-  }
-
-  // FLASH NOTIFICATIONS
-  function updateFlash(profile) {
-    flashContainer.innerHTML = "";
-
-    const flashes = [];
-
-    if (!profile?.pro) {
-      flashes.push({
-        text: "You haven't added your PRO. Learn about PROs in Rights & Registration.",
-        link: "rights-and-registration.html"
-      });
-    }
-
-    if (!profile?.ipi) {
-      flashes.push({
-        text: "Your IPI number is missing. This is required for publishing and PRO payouts.",
-        link: "glossary.html"
-      });
-    }
-
-    flashes.push({
-      text: "Upload your first song in Works to unlock auto‑fill for royalty forms.",
-      link: "works.html"
-    });
-
-    flashes.push({
-      text: "Learn key industry terms in the Glossary.",
-      link: "glossary.html"
-    });
-
-    flashes.push({
-      text: "Store your contracts and legal files in the Documents Vault.",
-      link: "documents.html"
-    });
-
-    flashes.push({
-      text: "Explore royalty organizations in Rights & Registration.",
-      link: "rights-and-registration.html"
-    });
-
-    flashes.forEach(f => {
+    missing.forEach(msg => {
       const box = document.createElement("div");
       box.className = "flash-box";
-      box.innerHTML = `${f.text} <br><a href="${f.link}">Go →</a>`;
+      box.textContent = msg;
       flashContainer.appendChild(box);
     });
   }
-
 });
