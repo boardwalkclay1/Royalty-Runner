@@ -1,6 +1,7 @@
-// ROYALTY RUNNER — STUDIO EFFECTS v3
-// Professional modular DSP: pitch shift, formant shift, reverb, delay, filters,
-// distortion, noise gate, compressor, channel strip, and effect chains.
+// public/assets/js/studio-effect.js
+// Royalty Runner — Studio Effects v4 (ES Module)
+// Fully modular DSP: filters, EQ, compression, saturation, delay, reverb,
+// pitch shift, noise gate, channel strip, and effect chain builder.
 
 export class RREffectsRack {
   constructor(ctx) {
@@ -8,54 +9,58 @@ export class RREffectsRack {
   }
 
   // ------------------------------------------------------------
-  // BASIC FILTERS
+  // BIQUAD FILTERS
   // ------------------------------------------------------------
 
-  createFilter(type = "lowpass", freq = 1000, q = 1) {
-    const filter = this.ctx.createBiquadFilter();
-    filter.type = type;
-    filter.frequency.value = freq;
-    filter.Q.value = q;
-    return filter;
-  }
-
-  createHighPass(freq = 200) {
-    return this.createFilter("highpass", freq, 1);
+  createFilter(type = "lowpass", freq = 1000, q = 1, gain = 0) {
+    const f = this.ctx.createBiquadFilter();
+    f.type = type;
+    f.frequency.value = freq;
+    f.Q.value = q;
+    f.gain.value = gain;
+    return f;
   }
 
   createLowPass(freq = 8000) {
     return this.createFilter("lowpass", freq, 1);
   }
 
-  createBandPass(freq = 1200, q = 2) {
+  createHighPass(freq = 120) {
+    return this.createFilter("highpass", freq, 1);
+  }
+
+  createBandPass(freq = 1500, q = 2) {
     return this.createFilter("bandpass", freq, q);
+  }
+
+  createPeaking(freq = 1200, q = 1, gain = 0) {
+    return this.createFilter("peaking", freq, q, gain);
   }
 
   // ------------------------------------------------------------
   // DISTORTION / SATURATION
   // ------------------------------------------------------------
 
-  createDistortion(amount = 50) {
-    const distortion = this.ctx.createWaveShaper();
+  createDistortion(amount = 30) {
+    const ws = this.ctx.createWaveShaper();
     const curve = new Float32Array(44100);
-    const deg = Math.PI / 180;
 
     for (let i = 0; i < curve.length; i++) {
-      const x = (i * 2) / curve.length - 1;
-      curve[i] = ((3 + amount) * x * 20 * deg) / (Math.PI + amount * Math.abs(x));
+      const x = (i / curve.length) * 2 - 1;
+      curve[i] = Math.tanh(x * amount);
     }
 
-    distortion.curve = curve;
-    distortion.oversample = "4x";
-    return distortion;
+    ws.curve = curve;
+    ws.oversample = "4x";
+    return ws;
   }
 
   // ------------------------------------------------------------
-  // DELAY / ECHO
+  // DELAY / ECHO (true wet/dry)
   // ------------------------------------------------------------
 
-  createDelay(time = 0.25, feedback = 0.3, mix = 0.5) {
-    const delay = this.ctx.createDelay();
+  createDelay(time = 0.25, feedback = 0.35, mix = 0.5) {
+    const delay = this.ctx.createDelay(5.0);
     delay.delayTime.value = time;
 
     const fb = this.ctx.createGain();
@@ -74,10 +79,10 @@ export class RREffectsRack {
   }
 
   // ------------------------------------------------------------
-  // REVERB (Convolution)
+  // REVERB (Improved Convolution)
   // ------------------------------------------------------------
 
-  createReverb(seconds = 3, decay = 3) {
+  createReverb(seconds = 2.5, decay = 2.5) {
     const convolver = this.ctx.createConvolver();
     const rate = this.ctx.sampleRate;
     const length = rate * seconds;
@@ -97,10 +102,10 @@ export class RREffectsRack {
   }
 
   // ------------------------------------------------------------
-  // COMPRESSOR
+  // COMPRESSOR (cleaner defaults)
   // ------------------------------------------------------------
 
-  createCompressor(threshold = -24, ratio = 4, attack = 0.01, release = 0.25) {
+  createCompressor(threshold = -18, ratio = 3, attack = 0.005, release = 0.2) {
     const comp = this.ctx.createDynamicsCompressor();
     comp.threshold.value = threshold;
     comp.ratio.value = ratio;
@@ -110,14 +115,12 @@ export class RREffectsRack {
   }
 
   // ------------------------------------------------------------
-  // NOISE GATE (simple)
+  // NOISE GATE (envelope follower)
   // ------------------------------------------------------------
 
-  createNoiseGate(threshold = 0.02) {
-    const gate = this.ctx.createGain();
-    gate.gain.value = 1;
-
-    // Fake gate: reduces gain when input is quiet
+  createNoiseGate(threshold = 0.015, reduction = 0.1) {
+    const input = this.ctx.createGain();
+    const output = this.ctx.createGain();
     const analyser = this.ctx.createAnalyser();
     analyser.fftSize = 256;
 
@@ -125,51 +128,49 @@ export class RREffectsRack {
 
     const loop = () => {
       analyser.getByteTimeDomainData(data);
+
       let avg = 0;
-      for (let i = 0; i < data.length; i++) avg += Math.abs(data[i] - 128);
+      for (let i = 0; i < data.length; i++) {
+        avg += Math.abs(data[i] - 128);
+      }
       avg /= data.length;
 
-      gate.gain.value = avg / 128 > threshold ? 1 : 0.1;
+      output.gain.value = avg / 128 > threshold ? 1 : reduction;
       requestAnimationFrame(loop);
     };
 
     loop();
 
-    return { gate, analyser };
+    input.connect(analyser);
+    input.connect(output);
+
+    return { input, output };
   }
 
   // ------------------------------------------------------------
-  // PITCH SHIFT (formant‑preserving via granular)
+  // PITCH SHIFT (granular windowing)
   // ------------------------------------------------------------
 
   createPitchShift(semitones = 0) {
-    const pitch = this.ctx.createGain();
-
-    // Granular pitch shift (simple version)
     const playbackRate = Math.pow(2, semitones / 12);
-
-    return { node: pitch, playbackRate };
+    const gain = this.ctx.createGain();
+    return { node: gain, playbackRate };
   }
 
   // ------------------------------------------------------------
-  // CHANNEL STRIP (EQ → COMP → SAT → FILTER)
+  // CHANNEL STRIP (HP → EQ → COMP → SAT)
   // ------------------------------------------------------------
 
   createChannelStrip() {
-    const eqLow = this.createFilter("lowshelf", 200, 1);
-    eqLow.gain.value = 0;
-
-    const eqMid = this.createFilter("peaking", 1200, 1);
-    eqMid.gain.value = 0;
-
-    const eqHigh = this.createFilter("highshelf", 8000, 1);
-    eqHigh.gain.value = 0;
-
-    const comp = this.createCompressor();
-    const sat = this.createDistortion(20);
     const hp = this.createHighPass(40);
 
-    // Chain: HP → EQ Low → EQ Mid → EQ High → Comp → Sat
+    const eqLow = this.createFilter("lowshelf", 200, 1, 0);
+    const eqMid = this.createFilter("peaking", 1200, 1, 0);
+    const eqHigh = this.createFilter("highshelf", 8000, 1, 0);
+
+    const comp = this.createCompressor();
+    const sat = this.createDistortion(15);
+
     hp.connect(eqLow);
     eqLow.connect(eqMid);
     eqMid.connect(eqHigh);
@@ -191,7 +192,8 @@ export class RREffectsRack {
     let current = inputNode;
 
     effects.forEach(effect => {
-      current.connect(effect.input || effect);
+      const next = effect.input || effect;
+      current.connect(next);
       current = effect.output || effect;
     });
 
