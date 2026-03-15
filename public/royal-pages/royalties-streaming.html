@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en" data-page="royalties-streaming">
+<head>
+  <meta charset="UTF-8" />
+  <title>Royalty Runner – Streaming Royalties</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      background: url("assets/img/royal-catalog.jpg") no-repeat center center fixed;
+      background-size: cover;
+      background-color: #000;
+    }
+    .overlay {
+      background: rgba(0,0,0,0.78);
+      min-height: 100vh;
+      padding-bottom: 4rem;
+    }
+    .section-card {
+      background: rgba(0,0,0,0.65);
+      border: 1px solid var(--copper);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      backdrop-filter: blur(4px);
+    }
+    details {
+      background: rgba(0,0,0,0.55);
+      border: 1px solid var(--copper);
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      cursor: pointer;
+    }
+    summary {
+      font-size: 1.3rem;
+      font-family: 'Dancing Script', cursive;
+      color: var(--copper-light);
+    }
+    .platform-link {
+      color: var(--copper-light);
+      text-decoration: underline;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+<div class="overlay">
+
+  <header class="rr-header">
+    <h1 class="cursive" style="font-size:3rem;">Streaming Platforms (Audio)</h1>
+    <button id="rr-menu-btn" class="rr-menu-btn">☰</button>
+  </header>
+
+  <main class="rr-main">
+
+    <section class="section-card">
+      <h2 class="cursive" style="font-size:2rem;">How Streaming Royalties Work</h2>
+      <p>
+        Streaming platforms pay you when people listen to your music on their apps. Money flows to:
+      </p>
+      <ul>
+        <li><strong>Master owner</strong> (via distributor)</li>
+        <li><strong>Songwriters & publishers</strong> (via PRO + mechanical agencies)</li>
+      </ul>
+      <p>
+        Each platform has its own payout rate, rules, and territories. Below is a breakdown of the
+        major and niche platforms where streams turn into money.
+      </p>
+    </section>
+
+    <section class="section-card">
+      <h2 class="cursive" style="font-size:2rem;">Global DSPs (Major Platforms)</h2>
+
+      <details>
+        <summary>Spotify</summary>
+        <p><a class="platform-link" href="https://artists.spotify.com" target="_blank">Spotify for Artists</a></p>
+        <p><strong>Pays:</strong> Master royalties (via distributor) + publishing (via PRO/MLC).</p>
+        <p><strong>Good for:</strong> All genres, playlists, algorithmic discovery, global reach.</p>
+      </details>
+
+      <details>
+        <summary>Apple Music</summary>
+        <p><a class="platform-link" href="https://artists.apple.com" target="_blank">Apple Music for Artists</a></p>
+        <p><strong>Pays:</strong> Higher per-stream than many competitors, master + publishing.</p>
+      </details>
+
+      <details>
+        <summary>Amazon Music</summary>
+        <p><a class="platform-link" href="https://music.amazon.com" target="_blank">Amazon Music</a></p>
+        <p><strong>Pays:</strong> Streams from Prime, Unlimited, and Alexa devices.</p>
+      </details>
+
+      <details>
+        <summary>TIDAL</summary>
+        <p><a class="platform-link" href="https://tidal.com" target="_blank">TIDAL</a></p>
+        <p><strong>Pays:</strong> One of the highest per-stream rates, HiFi audience.</p>
+      </details>
+
+      <details>
+        <summary>Deezer</summary>
+        <p><a class="platform-link" href="https://www.deezer.com" target="_blank">Deezer</a></p>
+        <p><strong>Pays:</strong> Streaming royalties, strong in Europe and Latin America.</p>
+      </details>
+
+      <details>
+        <summary>Pandora (Premium)</summary>
+        <p><a class="platform-link" href="https://www.pandora.com" target="_blank">Pandora</a></p>
+        <p><strong>Pays:</strong> On-demand streams (master + publishing) via distributor.</p>
+      </details>
+
+      <details>
+        <summary>YouTube Music</summary>
+        <p><a class="platform-link" href="https://music.youtube.com" target="_blank">YouTube Music</a></p>
+        <p><strong>Pays:</strong> Streaming royalties separate from YouTube video ad revenue.</p>
+      </details>
+
+    </section>
+
+    <section class="section-card">
+      <h2 class="cursive" style="font-size:2rem;">Regional & Niche DSPs</h2>
+
+      <details>
+        <summary>Anghami (Middle East & North Africa)</summary>
+        <p><a class="platform-link" href="https://www.anghami.com" target="_blank">Anghami</a></p>
+        <p><strong>Pays:</strong> Streaming royalties in MENA territories.</p>
+      </details>
+
+      <details>
+        <summary>JioSaavn (India)</summary>
+        <p><a class="platform-link" href="https://www.jiosaavn.com" target="_blank">JioSaavn</a></p>
+        <p><strong>Pays:</strong> Streaming royalties in India and South Asia.</p>
+      </details>
+
+      <details>
+        <summary>Gaana (India)</summary>
+        <p><a class="platform-link" href="https://gaana.com" target="_blank">Gaana</a></p>
+        <p><strong>Pays:</strong> Streaming royalties in India.</p>
+      </details>
+
+      <details>
+        <summary>Wynk Music (India)</summary>
+        <p><a class="platform-link" href="https://wynk.in/music" target="_blank">Wynk</a></p>
+        <p><strong>Pays:</strong> Streaming royalties via distributor.</p>
+      </details>
+
+      <details>
+        <summary>QQ Music / Kugou / Kuwo (China)</summary>
+        <p><a class="platform-link" href="https://y.qq.com" target="_blank">QQ Music</a> and related Tencent platforms.</p>
+        <p><strong>Pays:</strong> Streaming royalties in China (via select distributors).</p>
+      </details>
+
+      <details>
+        <summary>NetEase Cloud Music (China)</summary>
+        <p><a class="platform-link" href="https://music.163.com" target="_blank">NetEase Cloud Music</a></p>
+        <p><strong>Pays:</strong> Streaming royalties in China.</p>
+      </details>
+
+      <details>
+        <summary>Boomplay (Africa)</summary>
+        <p><a class="platform-link" href="https://www.boomplay.com" target="_blank">Boomplay</a></p>
+        <p><strong>Pays:</strong> Streaming royalties in African markets.</p>
+      </details>
+
+      <details>
+        <summary>Mdundo (Africa)</summary>
+        <p><a class="platform-link" href="https://mdundo.com" target="_blank">Mdundo</a></p>
+        <p><strong>Pays:</strong> Ad-supported streams and downloads.</p>
+      </details>
+
+      <details>
+        <summary>Yandex Music (Russia)</summary>
+        <p><a class="platform-link" href="https://music.yandex.com" target="_blank">Yandex Music</a></p>
+        <p><strong>Pays:</strong> Streaming royalties in Russia/CIS.</p>
+      </details>
+
+      <details>
+        <summary>VK Music (Russia)</summary>
+        <p><a class="platform-link" href="https://vk.com/music" target="_blank">VK Music</a></p>
+        <p><strong>Pays:</strong> Streaming royalties via distributor.</p>
+      </details>
+
+      <details>
+        <summary>Line Music (Japan)</summary>
+        <p><a class="platform-link" href="https://music.line.me" target="_blank">Line Music</a></p>
+        <p><strong>Pays:</strong> Streaming royalties in Japan.</p>
+      </details>
+
+      <details>
+        <summary>AWA (Japan)</summary>
+        <p><a class="platform-link" href="https://awa.fm" target="_blank">AWA</a></p>
+        <p><strong>Pays:</strong> Streaming royalties in Japan.</p>
+      </details>
+
+      <details>
+        <summary>Melon (South Korea)</summary>
+        <p><a class="platform-link" href="https://www.melon.com" target="_blank">Melon</a></p>
+        <p><strong>Pays:</strong> Streaming royalties in Korea.</p>
+      </details>
+
+      <details>
+        <summary>Flo (South Korea)</summary>
+        <p><a class="platform-link" href="https://www.music-flo.com" target="_blank">Flo</a></p>
+        <p><strong>Pays:</strong> Streaming royalties.</p>
+      </details>
+
+    </section>
+
+    <section class="section-card">
+      <h2 class="cursive" style="font-size:2rem;">Specialized & Indie Platforms</h2>
+
+      <details>
+        <summary>SoundCloud (Monetization)</summary>
+        <p><a class="platform-link" href="https://soundcloud.com/you/monetization" target="_blank">SoundCloud Premier / Repost</a></p>
+        <p><strong>Pays:</strong> Fan-powered royalties based on your actual listeners.</p>
+      </details>
+
+      <details>
+        <summary>Audiomack</summary>
+        <p><a class="platform-link" href="https://audiomack.com/creators/amp" target="_blank">Audiomack AMP</a></p>
+        <p><strong>Pays:</strong> Streaming royalties via AMP program.</p>
+      </details>
+
+      <details>
+        <summary>Bandcamp</summary>
+        <p><a class="platform-link" href="https://bandcamp.com" target="_blank">Bandcamp</a></p>
+        <p><strong>Pays:</strong> Direct sales (downloads, merch, vinyl) + streaming for fans.</p>
+      </details>
+
+      <details>
+        <summary>Napster</summary>
+        <p><a class="platform-link" href="https://us.napster.com" target="_blank">Napster</a></p>
+        <p><strong>Pays:</strong> Streaming royalties, historically higher per-stream.</p>
+      </details>
+
+      <details>
+        <summary>Qobuz</summary>
+        <p><a class="platform-link" href="https://www.qobuz.com" target="_blank">Qobuz</a></p>
+        <p><strong>Pays:</strong> Hi-res streaming + downloads.</p>
+      </details>
+
+      <details>
+        <summary>7digital / White-Label Stores</summary>
+        <p><a class="platform-link" href="https://www.7digital.com" target="_blank">7digital</a></p>
+        <p><strong>Pays:</strong> Streaming + downloads via partner services.</p>
+      </details>
+
+    </section>
+
+  </main>
+</div>
+
+<div id="rr-menu-panel" class="rr-menu-panel">
+  <a href="royalties-index.html">Back to Royalty Index</a>
+  <a href="index.html">Home</a>
+</div>
+
+<script>
+  document.getElementById("rr-menu-btn").addEventListener("click", () => {
+    document.getElementById("rr-menu-panel").classList.toggle("show");
+  });
+</script>
+
+</body>
+</html>
