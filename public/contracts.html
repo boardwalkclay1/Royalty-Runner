@@ -1,377 +1,87 @@
-<!DOCTYPE html>
-<html lang="en" data-page="contracts">
-<head>
-  <meta charset="UTF-8" />
-  <title>Royalty Runner – Contracts Command Center</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="manifest" href="manifest.json" />
-  <link rel="stylesheet" href="assets/css/style.css" />
+<!-- CONTRACT TYPES -->
+<section class="section-card">
+  <h3 class="cursive" style="font-size:1.8rem;">Types of Contracts</h3>
 
-  <!-- Cursive Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600&display=swap" rel="stylesheet">
+  <!-- Split Sheet -->
+  <div class="dropdown">
+    <div class="dropdown-header">Split Sheet</div>
+    <div class="dropdown-content">
+      <p>A document listing all contributors and their ownership percentages.</p>
+      <a href="#template-split" class="bubble-btn">Open Split Sheet Template</a>
+    </div>
+  </div>
 
-  <style>
-    body {
-      background: url("public/assets/img/royal-catalog.jpg") no-repeat center center fixed;
-      background-size: cover;
-      background-color: #000;
-    }
+  <!-- Management -->
+  <div class="dropdown">
+    <div class="dropdown-header">Management Agreement</div>
+    <div class="dropdown-content">
+      <p>Defines the relationship between artist and manager.</p>
+      <ul>
+        <li>Commission %</li>
+        <li>Term</li>
+        <li>Scope of services</li>
+        <li>Sunset clause</li>
+      </ul>
+      <a href="#template-management" class="bubble-btn">Open Management Template</a>
+    </div>
+  </div>
 
-    .overlay {
-      background: rgba(0, 0, 0, 0.78);
-      min-height: 100vh;
-      padding-bottom: 4rem;
-    }
+  <!-- Publicist -->
+  <div class="dropdown">
+    <div class="dropdown-header">Publicist Agreement</div>
+    <div class="dropdown-content">
+      <p>Covers PR services, deliverables, timelines, and payment.</p>
+      <a href="#template-publicist" class="bubble-btn">Open Publicist Template</a>
+    </div>
+  </div>
 
-    .cursive {
-      font-family: 'Dancing Script', cursive;
-      letter-spacing: 1px;
-    }
+  <!-- Work-for-Hire -->
+  <div class="dropdown">
+    <div class="dropdown-header">Work‑for‑Hire Agreement</div>
+    <div class="dropdown-content">
+      <p>Transfers ownership of the work to the hiring party.</p>
+      <a href="#template-wfh" class="bubble-btn">Open Work‑for‑Hire Template</a>
+    </div>
+  </div>
+</section>
 
-    .section-card {
-      background: rgba(0, 0, 0, 0.65);
-      border: 1px solid var(--copper);
-      border-radius: 12px;
-      padding: 1.5rem;
-      margin-bottom: 2rem;
-      backdrop-filter: blur(4px);
-    }
+<!-- CONTRACT TEMPLATES -->
+<section class="section-card" id="templates">
+  <h3 class="cursive" style="font-size:1.8rem;">Contract Templates</h3>
 
-    .dropdown-header {
-      cursor: pointer;
-      font-family: 'Dancing Script', cursive;
-      font-size: 1.6rem;
-      color: var(--copper);
-      margin-bottom: 0.5rem;
-    }
+  <!-- SPLIT SHEET TEMPLATE -->
+  <div class="contract-card" id="template-split">
+    <h4 class="cursive">Split Sheet</h4>
+    <p>A clean, auto‑filled split sheet for collaborators.</p>
+    <div class="template-box" id="template-split-box"></div>
+    <button class="bubble-btn" onclick="copyTemplate('template-split-box')">Copy</button>
+    <button class="bubble-btn" onclick="emailTemplate('template-split-box')">Email</button>
+  </div>
 
-    .dropdown-content {
-      display: none;
-      padding-left: 1rem;
-      border-left: 2px solid var(--copper);
-      margin-bottom: 1rem;
-      color: #ddd;
-    }
+  <!-- MANAGEMENT TEMPLATE -->
+  <div class="contract-card" id="template-management">
+    <h4 class="cursive">Management Agreement</h4>
+    <p>Defines the relationship between artist and manager.</p>
+    <div class="template-box" id="template-management-box"></div>
+    <button class="bubble-btn" onclick="copyTemplate('template-management-box')">Copy</button>
+    <button class="bubble-btn" onclick="emailTemplate('template-management-box')">Email</button>
+  </div>
 
-    .bubble-btn {
-      display: inline-block;
-      padding: 0.4rem 1rem;
-      background: var(--copper);
-      color: #000;
-      border-radius: 999px;
-      font-family: 'Dancing Script', cursive;
-      font-size: 1.1rem;
-      text-decoration: none;
-      margin-top: 0.5rem;
-    }
+  <!-- PUBLICIST TEMPLATE -->
+  <div class="contract-card" id="template-publicist">
+    <h4 class="cursive">Publicist Agreement</h4>
+    <p>Outlines PR services, deliverables, and payment.</p>
+    <div class="template-box" id="template-publicist-box"></div>
+    <button class="bubble-btn" onclick="copyTemplate('template-publicist-box')">Copy</button>
+    <button class="bubble-btn" onclick="emailTemplate('template-publicist-box')">Email</button>
+  </div>
 
-    .upload-box {
-      border: 2px dashed var(--copper);
-      padding: 1rem;
-      border-radius: 10px;
-      text-align: center;
-      margin-bottom: 1rem;
-    }
-
-    .contract-card {
-      background: rgba(0,0,0,0.55);
-      border: 1px solid var(--copper);
-      padding: 1rem;
-      border-radius: 10px;
-      margin-bottom: 1rem;
-    }
-
-    .rr-menu-btn {
-      position: absolute;
-      right: 1rem;
-      top: 1rem;
-      font-size: 2rem;
-      background: none;
-      border: none;
-      color: var(--copper);
-      cursor: pointer;
-      z-index: 9999;
-    }
-
-    .rr-menu-panel {
-      position: fixed;
-      top: 0;
-      right: 0;
-      width: 260px;
-      height: 100vh;
-      background: rgba(0,0,0,0.92);
-      border-left: 2px solid var(--copper);
-      padding: 2rem 1rem;
-      transition: transform 0.3s ease;
-      transform: translateX(100%);
-      z-index: 9998;
-    }
-
-    .rr-menu-panel.show {
-      transform: translateX(0);
-    }
-
-    .rr-menu-panel a {
-      display: block;
-      margin-bottom: 1.2rem;
-      color: var(--copper);
-      font-family: 'Dancing Script', cursive;
-      font-size: 1.5rem;
-      text-decoration: none;
-    }
-  </style>
-</head>
-
-<body>
-<div class="overlay">
-
-  <!-- HEADER -->
-  <header class="rr-header">
-    <h1 class="cursive" style="font-size:3rem;">Contracts Command Center</h1>
-
-    <button id="rr-menu-btn" class="rr-menu-btn">☰</button>
-
-    <nav class="rr-nav cursive">
-      <a href="index.html">Home</a>
-      <a href="profile.html">Profile</a>
-      <a href="rights-and-registration.html">Rights</a>
-      <a href="law.html">Law</a>
-      <a href="glossary.html">Glossary</a>
-      <a href="documents.html">Documents</a>
-    </nav>
-  </header>
-
-  <main class="rr-main">
-
-    <!-- INTRO -->
-    <section class="section-card">
-      <h2 class="cursive" style="font-size:2rem;">Understand, Upload, Create, and Protect</h2>
-      <p>
-        This is your legal headquarters. Every contract you sign, every agreement you draft,
-        every red flag you need to catch — it all starts here.
-      </p>
-      <p>
-        Royalty Runner helps you understand contracts, upload them for breakdown,
-        auto‑fill templates, and connect every clause back to the Glossary and Rights & Registration.
-      </p>
-    </section>
-
-    <!-- CONTRACT TYPES -->
-    <section class="section-card">
-      <h3 class="cursive" style="font-size:1.8rem;">Types of Contracts</h3>
-
-      <!-- Recording -->
-      <div class="dropdown">
-        <div class="dropdown-header">Recording Contract</div>
-        <div class="dropdown-content">
-          <p>
-            A deal between an artist and a label for recording, releasing, and distributing music.
-            Key areas:
-          </p>
-          <ul>
-            <li>Ownership of masters</li>
-            <li>Advance & recoupment</li>
-            <li>Royalty rate</li>
-            <li>Delivery requirements</li>
-            <li>Term & options</li>
-          </ul>
-          <a href="glossary.html" class="bubble-btn">See Terms</a>
-        </div>
-      </div>
-
-      <!-- Publishing -->
-      <div class="dropdown">
-        <div class="dropdown-header">Publishing Contract</div>
-        <div class="dropdown-content">
-          <p>
-            A deal covering your songwriting rights. Publishers help collect royalties worldwide.
-          </p>
-          <ul>
-            <li>Admin vs. full publishing</li>
-            <li>Song splits</li>
-            <li>Term</li>
-            <li>Advances</li>
-          </ul>
-          <a href="rights-and-registration.html" class="bubble-btn">Publishing Info</a>
-        </div>
-      </div>
-
-      <!-- Producer -->
-      <div class="dropdown">
-        <div class="dropdown-header">Producer Agreement</div>
-        <div class="dropdown-content">
-          <p>
-            Defines payment, ownership, royalties, and responsibilities between artist and producer.
-          </p>
-          <ul>
-            <li>Work‑for‑hire vs. royalty share</li>
-            <li>Points on the master</li>
-            <li>Delivery requirements</li>
-          </ul>
-          <a href="glossary.html" class="bubble-btn">Producer Terms</a>
-        </div>
-      </div>
-
-      <!-- Split Sheet -->
-      <div class="dropdown">
-        <div class="dropdown-header">Split Sheet</div>
-        <div class="dropdown-content">
-          <p>
-            A document listing all contributors and their ownership percentages.
-          </p>
-          <a href="contracts.html#templates" class="bubble-btn">Split Sheet Template</a>
-        </div>
-      </div>
-
-      <!-- Management -->
-      <div class="dropdown">
-        <div class="dropdown-header">Management Agreement</div>
-        <div class="dropdown-content">
-          <p>
-            Defines the relationship between artist and manager.
-          </p>
-          <ul>
-            <li>Commission %</li>
-            <li>Term</li>
-            <li>Scope of services</li>
-            <li>Sunset clause</li>
-          </ul>
-          <a href="manage.html" class="bubble-btn">Manager Tools</a>
-        </div>
-      </div>
-
-      <!-- Publicist -->
-      <div class="dropdown">
-        <div class="dropdown-header">Publicist Agreement</div>
-        <div class="dropdown-content">
-          <p>
-            Covers PR services, deliverables, timelines, and payment.
-          </p>
-          <a href="manage.html#publicist" class="bubble-btn">Publicist Tools</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- UPLOAD CONTRACT -->
-    <section class="section-card">
-      <h3 class="cursive" style="font-size:1.8rem;">Upload a Contract for Breakdown</h3>
-
-      <div class="upload-box">
-        <p>Upload PDF, DOCX, or TXT</p>
-        <input type="file" id="contract-upload" accept=".pdf,.doc,.docx,.txt" />
-      </div>
-
-      <textarea id="contract-analysis" rows="10" placeholder="Contract breakdown will appear here..." style="width:100%;"></textarea>
-
-      <button class="bubble-btn" id="analyze-contract">Analyze Contract</button>
-    </section>
-
-    <!-- TEMPLATES -->
-    <section class="section-card" id="templates">
-      <h3 class="cursive" style="font-size:1.8rem;">Contract Templates</h3>
-
-      <div class="contract-card">
-        <h4 class="cursive">Split Sheet</h4>
-        <p>A simple, clean split sheet for collaborators.</p>
-        <a href="#" class="bubble-btn">Open Template</a>
-      </div>
-
-      <div class="contract-card">
-        <h4 class="cursive">Producer Agreement</h4>
-        <p>Define payment, royalties, and responsibilities.</p>
-        <a href="#" class="bubble-btn">Open Template</a>
-      </div>
-
-      <div class="contract-card">
-        <h4 class="cursive">Management Agreement</h4>
-        <p>Set expectations and protect both sides.</p>
-        <a href="#" class="bubble-btn">Open Template</a>
-      </div>
-
-      <div class="contract-card">
-        <h4 class="cursive">Work‑for‑Hire Agreement</h4>
-        <p>Transfer ownership cleanly and legally.</p>
-        <a href="#" class="bubble-btn">Open Template</a>
-      </div>
-    </section>
-
-  </main>
-</div>
-
-<!-- BURGER MENU PANEL -->
-<div id="rr-menu-panel" class="rr-menu-panel">
-  <a href="index.html">Home</a>
-  <a href="profile.html">Profile</a>
-  <a href="my-catalog.html">My Catalog</a>
-  <a href="rights-and-registration.html">Rights</a>
-  <a href="manage.html">Manage</a>
-  <a href="law.html">Law</a>
-  <a href="contracts.html">Contracts</a>
-  <a href="documents.html">Documents</a>
-  <a href="protection.html">Protection</a>
-  <a href="glossary.html">Glossary</a>
-  <a href="the-game.html">The Game</a>
-  <a href="about-me.html">About Me</a>
-  <a href="export.html">Export</a>
-</div>
-
-<script>
-  // Burger menu toggle
-  document.getElementById("rr-menu-btn").addEventListener("click", () => {
-    document.getElementById("rr-menu-panel").classList.toggle("show");
-  });
-
-  // Dropdown logic
-  document.querySelectorAll(".dropdown-header").forEach(header => {
-    header.addEventListener("click", () => {
-      const content = header.nextElementSibling;
-      content.style.display = content.style.display === "block" ? "none" : "block";
-    });
-  });
-
-  // Contract upload + analysis (client-side)
-  document.getElementById("analyze-contract").addEventListener("click", () => {
-    const fileInput = document.getElementById("contract-upload");
-    const output = document.getElementById("contract-analysis");
-
-    if (!fileInput.files.length) {
-      output.value = "Please upload a contract first.";
-      return;
-    }
-
-    const file = fileInput.files[0];
-    const reader = new FileReader();
-
-    reader.onload = () => {
-      const text = reader.result;
-
-      // Simple keyword-based breakdown
-      let analysis = "CONTRACT BREAKDOWN:\n\n";
-
-      const keywords = {
-        "royalty": "Royalty terms found — check rate, recoupment, and payment schedule.",
-        "exclusive": "Exclusive clause — ensure you understand the limitations.",
-        "perpetuity": "Perpetuity clause — this may last forever.",
-        "master": "Master ownership mentioned — verify who owns the recordings.",
-        "publishing": "Publishing clause — check splits and admin rights.",
-        "advance": "Advance mentioned — ensure recoupment terms are clear.",
-        "termination": "Termination clause — understand how to exit the agreement.",
-        "deliverables": "Deliverables — check deadlines and requirements.",
-        "work for hire": "Work-for-hire — you may be giving up ownership.",
-      };
-
-      for (const key in keywords) {
-        if (text.toLowerCase().includes(key)) {
-          analysis += `• ${keywords[key]}\n`;
-        }
-      }
-
-      output.value = analysis || "No major keywords detected. Review manually.";
-    };
-
-    reader.readAsText(file);
-  });
-</script>
-
-</body>
-</html>
+  <!-- WORK FOR HIRE TEMPLATE -->
+  <div class="contract-card" id="template-wfh">
+    <h4 class="cursive">Work‑for‑Hire Agreement</h4>
+    <p>Transfers ownership of the work to the hiring party.</p>
+    <div class="template-box" id="template-wfh-box"></div>
+    <button class="bubble-btn" onclick="copyTemplate('template-wfh-box')">Copy</button>
+    <button class="bubble-btn" onclick="emailTemplate('template-wfh-box')">Email</button>
+  </div>
+</section>
