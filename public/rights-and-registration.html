@@ -9,7 +9,7 @@
 
   <style>
     body {
-      background: url("assets/img/royal-catalog.jpg") no-repeat center center fixed;
+      background: url("/assets/img/royal-catalog.jpg") no-repeat center center fixed;
       background-size: cover;
       background-color: #000;
     }
@@ -30,6 +30,18 @@
       backdrop-filter: blur(4px);
     }
 
+    /* Royalty Runner link style */
+    a {
+      color: var(--copper-light);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    a:hover {
+      color: var(--copper);
+    }
+
+    /* Popup override */
     .catalog-popup {
       background: rgba(0, 0, 0, 0.92);
       border-left: 2px solid var(--copper);
@@ -63,31 +75,23 @@
       z-index: 9998;
     }
 
-    .rr-menu-panel ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    .rr-menu-panel li {
-      margin-bottom: 1.5rem;
+    .rr-menu-panel.show {
+      transform: translateX(0);
     }
 
     .rr-menu-panel a {
-      color: var(--copper);
-      font-family: var(--print-font);
-      font-size: 1.2rem;
+      display: block;
+      margin-bottom: 1.2rem;
+      color: var(--copper-light);
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.5rem;
       text-decoration: none;
-    }
-
-    .rr-menu-panel.show {
-      transform: translateX(0);
     }
 
     .glossary-note {
       margin-top: 1rem;
       font-style: italic;
-      color: var(--copper);
+      color: var(--copper-light);
     }
   </style>
 </head>
@@ -96,10 +100,14 @@
 <div class="overlay">
 
 <header class="rr-header">
-  <h1>Rights & Registration</h1>
-  <p class="tagline">Every royalty. Every organization. Every registration you need as an artist.</p>
+  <h1 class="cursive" style="font-size:3rem;">Rights & Registration</h1>
+  <p class="tagline cursive" style="font-size:1.4rem;">Every royalty. Every organization. Every registration you need.</p>
 
-  <nav class="rr-nav">
+  <!-- BURGER -->
+  <button id="rr-menu-btn" class="rr-menu-btn">☰</button>
+
+  <!-- TOP NAV -->
+  <nav class="rr-nav cursive">
     <a href="index.html">Home</a>
     <a href="profile.html">Profile</a>
     <a href="works.html">Works</a>
@@ -110,54 +118,43 @@
     <a href="documents.html">Documents</a>
     <a href="protection.html">Protection</a>
     <a href="glossary.html">Glossary</a>
-    <a href="the-game.html">The Game</a>
-    <a href="about-me.html">About Me</a>
-    <a href="export.html">Export</a>
   </nav>
-
-  <!-- HAMBURGER -->
-  <button id="rr-menu-btn" class="rr-menu-btn">☰</button>
 </header>
 
 <main class="rr-main">
 
 <!-- DEFINITIONS -->
 <section class="section-card">
-  <h2>Understanding Your Rights</h2>
-  <p>
-    This page is your complete guide to every royalty, every rights organization, and every
-    registration step you need to protect your music. Each section includes direct links,
-    auto-fill tools, and connections to other Royalty Runner pages.
-  </p>
+  <h2 class="cursive" style="font-size:2rem;">Understanding Your Rights</h2>
 
-  <p><strong>Performance Royalties</strong> – Earned when your music is played publicly.  
+  <p><strong>Performance Royalties</strong> — Earned when your music is played publicly.  
     <a href="royalties.html">Learn more →</a></p>
 
-  <p><strong>Mechanical Royalties</strong> – Earned when your music is reproduced or streamed.  
+  <p><strong>Mechanical Royalties</strong> — Earned when your music is streamed or reproduced.  
     <a href="royalties.html">Learn more →</a></p>
 
-  <p><strong>Publishing Royalties</strong> – Earned from songwriting and composition.  
+  <p><strong>Publishing Royalties</strong> — Earned from songwriting & composition.  
     <a href="manage.html">Publishing tools →</a></p>
 
-  <p><strong>Neighboring Rights</strong> – Earned by performers and master owners overseas.  
+  <p><strong>Neighboring Rights</strong> — Earned by performers & master owners overseas.  
     <a href="law.html">Legal breakdown →</a></p>
 
-  <p><strong>Copyright Registration</strong> – Protects your ownership legally.  
+  <p><strong>Copyright Registration</strong> — Protects your ownership legally.  
     <a href="law.html">Copyright law →</a></p>
 
-  <p><strong>Digital Distribution</strong> – Sends your music to streaming platforms.  
+  <p><strong>Digital Distribution</strong> — Sends your music to streaming platforms.  
     <a href="manage.html">Manager tools →</a></p>
 
   <p class="glossary-note">
-    If you don’t understand something, the 
+    If you don’t understand something, the  
     <a href="glossary.html">Royalty Runner Glossary</a>  
-    teaches you everything you need to know.
+    explains every term in plain language.
   </p>
 </section>
 
 <!-- SEARCH -->
 <section class="section-card">
-  <h2>Search the Rights Directory</h2>
+  <h2 class="cursive" style="font-size:2rem;">Search the Rights Directory</h2>
   <input
     type="search"
     id="catalog-search"
@@ -168,10 +165,8 @@
 
 <!-- INTRO -->
 <section class="section-card">
-  <h2>How to Use This Directory</h2>
-  <p>
-    Click any organization to see:
-  </p>
+  <h2 class="cursive" style="font-size:2rem;">How This Directory Works</h2>
+  <p>Click any organization to see:</p>
   <ul>
     <li>What they do</li>
     <li>Why they matter</li>
@@ -211,17 +206,23 @@
   </div>
 </div>
 
-<!-- SLIDE-OUT MENU -->
-<div id="rr-menu-panel" class="rr-menu-panel hidden">
-  <ul>
-    <li><a href="#catalog-search">Search</a></li>
-    <li><a href="#catalog-letters">A–Z Index</a></li>
-    <li><a href="#catalog-list">Organizations</a></li>
-    <li><a href="manage.html">Manager Tools</a></li>
-    <li><a href="law.html">Legal Center</a></li>
-    <li><a href="contracts.html">Contracts</a></li>
-    <li><a href="glossary.html">Glossary</a></li>
-  </ul>
+<!-- FULL BURGER MENU -->
+<div id="rr-menu-panel" class="rr-menu-panel">
+  <a href="index.html">Home</a>
+  <a href="profile.html">Profile</a>
+  <a href="my-catalog.html">My Catalog</a>
+  <a href="works.html">Works</a>
+  <a href="royalties.html">Royalties</a>
+  <a href="rights-and-registration.html">Rights & Registration</a>
+  <a href="manage.html">Manage</a>
+  <a href="law.html">Law</a>
+  <a href="contracts.html">Contracts</a>
+  <a href="documents.html">Documents</a>
+  <a href="protection.html">Protection</a>
+  <a href="glossary.html">Glossary</a>
+  <a href="the-game.html">The Game</a>
+  <a href="about-me.html">About Me</a>
+  <a href="export.html">Export</a>
 </div>
 
 <script src="assets/js/app.js"></script>
