@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en" data-page="royalties-gaming">
+<head>
+  <meta charset="UTF-8" />
+  <title>Royalty Runner – Game Audio & Interactive Royalties</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: url("assets/img/royal-catalog.jpg") no-repeat center center fixed;
+      background-size: cover;
+      background-color: #000;
+    }
+    .overlay { background: rgba(0,0,0,0.78); min-height: 100vh; padding-bottom: 4rem; }
+    .section-card {
+      background: rgba(0,0,0,0.65);
+      border: 1px solid var(--copper);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      backdrop-filter: blur(4px);
+    }
+    details {
+      background: rgba(0,0,0,0.55);
+      border: 1px solid var(--copper);
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      cursor: pointer;
+    }
+    summary {
+      font-size: 1.3rem;
+      font-family: 'Dancing Script', cursive;
+      color: var(--copper-light);
+    }
+    .platform-link { color: var(--copper-light); text-decoration: underline; font-weight: bold; }
+    .tag-row { margin-top: 0.4rem; font-size: 0.85rem; color: #ccc; }
+    .tag {
+      display: inline-block;
+      padding: 0.1rem 0.5rem;
+      border-radius: 999px;
+      border: 1px solid var(--copper);
+      margin-right: 0.3rem;
+      margin-top: 0.2rem;
+    }
+  </style>
+</head>
+<body>
+<div class="overlay">
+  <header class="rr-header">
+    <h1 class="cursive" style="font-size:3rem;">Game Audio & Interactive Royalties</h1>
+    <button id="rr-menu-btn" class="rr-menu-btn">☰</button>
+  </header>
+
+  <main class="rr-main">
+    <section class="section-card">
+      <h2 class="cursive" style="font-size:2rem;">How Games Pay for Music</h2>
+      <p>Games, apps, and interactive worlds use music in menus, levels, trailers, and live events.</p>
+      <ul>
+        <li><strong>Upfront license fees</strong> for in-game use.</li>
+        <li><strong>Rev share</strong> on game sales or in-app purchases (sometimes).</li>
+        <li><strong>Backend performance royalties</strong> for trailers/ads/streams on TV or online.</li>
+      </ul>
+    </section>
+
+    <section class="section-card">
+      <h2 class="cursive" style="font-size:2rem;">Asset Stores & Game Dev Marketplaces</h2>
+
+      <details>
+        <summary>Unity Asset Store</summary>
+        <p><a class="platform-link" href="https://assetstore.unity.com" target="_blank">Unity Asset Store</a></p>
+        <p><strong>Model:</strong> Sell music packs, SFX, loops to Unity developers.</p>
+        <p><strong>Pays:</strong> Per-asset sales; Unity takes a cut.</p>
+        <div class="tag-row">
+          <span class="tag">Game Dev</span><span class="tag">Music Packs</span>
+        </div>
+      </details>
+
+      <details>
+        <summary>Unreal Engine Marketplace</summary>
+        <p><a class="platform-link" href="https://www.unrealengine.com/marketplace" target="_blank">Unreal Marketplace</a></p>
+        <p><strong>Model:</strong> Sell music/SFX packs to Unreal developers.</p>
+        <p><strong>Pays:</strong> Per-asset sales.</p>
+        <div class="tag-row">
+          <span class="tag">AAA</span><span class="tag">Indie</span>
+        </div>
+      </details>
+
+      <details>
+        <summary>GameDev Market</summary>
+        <p><a class="platform-link" href="https://www.gamedevmarket.net" target="_blank">GameDev Market</a></p>
+        <p><strong>Model:</strong> Marketplace for game assets including music.</p>
+        <p><strong>Pays:</strong> Per-asset sales.</p>
+      </details>
+
+      <details>
+        <summary>itch.io Asset Store</summary>
+        <p><a class="platform-link" href="https://itch.io/game-assets" target="_blank">itch.io Assets</a></p>
+        <p><strong>Model:</strong> Pay-what-you-want or fixed price packs.</p>
+        <p><strong>Pays:</strong> Direct sales to indie devs.</p>
+      </details>
+    </section>
+
+    <section class="section-card">
+      <h2 class="cursive" style="font-size:2rem;">Direct Game & Publisher Deals</h2>
+
+      <details>
+        <summary>Direct Licensing to Game Studios</summary>
+        <p>Studios may license tracks directly from you, your label, or your publisher.</p>
+        <p><strong>Pays:</strong> Flat fees, rev share, or both; sometimes work-for-hire.</p>
+      </details>
+
+      <details>
+        <summary>Mobile Games & Apps</summary>
+        <p>Casual games, rhythm games, and apps license loops, themes, and SFX.</p>
+        <p><strong>Pays:</strong> Flat fees, sometimes bonuses tied to performance.</p>
+      </details>
+
+      <details>
+        <summary>Esports & Live Events</summary>
+        <p>Esports broadcasts, tournaments, and events license hype tracks and themes.</p>
+        <p><strong>Pays:</strong> Sync fees + performance royalties via PROs.</p>
+      </details>
+    </section>
+
+    <section class="section-card">
+      <h2 class="cursive" style="font-size:2rem;">UGC Platforms with Game Content</h2>
+
+      <details>
+        <summary>Roblox</summary>
+        <p><a class="platform-link" href="https://www.roblox.com" target="_blank">Roblox</a></p>
+        <p><strong>Model:</strong> User-created games; music often via licensed catalogs.</p>
+        <p><strong>Pays:</strong> Indirectly via catalog deals and performance royalties.</p>
+      </details>
+
+      <details>
+        <summary>Fortnite Creative</summary>
+        <p><a class="platform-link" href="https://www.fortnite.com/creative" target="_blank">Fortnite Creative</a></p>
+        <p><strong>Model:</strong> Branded events, concerts, and experiences.</p>
+        <p><strong>Pays:</strong> Big sync/brand deals at the top level.</p>
+      </details>
+
+      <details>
+        <summary>Steam & PC Game Trailers</summary>
+        <p><a class="platform-link" href="https://store.steampowered.com" target="_blank">Steam</a></p>
+        <p><strong>Model:</strong> Music in trailers and promo videos.</p>
+        <p><strong>Pays:</strong> Sync fees + backend via PROs.</p>
+      </details>
+    </section>
+  </main>
+</div>
+
+<div id="rr-menu-panel" class="rr-menu-panel">
+  <a href="royalties-index.html">Back to Royalty Index</a>
+  <a href="index.html">Home</a>
+</div>
+<script>
+  document.getElementById("rr-menu-btn").addEventListener("click", () => {
+    document.getElementById("rr-menu-panel").classList.toggle("show");
+  });
+</script>
+</body>
+</html>
