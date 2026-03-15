@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en" data-page="royalties-sync">
+<head>
+  <meta charset="UTF-8" />
+  <title>Royalty Runner – Sync & Licensing Royalties</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      background: url("assets/img/royal-catalog.jpg") no-repeat center center fixed;
+      background-size: cover;
+      background-color: #000;
+    }
+    .overlay {
+      background: rgba(0,0,0,0.78);
+      min-height: 100vh;
+      padding-bottom: 4rem;
+    }
+    .section-card {
+      background: rgba(0,0,0,0.65);
+      border: 1px solid var(--copper);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      backdrop-filter: blur(4px);
+    }
+    details {
+      background: rgba(0,0,0,0.55);
+      border: 1px solid var(--copper);
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      cursor: pointer;
+    }
+    summary {
+      font-size: 1.3rem;
+      font-family: 'Dancing Script', cursive;
+      color: var(--copper-light);
+    }
+    .platform-link {
+      color: var(--copper-light);
+      text-decoration: underline;
+      font-weight: bold;
+    }
+    .tag-row {
+      margin-top: 0.4rem;
+      font-size: 0.85rem;
+      color: #ccc;
+    }
+    .tag {
+      display: inline-block;
+      padding: 0.1rem 0.5rem;
+      border-radius: 999px;
+      border: 1px solid var(--copper);
+      margin-right: 0.3rem;
+      margin-top: 0.2rem;
+    }
+  </style>
+</head>
+
+<body>
+<div class="overlay">
+
+  <header class="rr-header">
+    <h1 class="cursive" style="font-size:3rem;">Sync & Licensing Royalties</h1>
+    <button id="rr-menu-btn" class="rr-menu-btn">☰</button>
+  </header>
+
+  <main class="rr-main">
+
+    <section class="section-card">
+      <h2 class="cursive" style="font-size:2rem;">What is a Sync License?</h2>
+      <p>
+        A sync (synchronization) license is permission to use your music with visual media:
+        film, TV, ads, trailers, games, apps, YouTube, TikTok, brand content, and more.
+      </p>
+      <p>
+        A single sync can generate:
+      </p>
+      <ul>
+        <li><strong>Upfront fee</strong> (sync fee) for the master + composition.</li>
+        <li><strong>Backend performance royalties</strong> when the content airs/broadcasts.</li>
+        <li><strong>Extra exposure</strong> that drives streams, followers, and future deals.</li>
+      </ul>
+      <p>
+        Below are sync libraries, marketplaces, and companies that place music into visual media.
+      </p>
+    </section>
+
+    <section class="section-card">
+      <h2 class="cursive" style="font-size:2rem;">Major Sync Libraries & Marketplaces</h2>
+
+      <details>
+        <summary>Musicbed</summary>
+        <p><a class="platform-link" href="https://www.musicbed.com" target="_blank">Musicbed</a></p>
+        <p><strong>Model:</strong> Curated library for film, ads, weddings, branded content.</p>
+        <p><strong>Pays:</strong> Upfront license fees + potential backend via PROs.</p>
+        <p><strong>Good for:</strong> Cinematic, emotional, indie, worship, and cinematic pop.</p>
+        <div class="tag-row">
+          <span class="tag">Curated</span>
+          <span class="tag">Film</span>
+          <span class="tag">Ads</span>
+        </div>
+      </details>
+
+      <details>
+        <summary>Artlist</summary>
+        <p><a class="platform-link" href="https://artlist.io" target="_blank">Artlist</a></p>
+        <p><strong>Model:</strong> Subscription library for creators and filmmakers.</p>
+        <p><strong>Pays:</strong> Revenue share to artists based on usage.</p>
+        <p><strong>Good for:</strong> YouTube creators, filmmakers, commercial content.</p>
+        <div class="tag-row">
+          <span class="tag">Subscription</span>
+          <span class="tag">Creators</span>
+        </div>
+      </details>
+
+      <details>
+        <summary>Epidemic Sound</summary>
+        <p><a class="platform-link" href="https://www.epidemicsound.com" target="_blank">Epidemic Sound</a></p>
+        <p><strong>Model:</strong> Buyout-style deals + subscription library.</p>
+        <p><strong>Pays:</strong> Upfront payments + streaming royalties + bonuses.</p>
+        <p><strong>Note:</strong> Often requires giving up some rights; read terms carefully.</p>
+        <div class="tag-row">
+          <span class="tag">Buyout</span>
+          <span class="tag">YouTube</span>
+          <span class="tag">Global</span>
+        </div>
+      </details>
+
+      <details>
+        <summary>Audio Network</summary>
+        <p><a class="platform-link" href="https://www.audionetwork.com" target="_blank">Audio Network</a></p>
+        <p><strong>Model:</strong> Large catalog used by TV networks, brands, and film.</p>
+        <p><strong>Pays:</strong> License fees + backend via PROs.</p>
+        <div class="tag-row">
+          <span class="tag">TV</span>
+          <span class="tag">Film</span>
+          <span class="tag">Global</span>
+        </div>
+      </details>
+
+      <details>
+        <summary>Pond5</summary>
+        <p><a class="platform-link" href="https://www.pond5.com" target="_blank">Pond5</a></p>
+        <p><strong>Model:</strong> Marketplace for music, SFX, and video.</p>
+        <p><strong>Pays:</strong> Percentage of each license sale.</p>
+        <p><strong>Good for:</strong> Instrumentals, cinematic cues, sound design.</p>
+        <div class="tag-row">
+          <span class="tag">Marketplace</span>
+          <span class="tag">Music</span>
+          <span class="tag">SFX</span>
+        </div>
+      </details>
+
+      <details>
+        <summary>PremiumBeat (Shutterstock)</summary>
+        <p><a class="platform-link" href="https://www.premiumbeat.com" target="_blank">PremiumBeat</a></p>
+        <p><strong>Model:</strong> Curated library with fixed license fees.</p>
+        <p><strong>Pays:</strong> Royalties from license sales.</p>
+        <div class="tag-row">
+          <span class="tag">Curated</span>
+          <span class="tag">Corporate</span>
+        </div>
+      </details>
+
+      <details>
+        <summary>AudioJungle (Envato)</summary>
+        <p><a class="platform-link" href="https://audiojungle.net" target="_blank">AudioJungle</a></p>
+        <p><strong>Model:</strong> Marketplace for royalty-free tracks.</p>
+        <p><strong>Pays:</strong> Per-license sales, Envato takes a cut.</p>
+        <div class="tag-row">
+          <span class="tag">Marketplace</span>
+          <span class="tag">Royalty-Free</span>
+        </div>
+      </details>
+
+      <details>
+        <summary>Motion Array</summary>
+        <p><a class="platform-link" href="https://motionarray.com" target="_blank">Motion Array</a></p>
+        <p><strong>Model:</strong> Subscription platform for video creators.</p>
+        <p><strong>Pays:</strong> Monthly contributor pool based on downloads.</p>
+        <div class="tag-row">
+          <span class="tag">Subscription</span>
+          <span class="tag">Video</span>
+          <span class="tag">Music</span>
+        </div>
+      </details>
+
+    </section>
+
+    <section class="section-card">
+      <h2 class="cursive" style="font-size:2rem;">TV, Film & Trailer-Focused Companies</h2>
+
+      <details>
+        <summary>Position Music</summary>
+        <p><a class="platform-link" href="https://www.positionmusic.com" target="_blank">Position Music</a></p>
+        <p><strong>Model:</strong> Sync-focused label/publisher.</p>
+        <p><strong>Pays:</strong> Sync fees + backend via PROs.</p>
+        <p><strong>Good for:</strong> Trailers, games, film, TV.</p>
+        <div class="tag-row">
+          <span class="tag">Trailers</span>
+          <span class="tag">Label</span>
+          <span class="tag">Publishing</span>
+        </div>
+      </details>
+
+      <details>
+        <summary>Extreme Music (Sony)</summary>
+        <p><a class="platform-link" href="https://www.extrememusic.com" target="_blank">Extreme Music</a></p>
+        <p><strong>Model:</strong> Production music for TV/film.</p>
+        <p><strong>Pays:</strong> License fees + backend.</p>
+        <div class="tag-row">
+          <span class="tag">Production Music</span>
+          <span class="tag">TV</span>
+        </div>
+      </details>
+
+      <details>
+        <summary>Universal Production Music</summary>
+        <p><a class="platform-link" href="https://www.universalproductionmusic.com" target="_blank">Universal PM</a></p>
+        <p><strong>Model:</strong> Global production music catalog.</p>
+        <p><strong>Pays:</strong> License fees + backend.</p>
+        <div class="tag-row">
+          <span class="tag">Major</span>
+          <span class="tag">Global</span>
+        </div>
+      </details>
+
+      <details>
+        <summary>Warner Chappell Production Music</summary>
+        <p><a class="platform-link" href="https://www.warnerchappellpm.com" target="_blank">WCPM</a></p>
+        <p><strong>Model:</strong> Production music for TV, film, ads.</p>
+        <p><strong>Pays:</strong> License fees + backend.</p>
+        <div class="tag-row">
+          <span class="tag">Production</span>
+          <span class="tag">TV</span>
+        </div>
+      </details>
+
+      <details>
+        <summary>APM Music</summary>
+        <p><a class="platform-link" href="https://www.apmmusic.com" target="_blank">APM</a></p>
+        <p><strong>Model:</strong> Large production music library.</p>
+        <p><strong>Pays:</strong> License fees + backend.</p>
+        <div class="tag-row">
+          <span class="tag">Production</span>
+          <span class="tag">Legacy</span>
+        </div>
+      </details>
+
+    </section>
+
+    <section class="section-card">
+      <h2 class="cursive" style="font-size:2rem;">Direct-to-Brand & Creator Marketplaces</h2>
+
+      <details>
+        <summary>Songtradr</summary>
+        <p><a class="platform-link" href="https://www.songtradr.com" target="_blank">Songtradr</a></p>
+        <p><strong>Model:</strong> Marketplace for sync opportunities.</p>
+        <p><strong>Pays:</strong> Sync fees + backend.</p>
+        <p><strong>Good for:</strong> Indie artists pitching directly to briefs.</p>
+        <div class="tag-row">
+          <span class="tag">Marketplace</span>
+          <span class="tag">Sync</span>
+        </div>
+      </details>
+
+      <details>
+        <summary>Music Vine</summary>
+        <p><a class="platform-link" href="https://musicvine.com" target="_blank">Music Vine</a></p>
+        <p><strong>Model:</strong> Curated library for filmmakers and brands.</p>
+        <p><strong>Pays:</strong> License fees + contributor share.</p>
+        <div class="tag-row">
+          <span class="tag">Curated</span>
+          <span class="tag">Film</span>
+        </div>
+      </details>
+
+      <details>
+        <summary>Soundstripe</summary>
+        <p><a class="platform-link" href="https://soundstripe.com" target="_blank">Soundstripe</a></p>
+        <p><strong>Model:</strong> Subscription for creators.</p>
+        <p><strong>Pays:</strong> Contributor pool based on usage.</p>
+        <div class="tag-row">
+          <span class="tag">Subscription</span>
+          <span class="tag">Creators</span>
+        </div>
+      </details>
+
+      <details>
+        <summary>Jingle Punks</summary>
+        <p><a class="platform-link" href="https://www.jinglepunks.com" target="_blank">Jingle Punks</a></p>
+        <p><strong>Model:</strong> Custom music + catalog for TV and brands.</p>
+        <p><strong>Pays:</strong> Custom fees + backend.</p>
+        <div class="tag-row">
+          <span class="tag">Custom</span>
+          <span class="tag">TV</span>
+        </div>
+      </details>
+
+      <details>
+        <summary>BeatStars Sync / Licensing</summary>
+        <p><a class="platform-link" href="https://www.beatstars.com" target="_blank">BeatStars</a></p>
+        <p><strong>Model:</strong> Beat licensing + sync opportunities.</p>
+        <p><strong>Pays:</strong> License fees, splits, backend if placed in media.</p>
+        <div class="tag-row">
+          <span class="tag">Beats</span>
+          <span class="tag">Licensing</span>
+        </div>
+      </details>
+
+    </section>
+
+    <section class="section-card">
+      <h2 class="cursive" style="font-size:2rem;">Game, App & Interactive Sync</h2>
+
+      <details>
+        <summary>Game Audio via Libraries</summary>
+        <p>Many libraries (Musicbed, Artlist, AudioJungle, etc.) license music into games and apps.</p>
+        <p><strong>Pays:</strong> License fees + backend if tracked.</p>
+      </details>
+
+      <details>
+        <summary>Direct Game Deals</summary>
+        <p>Developers may license tracks directly from you or your publisher.</p>
+        <p><strong>Pays:</strong> Flat fees, rev share, or both.</p>
+      </details>
+
+      <details>
+        <summary>Mobile Apps & Startups</summary>
+        <p>Fitness apps, meditation apps, and social apps often license music.</p>
+        <p><strong>Pays:</strong> Sync fees + sometimes backend.</p>
+      </details>
+
+    </section>
+
+  </main>
+</div>
+
+<div id="rr-menu-panel" class="rr-menu-panel">
+  <a href="royalties-index.html">Back to Royalty Index</a>
+  <a href="index.html">Home</a>
+</div>
+
+<script>
+  document.getElementById("rr-menu-btn").addEventListener("click", () => {
+    document.getElementById("rr-menu-panel").classList.toggle("show");
+  });
+</script>
+
+</body>
+</html>
