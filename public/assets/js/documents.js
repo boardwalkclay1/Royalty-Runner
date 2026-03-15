@@ -1,16 +1,17 @@
 // Royalty Runner – Documents Vault Engine
-// IndexedDB Setup
 let db;
-const request = indexedDB.open("RoyaltyRunnerDB", 3);
+const request = indexedDB.open("RoyaltyRunnerDB", 4);
 
+// Upgrade DB
 request.onupgradeneeded = (e) => {
   db = e.target.result;
 
   if (!db.objectStoreNames.contains("documents")) {
     const store = db.createObjectStore("documents", { keyPath: "id", autoIncrement: true });
-    store.createIndex("name", "name", { unique: false });
-    store.createIndex("type", "type", { unique: false });
-    store.createIndex("date", "date", { unique: false });
+    store.createIndex("name", "name");
+    store.createIndex("type", "type");
+    store.createIndex("folder", "folder");
+    store.createIndex("date", "date");
   }
 };
 
@@ -19,9 +20,7 @@ request.onsuccess = (e) => {
   loadDocuments();
 };
 
-request.onerror = () => {
-  console.error("IndexedDB failed to load.");
-};
+request.onerror = () => console.error("IndexedDB failed.");
 
 // Save Uploaded Files
 document.getElementById("save-docs").addEventListener("click", () => {
@@ -34,9 +33,10 @@ document.getElementById("save-docs").addEventListener("click", () => {
       saveDocument({
         name: file.name,
         type: detectType(file.name),
+        folder: "Uploads",
         content: reader.result,
         date: new Date().toLocaleString(),
-        source: "Upload"
+        tags: ["upload"]
       });
     };
     reader.readAsDataURL(file);
@@ -46,7 +46,7 @@ document.getElementById("save-docs").addEventListener("click", () => {
   loadDocuments();
 });
 
-// Detect Document Type
+// Detect Type
 function detectType(name) {
   name = name.toLowerCase();
   if (name.includes("split")) return "Split Sheet";
@@ -59,7 +59,7 @@ function detectType(name) {
   return "General Document";
 }
 
-// Save Document to IndexedDB
+// Save Document
 function saveDocument(doc) {
   const tx = db.transaction("documents", "readwrite");
   tx.objectStore("documents").add(doc);
@@ -70,6 +70,8 @@ function loadDocuments() {
   const list = document.getElementById("documents-list");
   list.innerHTML = "";
 
+  const folderFilter = document.getElementById("folder-filter").value;
+
   const tx = db.transaction("documents", "readonly");
   const store = tx.objectStore("documents");
 
@@ -79,12 +81,20 @@ function loadDocuments() {
 
     const doc = cursor.value;
 
+    if (folderFilter !== "all" && doc.folder !== folderFilter) {
+      cursor.continue();
+      return;
+    }
+
     const card = document.createElement("div");
     card.className = "doc-card";
 
+    const tags = doc.tags?.map(t => `<span class="tag">${t}</span>`).join("") || "";
+
     card.innerHTML = `
       <h4>${doc.name}</h4>
-      <div class="doc-meta">${doc.type} • Saved ${doc.date}</div>
+      <div class="doc-meta">${doc.type} • ${doc.folder} • ${doc.date}</div>
+      ${tags}
       <button class="bubble-btn" onclick="previewDoc(${doc.id})">Open</button>
       <button class="bubble-btn" onclick="deleteDoc(${doc.id})" style="background:#922;">Delete</button>
     `;
@@ -117,7 +127,6 @@ document.getElementById("doc-modal-close").addEventListener("click", () => {
 function deleteDoc(id) {
   const tx = db.transaction("documents", "readwrite");
   tx.objectStore("documents").delete(id);
-
   tx.oncomplete = () => loadDocuments();
 }
 
@@ -132,6 +141,9 @@ document.getElementById("doc-search").addEventListener("input", (e) => {
   });
 });
 
+// Folder Filter
+document.getElementById("folder-filter").addEventListener("change", loadDocuments);
+
 // Receive Contracts from Contracts Page
 window.addEventListener("message", (event) => {
   if (!event.data || !event.data.contractText) return;
@@ -139,9 +151,10 @@ window.addEventListener("message", (event) => {
   const doc = {
     name: event.data.name || "Contract Draft",
     type: event.data.type || "Contract",
+    folder: "Contracts",
     content: event.data.contractText,
     date: new Date().toLocaleString(),
-    source: "Contracts Page"
+    tags: ["contract", event.data.type]
   };
 
   saveDocument(doc);
