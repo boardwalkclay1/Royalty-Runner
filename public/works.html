@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-page="works-studio">
+<html lang="en" data-page="works">
 <head>
   <meta charset="UTF-8" />
   <title>Royalty Runner – Works Studio</title>
@@ -14,18 +14,15 @@
       background-size: cover;
       background-color: #000;
     }
-
     .overlay {
       background: rgba(0, 0, 0, 0.78);
       min-height: 100vh;
       padding-bottom: 4rem;
     }
-
     .cursive {
       font-family: 'Dancing Script', cursive;
       letter-spacing: 1px;
     }
-
     .section-card {
       background: rgba(0, 0, 0, 0.65);
       border: 1px solid var(--copper);
@@ -34,20 +31,6 @@
       margin-bottom: 2rem;
       backdrop-filter: blur(4px);
     }
-
-    .bubble-btn {
-      display: inline-block;
-      padding: 0.4rem 1rem;
-      background: var(--copper);
-      color: #000;
-      border-radius: 999px;
-      font-family: 'Dancing Script', cursive;
-      font-size: 1.1rem;
-      text-decoration: none;
-      margin-top: 0.5rem;
-      cursor: pointer;
-    }
-
     .rr-menu-btn {
       position: absolute;
       right: 1rem;
@@ -59,7 +42,6 @@
       cursor: pointer;
       z-index: 9999;
     }
-
     .rr-menu-panel {
       position: fixed;
       top: 0;
@@ -73,11 +55,9 @@
       transform: translateX(100%);
       z-index: 9998;
     }
-
     .rr-menu-panel.show {
       transform: translateX(0);
     }
-
     .rr-menu-panel a {
       display: block;
       margin-bottom: 1.2rem;
@@ -86,7 +66,19 @@
       font-size: 1.5rem;
       text-decoration: none;
     }
-
+    .bubble-btn {
+      display: inline-block;
+      padding: 0.4rem 1rem;
+      background: var(--copper);
+      color: #000;
+      border-radius: 999px;
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.1rem;
+      text-decoration: none;
+      margin-top: 0.5rem;
+      border: none;
+      cursor: pointer;
+    }
     .work-card {
       background: rgba(0,0,0,0.55);
       border: 1px solid var(--copper);
@@ -94,18 +86,13 @@
       border-radius: 10px;
       margin-bottom: 1rem;
     }
-
-    .studio-track-row {
-      background: rgba(0,0,0,0.5);
-      border: 1px solid var(--copper);
-      border-radius: 8px;
-      padding: 0.75rem;
-      margin-bottom: 0.5rem;
-    }
-
-    audio {
+    .mixer-frame {
       width: 100%;
-      margin-top: 0.5rem;
+      height: 480px;
+      border: 1px solid var(--copper);
+      border-radius: 10px;
+      overflow: hidden;
+      background: #000;
     }
   </style>
 </head>
@@ -114,7 +101,7 @@
 <div class="overlay">
 
   <header class="rr-header">
-    <h1 class="cursive" style="font-size:3rem;">Works Studio</h1>
+    <h1 class="cursive" style="font-size:3rem;">Works – External Studio</h1>
 
     <button id="rr-menu-btn" class="rr-menu-btn">☰</button>
 
@@ -130,26 +117,40 @@
 
   <main class="rr-main">
 
+    <!-- INTRO -->
     <section class="section-card">
-      <h2 class="cursive" style="font-size:2rem;">Your Studio & Catalog</h2>
+      <h2 class="cursive" style="font-size:2rem;">Your Studio, Your Mixers</h2>
       <p>
-        Capture ideas, record takes, upload finished WAVs, and track protection status.
-        Every work you save here lives in your local Royalty Runner studio.
+        Use any free online mixer or DAW you love. Build your song there, export your mix or stems,
+        then drop the files back into Royalty Runner to save them as official Works in your local catalog.
       </p>
     </section>
 
-    <!-- CREATE / EDIT WORK -->
+    <!-- EXTERNAL MIXER EMBED -->
     <section class="section-card">
-      <h3 class="cursive" style="font-size:1.8rem;">Create / Edit Work</h3>
+      <h3 class="cursive" style="font-size:1.8rem;">Live Mixer</h3>
+      <p style="margin-bottom:0.75rem;">
+        This frame can point to any web‑based mixer (e.g. a free online DAW).  
+        Replace the <code>src</code> URL below with your chosen mixer.
+      </p>
 
-      <form id="work-form" class="rr-form">
-        <input type="hidden" name="id" />
+      <div class="mixer-frame">
+        <iframe
+          id="rr-external-mixer"
+          src="https://your-favorite-free-mixer.example.com"
+          style="width:100%;height:100%;border:0;"
+          allow="microphone; camera; clipboard-read; clipboard-write"
+        ></iframe>
+      </div>
+    </section>
 
-        <label>Title
-          <input type="text" name="title" required />
-        </label>
+    <!-- IMPORT RENDERS AS WORKS -->
+    <section class="section-card">
+      <h3 class="cursive" style="font-size:1.8rem;">Import Renders / Stems as Works</h3>
 
-        <label>Role
+      <form id="mixer-import-form" class="rr-form">
+        <label>
+          Default Role
           <select name="role">
             <option>Artist</option>
             <option>Writer</option>
@@ -158,79 +159,40 @@
           </select>
         </label>
 
-        <label>Upload Audio File (WAV or recorded)
-          <input type="file" name="audio" accept=".wav,audio/*" />
-        </label>
-        <!-- Record button injected by works-studio.js -->
-
-        <label>ISRC
-          <input type="text" name="isrc" />
+        <label>
+          Notes (applied to all imported files)
+          <textarea name="notes" rows="2" placeholder="Session notes, collaborators, mix version, etc."></textarea>
         </label>
 
-        <label>ISWC
-          <input type="text" name="iswc" />
+        <label>
+          Upload rendered audio (WAV / FLAC / OGG / WEBM – no MP3)
+          <input
+            type="file"
+            id="mixer-files"
+            name="mixerFiles"
+            accept=".wav,.flac,.ogg,.webm,audio/*"
+            multiple
+          />
         </label>
 
-        <label>PRO Work ID
-          <input type="text" name="pro_id" />
-        </label>
-
-        <label>MLC / Mechanical ID
-          <input type="text" name="mlc_id" />
-        </label>
-
-        <label>Release Date
-          <input type="date" name="release_date" />
-        </label>
-
-        <label>Notes
-          <textarea name="notes" rows="3"></textarea>
-        </label>
-
-        <h4 class="cursive" style="font-size:1.4rem;">Protection Status</h4>
-
-        <label><input type="checkbox" name="pro_registered" /> PRO Registered</label><br/>
-        <label><input type="checkbox" name="mechanical_registered" /> MLC Registered</label><br/>
-        <label><input type="checkbox" name="copyright_registered" /> Copyright Registered</label><br/>
-        <label><input type="checkbox" name="neighboring_registered" /> SoundExchange Registered</label><br/>
-        <label><input type="checkbox" name="split_sheet" /> Split Sheet Completed</label><br/>
-
-        <button type="submit" class="bubble-btn">Save Work to Catalog</button>
-        <button type="button" id="reset-work-form" class="bubble-btn" style="background:#444;color:#fff;">New Work</button>
+        <button type="submit" class="bubble-btn">Save Selected Files as Works</button>
       </form>
-    </section>
 
-    <!-- STUDIO PLAYER SHELL (for layering / mixing module later) -->
-    <section class="section-card">
-      <h3 class="cursive" style="font-size:1.8rem;">Studio Player (Layers & Mix)</h3>
-      <p>
-        Load multiple audio files, balance levels, and build rough mixes. This is your in‑browser studio rack.
+      <p class="small-note" style="margin-top:0.75rem;">
+        Each file becomes its own Work in your local IndexedDB catalog, with timestamps and metadata.
       </p>
-
-      <input id="studio-file-input" type="file" accept="audio/*" multiple />
-
-      <div style="margin-top:1rem;">
-        Master Volume:
-        <input id="studio-master-volume" type="range" min="0" max="1" step="0.01" value="0.9" />
-      </div>
-
-      <div style="margin-top:1rem;">
-        <button id="studio-play" class="bubble-btn">Play All</button>
-        <button id="studio-stop" class="bubble-btn" style="background:#444;color:#fff;">Stop</button>
-      </div>
-
-      <div id="studio-tracks" style="margin-top:1rem;"></div>
     </section>
 
     <!-- WORKS LIST -->
     <section class="section-card">
-      <h3 class="cursive" style="font-size:1.8rem;">Your Works (Studio + Catalog)</h3>
+      <h3 class="cursive" style="font-size:1.8rem;">Your Works Catalog</h3>
       <div id="works-list"></div>
     </section>
 
   </main>
 </div>
 
+<!-- BURGER MENU PANEL -->
 <div id="rr-menu-panel" class="rr-menu-panel">
   <a href="index.html">Home</a>
   <a href="profile.html">Profile</a>
@@ -248,14 +210,11 @@
 </div>
 
 <script src="assets/js/db.js"></script>
-<script src="assets/js/works-studio.js"></script>
-<script src="assets/js/studio-ui.js" type="module"></script>
-
+<script src="assets/js/works-mixer.js"></script>
 <script>
   document.getElementById("rr-menu-btn").addEventListener("click", () => {
     document.getElementById("rr-menu-panel").classList.toggle("show");
   });
 </script>
-
 </body>
 </html>
