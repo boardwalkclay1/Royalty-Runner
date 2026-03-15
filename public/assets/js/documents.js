@@ -1,91 +1,149 @@
-// DOCUMENTS VAULT ENGINE — IndexedDB + File Storage
+// Royalty Runner – Documents Vault Engine
+// IndexedDB Setup
+let db;
+const request = indexedDB.open("RoyaltyRunnerDB", 3);
 
-document.addEventListener("DOMContentLoaded", () => {
+request.onupgradeneeded = (e) => {
+  db = e.target.result;
 
-  const uploadInput = document.getElementById("doc-upload");
-  const saveBtn = document.getElementById("save-docs");
-  const listEl = document.getElementById("documents-list");
-
-  // Ensure DB exists
-  if (!window.dbGet || !window.dbSet || !window.dbDelete) {
-    console.error("IndexedDB helpers missing");
-    return;
+  if (!db.objectStoreNames.contains("documents")) {
+    const store = db.createObjectStore("documents", { keyPath: "id", autoIncrement: true });
+    store.createIndex("name", "name", { unique: false });
+    store.createIndex("type", "type", { unique: false });
+    store.createIndex("date", "date", { unique: false });
   }
+};
 
-  // SAVE DOCUMENTS
-  saveBtn.addEventListener("click", async () => {
-    const files = uploadInput.files;
-    if (!files.length) {
-      alert("Upload at least one file");
-      return;
-    }
+request.onsuccess = (e) => {
+  db = e.target.result;
+  loadDocuments();
+};
 
-    for (const file of files) {
-      const arrayBuffer = await file.arrayBuffer();
+request.onerror = () => {
+  console.error("IndexedDB failed to load.");
+};
 
-      await window.dbSet("documents", file.name, {
+// Save Uploaded Files
+document.getElementById("save-docs").addEventListener("click", () => {
+  const files = document.getElementById("doc-upload").files;
+  if (!files.length) return alert("Upload a file first.");
+
+  [...files].forEach(file => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      saveDocument({
         name: file.name,
-        type: file.type,
-        size: file.size,
-        data: arrayBuffer,
-        savedAt: new Date().toISOString()
+        type: detectType(file.name),
+        content: reader.result,
+        date: new Date().toLocaleString(),
+        source: "Upload"
       });
-    }
-
-    uploadInput.value = "";
-    loadDocuments();
+    };
+    reader.readAsDataURL(file);
   });
 
-  // LOAD DOCUMENTS
-  async function loadDocuments() {
-    const docs = await window.dbGetAll("documents");
-    listEl.innerHTML = "";
+  alert("Saved to Documents Vault.");
+  loadDocuments();
+});
 
-    docs.forEach(doc => {
-      const card = document.createElement("div");
-      card.className = "doc-card";
+// Detect Document Type
+function detectType(name) {
+  name = name.toLowerCase();
+  if (name.includes("split")) return "Split Sheet";
+  if (name.includes("producer")) return "Producer Agreement";
+  if (name.includes("record")) return "Recording Agreement";
+  if (name.includes("manage")) return "Management Agreement";
+  if (name.includes("public")) return "Publicist Agreement";
+  if (name.includes("hire")) return "Work for Hire";
+  if (name.includes("sync")) return "Sync License";
+  return "General Document";
+}
 
-      card.innerHTML = `
-        <strong>${doc.name}</strong><br/>
-        <small>${(doc.size / 1024).toFixed(1)} KB</small><br/><br/>
+// Save Document to IndexedDB
+function saveDocument(doc) {
+  const tx = db.transaction("documents", "readwrite");
+  tx.objectStore("documents").add(doc);
+}
 
-        <button class="bubble-btn" data-name="${doc.name}" data-action="download">Download</button>
-        <button class="bubble-btn" data-name="${doc.name}" data-action="delete">Delete</button>
-      `;
+// Load Documents
+function loadDocuments() {
+  const list = document.getElementById("documents-list");
+  list.innerHTML = "";
 
-      listEl.appendChild(card);
-    });
+  const tx = db.transaction("documents", "readonly");
+  const store = tx.objectStore("documents");
 
-    hookButtons();
-  }
+  store.openCursor().onsuccess = (e) => {
+    const cursor = e.target.result;
+    if (!cursor) return;
 
-  // BUTTON ACTIONS
-  function hookButtons() {
-    document.querySelectorAll(".bubble-btn").forEach(btn => {
-      btn.addEventListener("click", async () => {
-        const name = btn.dataset.name;
-        const action = btn.dataset.action;
+    const doc = cursor.value;
 
-        if (action === "delete") {
-          await window.dbDelete("documents", name);
-          loadDocuments();
-        }
+    const card = document.createElement("div");
+    card.className = "doc-card";
 
-        if (action === "download") {
-          const doc = await window.dbGet("documents", name);
-          const blob = new Blob([doc.data], { type: doc.type });
-          const url = URL.createObjectURL(blob);
+    card.innerHTML = `
+      <h4>${doc.name}</h4>
+      <div class="doc-meta">${doc.type} • Saved ${doc.date}</div>
+      <button class="bubble-btn" onclick="previewDoc(${doc.id})">Open</button>
+      <button class="bubble-btn" onclick="deleteDoc(${doc.id})" style="background:#922;">Delete</button>
+    `;
 
-          const a = document.createElement("a");
-          a.href = url;
-          a.download = doc.name;
-          a.click();
+    list.appendChild(card);
+    cursor.continue();
+  };
+}
 
-          URL.revokeObjectURL(url);
-        }
-      });
-    });
-  }
+// Preview Modal
+function previewDoc(id) {
+  const tx = db.transaction("documents", "readonly");
+  const store = tx.objectStore("documents");
 
+  store.get(id).onsuccess = (e) => {
+    const doc = e.target.result;
+
+    document.getElementById("doc-modal-title").textContent = doc.name;
+    document.getElementById("doc-modal-body").textContent = doc.content;
+
+    document.getElementById("doc-modal").style.display = "flex";
+  };
+}
+
+document.getElementById("doc-modal-close").addEventListener("click", () => {
+  document.getElementById("doc-modal").style.display = "none";
+});
+
+// Delete Document
+function deleteDoc(id) {
+  const tx = db.transaction("documents", "readwrite");
+  tx.objectStore("documents").delete(id);
+
+  tx.oncomplete = () => loadDocuments();
+}
+
+// Search
+document.getElementById("doc-search").addEventListener("input", (e) => {
+  const term = e.target.value.toLowerCase();
+  const cards = document.querySelectorAll(".doc-card");
+
+  cards.forEach(card => {
+    const text = card.textContent.toLowerCase();
+    card.style.display = text.includes(term) ? "block" : "none";
+  });
+});
+
+// Receive Contracts from Contracts Page
+window.addEventListener("message", (event) => {
+  if (!event.data || !event.data.contractText) return;
+
+  const doc = {
+    name: event.data.name || "Contract Draft",
+    type: event.data.type || "Contract",
+    content: event.data.contractText,
+    date: new Date().toLocaleString(),
+    source: "Contracts Page"
+  };
+
+  saveDocument(doc);
   loadDocuments();
 });
