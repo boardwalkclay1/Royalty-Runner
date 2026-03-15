@@ -12,7 +12,7 @@
 
   <style>
     body {
-      background: url("public/assets/img/royal-catalog.jpg") no-repeat center center fixed;
+      background: url("/assets/img/royal-catalog.jpg") no-repeat center center fixed;
       background-size: cover;
       background-color: #000;
     }
@@ -47,6 +47,8 @@
       font-size: 1.1rem;
       text-decoration: none;
       margin-top: 0.5rem;
+      cursor: pointer;
+      border: none;
     }
 
     .upload-box {
@@ -63,6 +65,19 @@
       padding: 1rem;
       border-radius: 10px;
       margin-bottom: 1rem;
+    }
+
+    .doc-card h4 {
+      margin: 0;
+      font-family: 'Dancing Script', cursive;
+      color: var(--copper-light);
+      font-size: 1.6rem;
+    }
+
+    .doc-meta {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
     }
 
     .rr-menu-btn {
@@ -103,6 +118,40 @@
       font-size: 1.5rem;
       text-decoration: none;
     }
+
+    /* Modal */
+    #doc-modal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.85);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+      z-index: 99999;
+    }
+
+    #doc-modal-content {
+      background: rgba(0,0,0,0.9);
+      border: 1px solid var(--copper);
+      padding: 1.5rem;
+      border-radius: 12px;
+      max-width: 800px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      color: var(--copper-light);
+      font-family: ui-monospace, monospace;
+      white-space: pre-wrap;
+    }
+
+    #doc-modal-close {
+      float: right;
+      cursor: pointer;
+      font-size: 2rem;
+      color: var(--copper);
+    }
   </style>
 </head>
 
@@ -130,8 +179,11 @@
     <section class="section-card">
       <h2 class="cursive" style="font-size:2rem;">Your Private Artist Filing Cabinet</h2>
       <p>
-        Upload, store, preview, and export your contracts, legal documents, creative assets,
-        and anything else important to your career. Everything stays offline and on your device.
+        Every contract you draft, every agreement you generate, every legal document you upload —
+        all saved here with timestamps, tags, and full previews.
+      </p>
+      <p>
+        Documents saved from the <a href="contracts.html">Contracts Command Center</a> appear here automatically.
       </p>
     </section>
 
@@ -150,10 +202,22 @@
     <!-- DOCUMENT LIST -->
     <section class="section-card">
       <h3 class="cursive" style="font-size:1.8rem;">Your Saved Documents</h3>
+
+      <input type="search" id="doc-search" placeholder="Search documents..." style="width:100%;padding:0.5rem;margin-bottom:1rem;border-radius:6px;border:1px solid var(--copper);background:#000;color:var(--copper-light);" />
+
       <div id="documents-list"></div>
     </section>
 
   </main>
+</div>
+
+<!-- DOCUMENT PREVIEW MODAL -->
+<div id="doc-modal">
+  <div id="doc-modal-content">
+    <span id="doc-modal-close">×</span>
+    <h2 id="doc-modal-title" class="cursive" style="color:var(--copper);"></h2>
+    <pre id="doc-modal-body"></pre>
+  </div>
 </div>
 
 <!-- BURGER MENU PANEL -->
@@ -162,6 +226,7 @@
   <a href="profile.html">Profile</a>
   <a href="my-catalog.html">My Catalog</a>
   <a href="works.html">Works</a>
+  <a href="royalties.html">Royalties</a>
   <a href="rights-and-registration.html">Rights</a>
   <a href="manage.html">Manage</a>
   <a href="law.html">Law</a>
@@ -177,7 +242,6 @@
 <script src="assets/js/documents.js"></script>
 
 <script>
-  // Burger menu toggle
   document.getElementById("rr-menu-btn").addEventListener("click", () => {
     document.getElementById("rr-menu-panel").classList.toggle("show");
   });
