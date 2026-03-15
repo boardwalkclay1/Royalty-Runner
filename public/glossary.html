@@ -87,9 +87,7 @@
       <input type="search" id="glossary-search" placeholder="Search terms...">
     </section>
 
-    <section class="section-card" id="glossary-list">
-      <!-- JS will inject EVERYTHING here -->
-    </section>
+    <section class="section-card" id="glossary-list"></section>
 
   </main>
 </div>
@@ -107,12 +105,46 @@
 
 <script src="assets/js/glossary-words.js"></script>
 <script src="assets/js/glossary-music.js"></script>
-<script src="assets/js/glossary-render.js"></script>
 
 <script>
-  document.getElementById("rr-menu-btn").addEventListener("click", () => {
-    document.getElementById("rr-menu-panel").classList.toggle("show");
-  });
+  const list = document.getElementById("glossary-list");
+  const search = document.getElementById("glossary-search");
+
+  const ALL = [...WORD_GLOSSARY, ...MUSIC_GLOSSARY];
+
+  function render(items) {
+    list.innerHTML = "";
+    items.forEach(i => {
+      const block = document.createElement("div");
+      block.className = "dropdown";
+      block.dataset.tags = i.tags.join(" ");
+
+      block.innerHTML = `
+        <div class="dropdown-header">${i.term}</div>
+        <div class="dropdown-content">
+          <p>${i.definition}</p>
+          <div class="tag-row">${i.tags.map(t => `<span class="tag">${t}</span>`).join("")}</div>
+        </div>
+      `;
+
+      block.querySelector(".dropdown-header").onclick = () => {
+        const c = block.querySelector(".dropdown-content");
+        c.style.display = c.style.display === "block" ? "none" : "block";
+      };
+
+      list.appendChild(block);
+    });
+  }
+
+  search.oninput = () => {
+    const q = search.value.toLowerCase();
+    render(ALL.filter(i =>
+      i.term.toLowerCase().includes(q) ||
+      i.definition.toLowerCase().includes(q)
+    ));
+  };
+
+  render(ALL);
 </script>
 
 </body>
