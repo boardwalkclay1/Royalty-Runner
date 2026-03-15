@@ -2,7 +2,7 @@
 
 (function () {
   const DB_NAME = "RoyaltyRunnerDB";
-  const DB_VERSION = 1;
+  const DB_VERSION = 2; // bumped version to add checklist store
 
   const STORES = {
     PROFILE: "profile",
@@ -10,6 +10,7 @@
     DOCUMENTS: "documents",
     CONTRACTS: "contracts",
     SETTINGS: "settings",
+    CHECKLIST: "checklist", // NEW STORE
   };
 
   let dbInstance = null;
@@ -23,26 +24,36 @@
       request.onupgradeneeded = (event) => {
         const db = event.target.result;
 
+        // PROFILE
         if (!db.objectStoreNames.contains(STORES.PROFILE)) {
           db.createObjectStore(STORES.PROFILE, { keyPath: "id" });
         }
 
+        // WORKS
         if (!db.objectStoreNames.contains(STORES.WORKS)) {
           const store = db.createObjectStore(STORES.WORKS, { keyPath: "id" });
           store.createIndex("by_title", "title", { unique: false });
           store.createIndex("by_createdAt", "createdAt", { unique: false });
         }
 
+        // DOCUMENTS
         if (!db.objectStoreNames.contains(STORES.DOCUMENTS)) {
           db.createObjectStore(STORES.DOCUMENTS, { keyPath: "id" });
         }
 
+        // CONTRACTS
         if (!db.objectStoreNames.contains(STORES.CONTRACTS)) {
           db.createObjectStore(STORES.CONTRACTS, { keyPath: "id" });
         }
 
+        // SETTINGS
         if (!db.objectStoreNames.contains(STORES.SETTINGS)) {
           db.createObjectStore(STORES.SETTINGS, { keyPath: "id" });
+        }
+
+        // CHECKLIST (NEW)
+        if (!db.objectStoreNames.contains(STORES.CHECKLIST)) {
+          db.createObjectStore(STORES.CHECKLIST, { keyPath: "id" });
         }
       };
 
@@ -55,6 +66,7 @@
     });
   }
 
+  // GENERIC HELPERS
   function saveToStore(storeName, data) {
     return openDB().then((db) => {
       return new Promise((resolve, reject) => {
@@ -99,8 +111,26 @@
     });
   }
 
-  // WORKS HELPERS (recorded + uploaded + progress + studio state)
+  // PROFILE HELPERS (NOW SUPPORTS AKA + PHOTO)
+  function saveProfile(profile) {
+    profile.id = "artist_profile";
 
+    // ensure fields exist
+    profile.aka = profile.aka || "";
+    profile.photo = profile.photo || "";
+
+    return saveToStore(STORES.PROFILE, profile);
+  }
+
+  function getProfile() {
+    return getFromStore(STORES.PROFILE, "artist_profile");
+  }
+
+  function deleteProfile() {
+    return deleteFromStore(STORES.PROFILE, "artist_profile");
+  }
+
+  // WORKS HELPERS (unchanged)
   function createWorkId() {
     return "work_" + Date.now() + "_" + Math.random().toString(16).slice(2);
   }
@@ -149,7 +179,27 @@
     });
   }
 
-  // Expose globals
+  // CHECKLIST HELPERS (NEW)
+  function saveChecklist(checklist) {
+    checklist.id = "protection_checklist";
+    return saveToStore(STORES.CHECKLIST, checklist);
+  }
+
+  function getChecklist() {
+    return getFromStore(STORES.CHECKLIST, "protection_checklist");
+  }
+
+  function updateChecklistItem(itemId, value) {
+    return getChecklist().then((data) => {
+      if (!data) {
+        data = { id: "protection_checklist" };
+      }
+      data[itemId] = value;
+      return saveChecklist(data);
+    });
+  }
+
+  // EXPOSE GLOBALS
   window.RRDB = {
     STORES,
     openDB,
@@ -157,11 +207,22 @@
     getAllFromStore,
     getFromStore,
     deleteFromStore,
-    // works-specific
+
+    // PROFILE
+    saveProfile,
+    getProfile,
+    deleteProfile,
+
+    // WORKS
     saveWork,
     getAllWorks,
     getWorkById,
     deleteWork,
     updateWorkProgress,
+
+    // CHECKLIST
+    saveChecklist,
+    getChecklist,
+    updateChecklistItem,
   };
 })();
