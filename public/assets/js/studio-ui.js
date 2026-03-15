@@ -1,5 +1,7 @@
-// ROYALTY RUNNER — STUDIO UI (v2)
-// High‑level mixer UI for RRStudioEngine: tracks, mute/solo, remove, basic transport, master controls.
+// public/assets/js/studio-ui.js
+// ROYALTY RUNNER — STUDIO UI v3
+// High‑level mixer UI for RRStudioEngine: tracks, mute/solo, remove,
+// basic transport, master controls, and integration with Works (RR_STUDIO_LOAD_WORK).
 
 import { RRStudioEngine } from "./studio-engine.js";
 
@@ -13,27 +15,50 @@ document.addEventListener("DOMContentLoaded", () => {
   const stopBtn = document.getElementById("studio-stop");
   const masterVol = document.getElementById("studio-master-volume");
 
-  // Optional extra master controls (add these inputs in HTML if you want them)
   const masterHighBoost = document.getElementById("studio-master-high");
   const playFromStartBtn = document.getElementById("studio-play-start");
   const loopToggle = document.getElementById("studio-loop-toggle");
 
   let isPlaying = false;
   let loopEnabled = false;
-  let lastOffset = 0;
 
-  // ---- FILE LOADING ----
+  // ------------------------------------------------------------
+  // FILE LOADING (LOCAL)
+  // ------------------------------------------------------------
 
-  fileInput.addEventListener("change", async () => {
-    const files = Array.from(fileInput.files || []);
-    for (const f of files) {
-      const track = await engine.addTrackFromFile(f);
-      addTrackUI(track);
-    }
-    fileInput.value = "";
+  if (fileInput) {
+    fileInput.addEventListener("change", async () => {
+      const files = Array.from(fileInput.files || []);
+      for (const f of files) {
+        const track = await engine.addTrackFromFile(f);
+        addTrackUI(track);
+      }
+      fileInput.value = "";
+    });
+  }
+
+  // ------------------------------------------------------------
+  // LOAD FROM WORKS (RR_STUDIO_LOAD_WORK)
+  // ------------------------------------------------------------
+
+  window.addEventListener("RR_STUDIO_LOAD_WORK", async (e) => {
+    const { id, title, blob } = e.detail || {};
+    if (!blob) return;
+
+    const track = await engine.addTrackFromBlob(blob, title || `Work ${id || ""}`);
+    addTrackUI(track);
+    scrollToStudio();
   });
 
-  // ---- TRACK UI ----
+  function scrollToStudio() {
+    const studioSection = document.getElementById("studio-shell");
+    if (!studioSection) return;
+    studioSection.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  // ------------------------------------------------------------
+  // TRACK UI
+  // ------------------------------------------------------------
 
   function addTrackUI(track) {
     const row = document.createElement("div");
@@ -48,9 +73,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
       <div style="margin-top:0.4rem;">
         Vol:
-        <input type="range" min="0" max="1" step="0.01" value="0.8" class="track-vol">
+        <input type="range" min="0" max="1" step="0.01" value="${track.volume ?? 0.8}" class="track-vol">
         Pan:
-        <input type="range" min="-1" max="1" step="0.01" value="0" class="track-pan">
+        <input type="range" min="-1" max="1" step="0.01" value="${track.pan ?? 0}" class="track-pan">
       </div>
 
       <div style="margin-top:0.4rem;">
@@ -70,7 +95,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const removeBtn = row.querySelector(".studio-remove");
 
     vol.addEventListener("input", () => {
-      engine.setTrackVolume(track.id, parseFloat(vol.value));
+      const v = parseFloat(vol.value);
+      engine.setTrackVolume(track.id, v);
+      track._uiVolume = v;
+      refreshSoloMuteState();
     });
 
     pan.addEventListener("input", () => {
@@ -109,74 +137,68 @@ document.addEventListener("DOMContentLoaded", () => {
   function refreshSoloMuteState() {
     const anySolo = engine.tracks.some(t => t.solo);
     engine.tracks.forEach(t => {
+      const baseVol = t._uiVolume ?? 0.8;
+
       if (anySolo) {
-        t.gainNode.gain.value = t.solo ? t.gainNode.gain.value : 0;
+        t.gainNode.gain.value = t.solo && !t.muted ? baseVol : 0;
       } else {
-        // if no solo, restore based on mute
-        if (t.muted) {
-          t.gainNode.gain.value = 0;
-        } else {
-          if (t.gainNode.gain.value === 0) {
-            t.gainNode.gain.value = 0.8;
-          }
-        }
+        t.gainNode.gain.value = t.muted ? 0 : baseVol;
       }
     });
   }
 
   function removeTrack(id, rowEl) {
     engine.stopAll();
-    engine.tracks = engine.tracks.filter(t => t.id !== id);
+    engine.removeTrack(id);
     if (rowEl && rowEl.parentNode) rowEl.parentNode.removeChild(rowEl);
+    refreshSoloMuteState();
   }
 
-  // ---- TRANSPORT ----
+  // ------------------------------------------------------------
+  // TRANSPORT
+  // ------------------------------------------------------------
 
-  playBtn.addEventListener("click", () => {
+  playBtn?.addEventListener("click", () => {
     if (!isPlaying) {
-      engine.playAll(0);
+      engine.playAll(0, { loop: loopEnabled });
       isPlaying = true;
-      lastOffset = 0;
     } else {
       engine.stopAll();
       isPlaying = false;
     }
   });
 
-  stopBtn.addEventListener("click", () => {
+  stopBtn?.addEventListener("click", () => {
     engine.stopAll();
     isPlaying = false;
-    lastOffset = 0;
   });
 
-  if (playFromStartBtn) {
-    playFromStartBtn.addEventListener("click", () => {
-      engine.stopAll();
-      engine.playAll(0);
-      isPlaying = true;
-      lastOffset = 0;
-    });
-  }
+  playFromStartBtn?.addEventListener("click", () => {
+    engine.stopAll();
+    engine.playAll(0, { loop: loopEnabled });
+    isPlaying = true;
+  });
 
-  if (loopToggle) {
-    loopToggle.addEventListener("change", () => {
-      loopEnabled = loopToggle.checked;
-    });
-  }
+  loopToggle?.addEventListener("change", () => {
+    loopEnabled = loopToggle.checked;
+    engine.setLoop(loopEnabled);
+  });
 
-  // ---- MASTER CONTROLS ----
+  // ------------------------------------------------------------
+  // MASTER CONTROLS
+  // ------------------------------------------------------------
 
-  masterVol.addEventListener("input", () => {
+  masterVol?.addEventListener("input", () => {
     engine.setMasterVolume(parseFloat(masterVol.value));
   });
 
-  if (masterHighBoost) {
-    masterHighBoost.addEventListener("input", () => {
-      engine.setMasterHighBoost(parseFloat(masterHighBoost.value));
-    });
-  }
+  masterHighBoost?.addEventListener("input", () => {
+    engine.setMasterHighBoost(parseFloat(masterHighBoost.value));
+  });
 
-  // ---- SIMPLE METER ANIMATION (fake visual, not real RMS) ----
+  // ------------------------------------------------------------
+  // SIMPLE METER ANIMATION (visual only)
+  // ------------------------------------------------------------
 
   function animateMeters() {
     const rows = tracksContainer.querySelectorAll(".studio-track-row");
