@@ -2,69 +2,294 @@
 <html lang="en" data-page="royalties">
 <head>
   <meta charset="UTF-8" />
-  <title>Royalty Runner – Royalty Forms</title>
+  <title>Royalty Runner – Royalties Guide</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="manifest" href="manifest.json" />
   <link rel="stylesheet" href="assets/css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      background: url("/assets/img/royal-catalog.jpg") no-repeat center center fixed;
+      background-size: cover;
+      background-color: #000;
+    }
+
+    .overlay {
+      background: rgba(0,0,0,0.78);
+      min-height: 100vh;
+      padding-bottom: 4rem;
+    }
+
+    .cursive {
+      font-family: 'Dancing Script', cursive;
+      letter-spacing: 1px;
+    }
+
+    .section-card {
+      background: rgba(0,0,0,0.65);
+      border: 1px solid var(--copper);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      backdrop-filter: blur(4px);
+    }
+
+    details {
+      background: rgba(0,0,0,0.55);
+      border: 1px solid var(--copper);
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      cursor: pointer;
+    }
+
+    summary {
+      font-size: 1.3rem;
+      font-family: 'Dancing Script', cursive;
+      color: var(--copper-light);
+      cursor: pointer;
+    }
+
+    .rr-menu-btn {
+      position: absolute;
+      right: 1rem;
+      top: 1rem;
+      font-size: 2rem;
+      background: none;
+      border: none;
+      color: var(--copper);
+      cursor: pointer;
+      z-index: 9999;
+    }
+
+    .rr-menu-panel {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 260px;
+      height: 100vh;
+      background: rgba(0,0,0,0.92);
+      border-left: 2px solid var(--copper);
+      padding: 2rem 1rem;
+      transition: transform 0.3s ease;
+      transform: translateX(100%);
+      z-index: 9998;
+    }
+
+    .rr-menu-panel.show {
+      transform: translateX(0);
+    }
+
+    .rr-menu-panel a {
+      display: block;
+      margin-bottom: 1.2rem;
+      color: var(--copper);
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.5rem;
+      text-decoration: none;
+    }
+
+    a.platform-link {
+      color: var(--copper-light);
+      font-weight: bold;
+      text-decoration: underline;
+    }
+  </style>
 </head>
+
 <body>
+<div class="overlay">
+
   <header class="rr-header">
-    <h1>Royalty Forms</h1>
-    <nav class="rr-nav">
+    <h1 class="cursive" style="font-size:3rem;">Royalties & Upload Destinations</h1>
+
+    <button id="rr-menu-btn" class="rr-menu-btn">☰</button>
+
+    <nav class="rr-nav cursive">
       <a href="index.html">Home</a>
       <a href="profile.html">Profile</a>
       <a href="works.html">Works</a>
-      <a href="catalog.html">Catalog</a>
-      <a href="export.html">Exports</a>
+      <a href="rights-and-registration.html">Rights</a>
+      <a href="contracts.html">Contracts</a>
+      <a href="documents.html">Documents</a>
+      <a href="glossary.html">Glossary</a>
     </nav>
   </header>
 
   <main class="rr-main">
-    <section>
+
+    <section class="section-card">
+      <h2 class="cursive" style="font-size:2rem;">Understanding Royalties</h2>
       <p>
-        Royalty Runner combines your artist profile and your works to generate pre‑filled text you
-        can paste into official registration forms. When possible, this page will auto‑fill using
-        your latest work and last used destination.
+        Royalties are payments you earn when your music, vocals, beats, or videos are used, streamed, downloaded, licensed, or placed in media.
       </p>
+
+      <p><strong style="color:var(--copper-light);">There are 4 main royalty types:</strong></p>
+
+      <ul>
+        <li><strong>Performance Royalties</strong> — paid when your music is played publicly (radio, TV, venues, streaming).</li>
+        <li><strong>Mechanical Royalties</strong> — paid when your music is reproduced (streaming, downloads, CDs).</li>
+        <li><strong>Sync Royalties</strong> — paid when your music is used in film, TV, ads, games, YouTube, etc.</li>
+        <li><strong>Neighboring Rights</strong> — paid to performers & master owners for international plays.</li>
+      </ul>
     </section>
 
-    <form id="royalty-form" class="rr-form">
-      <label>
-        Select work
-        <select name="workId" id="royalty-work-select" required></select>
-      </label>
+    <!-- FREE PLATFORMS -->
+    <section class="section-card">
+      <h2 class="cursive" style="font-size:2rem;">Free Platforms (Upload & Earn)</h2>
 
-      <label>
-        Destination
-        <select name="destination" id="royalty-destination" required>
-          <option value="">Select a destination</option>
-          <option value="ascap">ASCAP – Work Registration</option>
-          <option value="bmi">BMI – Work Registration</option>
-          <option value="soundexchange">SoundExchange – Repertoire</option>
-          <option value="mlc">MLC – Work Registration</option>
-          <option value="youtube_cid">YouTube Content ID – Metadata</option>
-        </select>
-      </label>
+      <!-- YouTube Content ID -->
+      <details>
+        <summary>YouTube Content ID (Audio & Video)</summary>
+        <p>
+          <a class="platform-link" href="https://www.youtube.com" target="_blank">YouTube</a> pays royalties through ads and Content ID.
+        </p>
+        <p><strong>Pays:</strong> Ad revenue + Content ID claims.</p>
+        <p><strong>Rate:</strong> $1–$4 per 1,000 views (varies heavily).</p>
+        <p><strong>Good for:</strong> Beats, songs, instrumentals, tutorials, music videos.</p>
+      </details>
 
-      <div class="form-actions">
-        <button type="submit" class="button">Generate form</button>
-        <button type="button" id="one-click-complete" class="button-secondary">One‑Click Complete</button>
-      </div>
+      <!-- SoundCloud -->
+      <details>
+        <summary>SoundCloud Monetization (Audio)</summary>
+        <p>
+          <a class="platform-link" href="https://soundcloud.com/you/monetization" target="_blank">SoundCloud Premier</a> pays creators for streams.
+        </p>
+        <p><strong>Pays:</strong> Fan-powered royalties.</p>
+        <p><strong>Rate:</strong> $2–$4 per 1,000 streams.</p>
+      </details>
 
-      <p id="royalty-missing" class="small-note warning"></p>
-    </form>
+      <!-- Audiomack -->
+      <details>
+        <summary>Audiomack AMP (Audio)</summary>
+        <p>
+          <a class="platform-link" href="https://audiomack.com/creators/amp" target="_blank">Audiomack AMP</a> pays for streams.
+        </p>
+        <p><strong>Pays:</strong> Streaming royalties.</p>
+        <p><strong>Rate:</strong> $1–$5 per 1,000 streams.</p>
+      </details>
 
-    <section>
-      <h2>Generated form</h2>
-      <textarea id="royalty-output" rows="14" class="rr-output" readonly></textarea>
-      <button id="copy-royalty-output" class="button-secondary">Copy to clipboard</button>
-      <p class="small-note">
-        This text is generated locally using your profile and works. Always review it before
-        submitting to any official site.
-      </p>
+      <!-- TikTok -->
+      <details>
+        <summary>TikTok Sounds (Audio)</summary>
+        <p>
+          <a class="platform-link" href="https://www.tiktok.com" target="_blank">TikTok</a> pays when your sound is used in videos.
+        </p>
+        <p><strong>Pays:</strong> Usage-based royalties via distributor.</p>
+        <p><strong>Rate:</strong> $0.03–$0.06 per use (varies).</p>
+      </details>
+
+      <!-- Facebook/Instagram -->
+      <details>
+        <summary>Facebook & Instagram Music (Audio)</summary>
+        <p>
+          <a class="platform-link" href="https://www.facebook.com/business/help/208949576550050" target="_blank">Meta Music</a> pays for music used in Reels, Stories, and posts.
+        </p>
+        <p><strong>Pays:</strong> Usage royalties via distributor.</p>
+      </details>
     </section>
+
+    <!-- PAID DISTRIBUTORS -->
+    <section class="section-card">
+      <h2 class="cursive" style="font-size:2rem;">Paid Distributors (Get on Spotify, Apple, etc.)</h2>
+
+      <!-- DistroKid -->
+      <details>
+        <summary>DistroKid</summary>
+        <p>
+          <a class="platform-link" href="https://distrokid.com" target="_blank">DistroKid</a> uploads your music to Spotify, Apple Music, TikTok, and 150+ platforms.
+        </p>
+        <p><strong>Cost:</strong> $22.99/year.</p>
+        <p><strong>Pays:</strong> Streaming + mechanical royalties.</p>
+        <p><strong>Spotify Rate:</strong> $3–$5 per 1,000 streams.</p>
+      </details>
+
+      <!-- TuneCore -->
+      <details>
+        <summary>TuneCore</summary>
+        <p>
+          <a class="platform-link" href="https://www.tunecore.com" target="_blank">TuneCore</a> distributes to all major platforms.
+        </p>
+        <p><strong>Cost:</strong> $14.99/year (Rising Artist plan).</p>
+        <p><strong>Pays:</strong> Streaming + downloads.</p>
+      </details>
+
+      <!-- CD Baby -->
+      <details>
+        <summary>CD Baby</summary>
+        <p>
+          <a class="platform-link" href="https://cdbaby.com" target="_blank">CD Baby</a> distributes your music and collects publishing royalties.
+        </p>
+        <p><strong>Cost:</strong> $9.99 per single.</p>
+        <p><strong>Pays:</strong> Streaming + sync + publishing.</p>
+      </details>
+    </section>
+
+    <!-- SYNC / LICENSING -->
+    <section class="section-card">
+      <h2 class="cursive" style="font-size:2rem;">Sync Licensing (Film, TV, Ads, Games)</h2>
+
+      <!-- Pond5 -->
+      <details>
+        <summary>Pond5 (Audio & Video)</summary>
+        <p>
+          <a class="platform-link" href="https://pond5.com" target="_blank">Pond5</a> is a marketplace for music, sound effects, and video licensing.
+        </p>
+        <p><strong>Pays:</strong> 40%–60% per license.</p>
+        <p><strong>Good for:</strong> Beats, cinematic music, sound effects, vocals, video clips.</p>
+      </details>
+
+      <!-- Motion Array -->
+      <details>
+        <summary>Motion Array (Audio & Video)</summary>
+        <p>
+          <a class="platform-link" href="https://motionarray.com" target="_blank">Motion Array</a> pays contributors monthly based on downloads.
+        </p>
+        <p><strong>Pays:</strong> $200–$2,000/month depending on downloads.</p>
+        <p><strong>Good for:</strong> Beats, sound effects, loops, video assets.</p>
+      </details>
+
+      <!-- Artlist -->
+      <details>
+        <summary>Artlist (Audio)</summary>
+        <p>
+          <a class="platform-link" href="https://artlist.io" target="_blank">Artlist</a> licenses music for film and commercial use.
+        </p>
+        <p><strong>Pays:</strong> Monthly revenue share.</p>
+      </details>
+
+      <!-- Epidemic Sound -->
+      <details>
+        <summary>Epidemic Sound (Audio)</summary>
+        <p>
+          <a class="platform-link" href="https://epidemicsound.com" target="_blank">Epidemic Sound</a> pays upfront + streaming royalties.
+        </p>
+        <p><strong>Pays:</strong> Upfront + streaming + usage bonuses.</p>
+      </details>
+    </section>
+
   </main>
+</div>
 
-  <script src="assets/js/app.js"></script>
+<!-- BURGER MENU PANEL -->
+<div id="rr-menu-panel" class="rr-menu-panel">
+  <a href="index.html">Home</a>
+  <a href="profile.html">Profile</a>
+  <a href="works.html">Works</a>
+  <a href="rights-and-registration.html">Rights</a>
+  <a href="contracts.html">Contracts</a>
+  <a href="documents.html">Documents</a>
+  <a href="protection.html">Protection</a>
+  <a href="glossary.html">Glossary</a>
+  <a href="export.html">Export</a>
+</div>
+
+<script>
+  document.getElementById("rr-menu-btn").addEventListener("click", () => {
+    document.getElementById("rr-menu-panel").classList.toggle("show");
+  });
+</script>
+
 </body>
 </html>
