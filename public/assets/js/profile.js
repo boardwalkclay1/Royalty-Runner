@@ -1,4 +1,4 @@
-// ROYALTY RUNNER — PROFILE PAGE LOGIC
+// ROYALTY RUNNER — PROFILE PAGE LOGIC (RRDB VERSION)
 
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("profile-form");
@@ -12,45 +12,46 @@ document.addEventListener("DOMContentLoaded", () => {
   form.addEventListener("submit", saveProfile);
   deleteBtn.addEventListener("click", deleteProfile);
 
-  function loadProfile() {
-    const data = JSON.parse(localStorage.getItem("rr_profile") || "{}");
+  async function loadProfile() {
+    const data = await RRDB.getProfile(); // ← NOW USING INDEXEDDB
 
-    for (const key in data) {
-      if (form.elements[key]) {
-        form.elements[key].value = data[key];
+    if (data) {
+      for (const key in data) {
+        if (form.elements[key]) {
+          form.elements[key].value = data[key];
+        }
       }
     }
 
-    updateStrength();
-    updateFlash();
+    updateStrength(data);
+    updateFlash(data);
   }
 
-  function saveProfile(e) {
+  async function saveProfile(e) {
     e.preventDefault();
 
     const data = {};
     new FormData(form).forEach((v, k) => (data[k] = v));
 
-    localStorage.setItem("rr_profile", JSON.stringify(data));
+    await RRDB.saveProfile(data); // ← SAVE TO INDEXEDDB
 
-    updateStrength();
-    updateFlash();
+    updateStrength(data);
+    updateFlash(data);
 
     alert("Profile saved.");
   }
 
-  function deleteProfile() {
+  async function deleteProfile() {
     if (!confirm("Delete your profile from this browser?")) return;
 
-    localStorage.removeItem("rr_profile");
+    await RRDB.deleteProfile(); // ← DELETE FROM INDEXEDDB
     form.reset();
-    updateStrength();
-    updateFlash();
+
+    updateStrength({});
+    updateFlash({});
   }
 
-  function updateStrength() {
-    const data = JSON.parse(localStorage.getItem("rr_profile") || "{}");
-
+  function updateStrength(data = {}) {
     const fields = [
       "legalName",
       "stageName",
@@ -70,10 +71,8 @@ document.addEventListener("DOMContentLoaded", () => {
     strengthLabel.textContent = pct + "% complete";
   }
 
-  function updateFlash() {
+  function updateFlash(data = {}) {
     flashContainer.innerHTML = "";
-
-    const data = JSON.parse(localStorage.getItem("rr_profile") || "{}");
 
     const missing = [];
 
