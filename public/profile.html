@@ -12,7 +12,7 @@
 
   <style>
     body {
-      background: url("/assets/img/royal-profile.jpg") no-repeat center center fixed;
+      background: url("assets/img/royal-profile.jpg") no-repeat center center fixed;
       background-size: cover;
       background-color: #000;
     }
@@ -38,29 +38,32 @@
       backdrop-filter: blur(4px);
     }
 
+    .photo-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      margin-bottom: 1.5rem;
+    }
+
     .profile-photo {
-      width: 120px;
-      height: 120px;
+      width: 130px;
+      height: 130px;
       border-radius: 50%;
       border: 2px solid var(--copper);
       object-fit: cover;
-      display: block;
-      margin-bottom: 1rem;
-    }
-
-    .strength-bar {
-      height: 10px;
-      background: rgba(255,255,255,0.2);
-      border-radius: 5px;
       margin-top: 0.5rem;
-      overflow: hidden;
     }
 
-    .strength-fill {
-      height: 100%;
-      width: 0%;
-      background: var(--copper);
-      transition: width 0.4s ease;
+    .rr-form label {
+      display: block;
+      margin-bottom: 1.2rem;
+      width: 100%;
+    }
+
+    .rr-form input,
+    .rr-form textarea {
+      width: 100%;
+      margin-top: 0.4rem;
     }
 
     .rr-menu-btn {
@@ -102,17 +105,19 @@
       text-decoration: none;
     }
 
-    /* One-line layout */
-    .rr-form label {
-      display: block;
-      margin-bottom: 1.2rem;
-      width: 100%;
+    .strength-bar {
+      height: 10px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 5px;
+      margin-top: 0.5rem;
+      overflow: hidden;
     }
 
-    .rr-form input,
-    .rr-form textarea {
-      width: 100%;
-      margin-top: 0.4rem;
+    .strength-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--copper);
+      transition: width 0.4s ease;
     }
   </style>
 </head>
@@ -159,12 +164,12 @@
     <section class="profile-card">
       <form id="profile-form" class="rr-form">
 
-        <!-- PROFILE PHOTO -->
-        <label>
-          Profile Photo
-          <img id="profile-photo-preview" class="profile-photo" src="assets/img/default-avatar.png" alt="Profile Photo" />
+        <!-- FIXED PROFILE PHOTO SECTION -->
+        <div class="photo-wrapper">
+          <label class="cursive" style="font-size:1.4rem;">Profile Photo</label>
+          <img id="profile-photo-preview" class="profile-photo" src="assets/img/default-avatar.png" alt="Avatar" />
           <input type="file" name="photo" accept="image/*" id="photo-input" />
-        </label>
+        </div>
 
         <label>Legal name
           <input type="text" name="legalName" required />
