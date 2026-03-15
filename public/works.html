@@ -10,7 +10,7 @@
 
   <style>
     body {
-      background: url("public/assets/img/royal-catalog.jpg") no-repeat center center fixed;
+      background: url("assets/img/royal-catalog.jpg") no-repeat center center fixed;
       background-size: cover;
       background-color: #000;
     }
@@ -94,6 +94,22 @@
       overflow: hidden;
       background: #000;
     }
+    #mixer-waveform-preview {
+      width: 100%;
+      height: 120px;
+      background: #000;
+      border: 1px solid var(--copper);
+      border-radius: 8px;
+      margin-top: 1rem;
+    }
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+      font-size: 0.9rem;
+      color: var(--copper);
+    }
   </style>
 </head>
 
@@ -120,7 +136,7 @@
     <section class="section-card">
       <h2 class="cursive" style="font-size:2rem;">Your Studio, Your Mixers</h2>
       <p>
-        Use the built‑in free mixer below to edit, trim, process, and export your audio.  
+        Use the built‑in free mixer below to edit, trim, process, and export your audio.
         When you're done, import your renders or stems back into Royalty Runner as Works.
       </p>
     </section>
@@ -129,8 +145,8 @@
     <section class="section-card">
       <h3 class="cursive" style="font-size:1.8rem;">Live Mixer</h3>
       <p style="margin-bottom:0.75rem;">
-        This is a full, free, browser‑based DAW.  
-        No login. No ads. No limits.  
+        This is a full, free, browser‑based DAW.
+        No login. No ads. No limits.
         Edit your audio directly inside this frame.
       </p>
 
@@ -175,6 +191,20 @@
           />
         </label>
 
+        <!-- WAVEFORM PREVIEW -->
+        <canvas id="mixer-waveform-preview"></canvas>
+
+        <!-- METADATA PREVIEW -->
+        <div class="meta-grid">
+          <div>Duration: <span id="mixer-meta-duration">—</span></div>
+          <div>Rate: <span id="mixer-meta-samplerate">—</span></div>
+          <div>Channels: <span id="mixer-meta-channels">—</span></div>
+          <div>Peak: <span id="mixer-meta-peak">—</span></div>
+          <div>RMS: <span id="mixer-meta-rms">—</span></div>
+          <div>BPM: <span id="mixer-meta-bpm">—</span></div>
+          <div>Key: <span id="mixer-meta-key">—</span></div>
+        </div>
+
         <button type="submit" class="bubble-btn">Save Selected Files as Works</button>
       </form>
 
@@ -210,11 +240,15 @@
 </div>
 
 <script src="assets/js/db.js"></script>
-<script src="assets/js/works-mixer.js"></script>
+
+<!-- UPGRADED ES MODULE -->
+<script type="module" src="assets/js/works-mixer.js"></script>
+
 <script>
   document.getElementById("rr-menu-btn").addEventListener("click", () => {
     document.getElementById("rr-menu-panel").classList.toggle("show");
   });
 </script>
+
 </body>
 </html>
