@@ -38,18 +38,14 @@
       backdrop-filter: blur(4px);
     }
 
-    .flash-box {
-      background: rgba(255, 140, 0, 0.15);
-      border-left: 3px solid var(--copper);
-      padding: 1rem;
+    .profile-photo {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 2px solid var(--copper);
+      object-fit: cover;
+      display: block;
       margin-bottom: 1rem;
-      border-radius: 6px;
-    }
-
-    .flash-box a {
-      color: var(--copper);
-      font-weight: bold;
-      text-decoration: underline;
     }
 
     .strength-bar {
@@ -105,6 +101,19 @@
       font-size: 1.5rem;
       text-decoration: none;
     }
+
+    /* One-line layout */
+    .rr-form label {
+      display: block;
+      margin-bottom: 1.2rem;
+      width: 100%;
+    }
+
+    .rr-form input,
+    .rr-form textarea {
+      width: 100%;
+      margin-top: 0.4rem;
+    }
   </style>
 </head>
 
@@ -150,8 +159,19 @@
     <section class="profile-card">
       <form id="profile-form" class="rr-form">
 
+        <!-- PROFILE PHOTO -->
+        <label>
+          Profile Photo
+          <img id="profile-photo-preview" class="profile-photo" src="assets/img/default-avatar.png" alt="Profile Photo" />
+          <input type="file" name="photo" accept="image/*" id="photo-input" />
+        </label>
+
         <label>Legal name
           <input type="text" name="legalName" required />
+        </label>
+
+        <label>AKA
+          <input type="text" name="aka" placeholder="Also known as…" />
         </label>
 
         <label>Stage name
@@ -191,9 +211,7 @@
           <button type="button" id="delete-profile" class="button-secondary">Delete profile</button>
         </div>
 
-        <p class="small-note">
-          Deleting your profile removes it from this browser only.
-        </p>
+        <p class="small-note">Deleting your profile removes it from this browser only.</p>
 
       </form>
     </section>
@@ -220,6 +238,17 @@
 <script>
   document.getElementById("rr-menu-btn").addEventListener("click", () => {
     document.getElementById("rr-menu-panel").classList.toggle("show");
+  });
+
+  // Live photo preview
+  const photoInput = document.getElementById("photo-input");
+  const preview = document.getElementById("profile-photo-preview");
+
+  photoInput.addEventListener("change", () => {
+    const file = photoInput.files[0];
+    if (file) {
+      preview.src = URL.createObjectURL(file);
+    }
   });
 </script>
 
