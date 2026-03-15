@@ -80,6 +80,27 @@
       margin-bottom: 0.5rem;
     }
 
+    .tag {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid var(--copper);
+      border-radius: 999px;
+      font-size: 0.75rem;
+      margin-right: 0.3rem;
+      color: var(--copper-light);
+    }
+
+    .folder-select {
+      width: 100%;
+      padding: 0.5rem;
+      background: #000;
+      border: 1px solid var(--copper);
+      color: var(--copper-light);
+      border-radius: 6px;
+      margin-bottom: 1rem;
+    }
+
     .rr-menu-btn {
       position: absolute;
       right: 1rem;
@@ -180,11 +201,24 @@
       <h2 class="cursive" style="font-size:2rem;">Your Private Artist Filing Cabinet</h2>
       <p>
         Every contract you draft, every agreement you generate, every legal document you upload —
-        all saved here with timestamps, tags, and full previews.
+        all saved here with timestamps, tags, folders, and full previews.
       </p>
       <p>
         Documents saved from the <a href="contracts.html">Contracts Command Center</a> appear here automatically.
       </p>
+    </section>
+
+    <!-- FOLDER FILTER -->
+    <section class="section-card">
+      <h3 class="cursive" style="font-size:1.8rem;">Folders</h3>
+      <select id="folder-filter" class="folder-select">
+        <option value="all">All Documents</option>
+        <option value="Contracts">Contracts</option>
+        <option value="Uploads">Uploads</option>
+        <option value="Legal">Legal</option>
+        <option value="Creative">Creative</option>
+        <option value="Other">Other</option>
+      </select>
     </section>
 
     <!-- UPLOAD -->
@@ -227,7 +261,7 @@
   <a href="my-catalog.html">My Catalog</a>
   <a href="works.html">Works</a>
   <a href="royalties.html">Royalties</a>
-  <a href="rights-and-registration.html">Rights</a>
+  <a href="rights-and-registration.html">Rights & Registration</a>
   <a href="manage.html">Manage</a>
   <a href="law.html">Law</a>
   <a href="contracts.html">Contracts</a>
