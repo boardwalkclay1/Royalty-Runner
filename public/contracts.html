@@ -6,6 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="manifest" href="manifest.json" />
   <link rel="stylesheet" href="assets/css/style.css" />
+
+  <!-- Cursive Font -->
   <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600&display=swap" rel="stylesheet">
 
   <style>
@@ -40,13 +42,15 @@
       font-family: 'Dancing Script', cursive;
       font-size: 1.6rem;
       color: var(--copper);
-      margin-bottom: 0.25rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
-    .dropdown-sub {
-      font-size: 0.9rem;
-      color: #ccc;
-      margin-bottom: 0.5rem;
+    .dropdown-header span.toggle-icon {
+      font-size: 1.4rem;
+      color: var(--copper-light);
     }
 
     .dropdown-content {
@@ -59,7 +63,7 @@
 
     .dropdown-content ul {
       padding-left: 1.2rem;
-      margin-top: 0.4rem;
+      margin-top: 0.5rem;
     }
 
     .bubble-btn {
@@ -74,12 +78,6 @@
       margin-top: 0.5rem;
       cursor: pointer;
       border: none;
-    }
-
-    .bubble-btn.secondary {
-      background: transparent;
-      color: var(--copper-light);
-      border: 1px solid var(--copper);
     }
 
     .editor-meta {
@@ -209,6 +207,13 @@
       font-size: 1rem;
       text-decoration: none;
     }
+
+    /* Signature helper */
+    .signature-helper {
+      margin-top: 0.75rem;
+      font-size: 0.9rem;
+      color: var(--copper-light);
+    }
   </style>
 </head>
 
@@ -219,7 +224,7 @@
   <header class="rr-header">
     <h1 class="cursive" style="font-size:3rem;">Contracts Command Center</h1>
     <p class="cursive" style="font-size:1.3rem;">
-      Draft, understand, and route every deal to your Documents Vault.
+      Draft, understand, and route every deal through your Documents Vault.
     </p>
 
     <button id="rr-menu-btn" class="rr-menu-btn">☰</button>
@@ -228,9 +233,9 @@
       <a href="index.html">Home</a>
       <a href="profile.html">Profile</a>
       <a href="rights-and-registration.html">Rights</a>
-      <a href="law.html">Law</a>
       <a href="documents.html">Documents</a>
       <a href="glossary.html">Glossary</a>
+      <a href="law.html">Law</a>
     </nav>
   </header>
 
@@ -238,118 +243,159 @@
 
     <!-- INTRO -->
     <section class="section-card">
-      <h2 class="cursive" style="font-size:2rem;">How This Page Works</h2>
+      <h2 class="cursive" style="font-size:2rem;">How this page works</h2>
       <p>
-        This is your **drafting lane**, not long‑term storage. You load a template, it auto‑fills with your
-        profile details where possible, you customize it, then:
+        This is your **staging area** for contracts. Load a template, let your profile auto‑fill names and IDs,
+        tweak the language, then send it to your <a href="documents.html">Documents Vault</a> to sign, store, and print.
+      </p>
+      <p>
+        You can:
       </p>
       <ul>
-        <li>Send it to the <strong>Documents Vault</strong> to store, sign, and version it</li>
-        <li>Email it as a draft for review or signature</li>
-        <li>Print a clean copy for in‑person signing</li>
+        <li>Load detailed templates with plain‑language explanations</li>
+        <li>Click highlighted terms to see definitions without leaving the page</li>
+        <li>Auto‑insert your profile info (legal name, PRO, IPI, publisher)</li>
+        <li>Email a draft for e‑signature or in‑person signing</li>
+        <li>Send a clean text version to the Documents Vault for long‑term storage</li>
       </ul>
-      <p>
-        Any highlighted term is clickable — you’ll get a plain‑language explanation in a popup without leaving the page.
+      <p class="signature-helper">
+        To sign: print from the Documents Vault, sign in person, or use any e‑signature tool and re‑upload.
       </p>
     </section>
 
     <!-- CONTRACT TYPES -->
     <section class="section-card">
-      <h3 class="cursive" style="font-size:1.8rem;">Contract Templates</h3>
+      <h3 class="cursive" style="font-size:1.8rem;">Contract templates & explanations</h3>
 
+      <!-- Recording -->
       <div class="dropdown">
-        <div class="dropdown-header">Recording Agreement (Artist ↔ Label)</div>
-        <div class="dropdown-sub">Use when a label is funding, releasing, or controlling your masters.</div>
+        <div class="dropdown-header">
+          <span>Recording Agreement (Artist ↔ Label)</span>
+          <span class="toggle-icon">+</span>
+        </div>
         <div class="dropdown-content">
-          <p>This covers:</p>
+          <p>
+            This is the classic **record deal**. It controls who owns the masters, how advances work,
+            how royalties are calculated, and how long the label controls your recordings.
+          </p>
           <ul>
-            <li>Who owns the <span class="glossary-term" data-term="masters">masters</span></li>
-            <li><span class="glossary-term" data-term="advance">Advances</span>, <span class="glossary-term" data-term="recoupment">recoupment</span>, and royalty rates</li>
-            <li><span class="glossary-term" data-term="term">Term</span>, options, and <span class="glossary-term" data-term="territory">territory</span></li>
-            <li>Delivery requirements and reversion / license options</li>
+            <li><strong>Use when:</strong> A label or company is funding and releasing your music.</li>
+            <li><strong>Key clauses:</strong> Masters ownership, advance, recoupment, royalty %, term, options, territory, reversion.</li>
+            <li><strong>Risk:</strong> You can lose control of your masters for a long time if terms are bad.</li>
           </ul>
           <button class="bubble-btn" data-template="recording">Load Recording Agreement</button>
         </div>
       </div>
 
+      <!-- Producer -->
       <div class="dropdown">
-        <div class="dropdown-header">Producer Agreement (Producer Points on Master)</div>
-        <div class="dropdown-sub">Use when a producer is owed a fee and/or points on the master.</div>
+        <div class="dropdown-header">
+          <span>Producer Agreement (Producer Points on Master)</span>
+          <span class="toggle-icon">+</span>
+        </div>
         <div class="dropdown-content">
-          <p>This covers:</p>
+          <p>
+            This defines what a producer gets paid, how many **points** they receive on the master,
+            and who owns the final recordings.
+          </p>
           <ul>
-            <li>Producer fee and <span class="glossary-term" data-term="points">points</span></li>
-            <li>Who owns the master and whether it’s <span class="glossary-term" data-term="work-for-hire">work‑for‑hire</span></li>
-            <li>Credits, stems, and sample responsibilities</li>
+            <li><strong>Use when:</strong> You hire a producer to create or finish your track.</li>
+            <li><strong>Key clauses:</strong> Fee, points, recoupment, credits, ownership, samples.</li>
           </ul>
           <button class="bubble-btn" data-template="producer">Load Producer Agreement</button>
         </div>
       </div>
 
+      <!-- Split Sheet -->
       <div class="dropdown">
-        <div class="dropdown-header">Split Sheet (Songwriter / Composer Splits)</div>
-        <div class="dropdown-sub">Use every time more than one person writes a song.</div>
+        <div class="dropdown-header">
+          <span>Split Sheet (Songwriter / Composer Splits)</span>
+          <span class="toggle-icon">+</span>
+        </div>
         <div class="dropdown-content">
-          <p>This covers:</p>
+          <p>
+            This locks in **who owns what % of the song** (the composition), and records each writer’s PRO,
+            IPI / CAE, and publisher/admin.
+          </p>
           <ul>
-            <li>Songwriter names, roles, and percentages</li>
-            <li><span class="glossary-term" data-term="pro">PRO</span> and <span class="glossary-term" data-term="ipi">IPI / CAE</span> info</li>
-            <li>How <span class="glossary-term" data-term="mechanical royalties">mechanical</span> and performance royalties are split</li>
+            <li><strong>Use when:</strong> Two or more people wrote or composed the song.</li>
+            <li><strong>Key clauses:</strong> Ownership %, PRO, IPI, publisher/admin, sync fee splits.</li>
           </ul>
           <button class="bubble-btn" data-template="split">Load Split Sheet</button>
         </div>
       </div>
 
+      <!-- Management -->
       <div class="dropdown">
-        <div class="dropdown-header">Management Agreement (Artist ↔ Manager)</div>
-        <div class="dropdown-sub">Use when someone is managing your entire career.</div>
+        <div class="dropdown-header">
+          <span>Management Agreement (Artist ↔ Manager)</span>
+          <span class="toggle-icon">+</span>
+        </div>
         <div class="dropdown-content">
-          <p>This covers:</p>
+          <p>
+            This defines how a manager gets paid, what they handle, and how long they represent you.
+            The **sunset clause** controls how long they keep earning after the deal ends.
+          </p>
           <ul>
-            <li>Commission on <span class="glossary-term" data-term="gross earnings">gross earnings</span></li>
-            <li><span class="glossary-term" data-term="term">Term</span> and <span class="glossary-term" data-term="sunset clause">sunset clause</span></li>
-            <li>Scope of services and expenses</li>
+            <li><strong>Use when:</strong> You’re hiring a manager or formalizing an existing relationship.</li>
+            <li><strong>Key clauses:</strong> Commission %, term, sunset clause, expenses, power of attorney.</li>
           </ul>
           <button class="bubble-btn" data-template="management">Load Management Agreement</button>
         </div>
       </div>
 
+      <!-- Work for Hire -->
       <div class="dropdown">
-        <div class="dropdown-header">Work‑for‑Hire Agreement</div>
-        <div class="dropdown-sub">Use when you pay a flat fee and own 100% of the results.</div>
+        <div class="dropdown-header">
+          <span>Work‑for‑Hire Agreement</span>
+          <span class="toggle-icon">+</span>
+        </div>
         <div class="dropdown-content">
-          <p>This covers:</p>
+          <p>
+            You pay a flat fee, and you own **100% of the results**. Common for session players, designers,
+            editors, and some producers.
+          </p>
           <ul>
-            <li>Clear “work‑for‑hire” language</li>
-            <li>Flat fee and payment schedule</li>
-            <li>Optional credit language</li>
+            <li><strong>Use when:</strong> You want full ownership of what someone creates for you.</li>
+            <li><strong>Key clauses:</strong> Scope of work, fee, ownership, credits, warranties.</li>
           </ul>
           <button class="bubble-btn" data-template="workforhire">Load Work‑for‑Hire</button>
         </div>
       </div>
 
+      <!-- Sync -->
       <div class="dropdown">
-        <div class="dropdown-header">Sync License (Music ↔ Film / TV / Content)</div>
-        <div class="dropdown-sub">Use when your music is being used with video or visuals.</div>
+        <div class="dropdown-header">
+          <span>Sync License (Music ↔ Film / TV / Content)</span>
+          <span class="toggle-icon">+</span>
+        </div>
         <div class="dropdown-content">
-          <p>This covers:</p>
+          <p>
+            This grants the right to use your music with picture (film, TV, ads, games, YouTube, etc.).
+            It covers fee, term, territory, and media.
+          </p>
           <ul>
-            <li>Media, territory, and term</li>
-            <li>Sync fee and credit language</li>
-            <li>Who controls the master and composition</li>
+            <li><strong>Use when:</strong> Someone wants to use your song in visual media.</li>
+            <li><strong>Key clauses:</strong> Media, territory, term, fee, credits, clearances.</li>
           </ul>
           <button class="bubble-btn" data-template="sync">Load Sync License</button>
         </div>
       </div>
 
+      <!-- Custom -->
       <div class="dropdown">
-        <div class="dropdown-header">Custom Contract (Blank Structured Template)</div>
-        <div class="dropdown-sub">Use when you need something unique but still structured.</div>
+        <div class="dropdown-header">
+          <span>Custom Contract (Blank Structured Template)</span>
+          <span class="toggle-icon">+</span>
+        </div>
         <div class="dropdown-content">
-          <p>This gives you:</p>
+          <p>
+            A clean, structured skeleton you can adapt to any situation: collabs, brand deals, one‑off services,
+            or anything that doesn’t fit a standard template.
+          </p>
           <ul>
-            <li>Clean sections for rights, term, compensation, and ownership</li>
-            <li>Signature blocks ready for printing or e‑signing</li>
+            <li><strong>Use when:</strong> No existing template fits what you’re doing.</li>
+            <li><strong>Key clauses:</strong> Definitions, grant of rights/services, term, compensation, ownership, credits, termination.</li>
           </ul>
           <button class="bubble-btn" data-template="custom">Start Custom Contract</button>
         </div>
@@ -358,12 +404,7 @@
 
     <!-- EDITOR -->
     <section class="section-card" id="editor-section">
-      <h3 class="cursive" style="font-size:1.8rem;">Active Contract Draft</h3>
-
-      <p style="font-size:0.95rem; color:#ddd; margin-bottom:0.75rem;">
-        Your profile details (legal name, stage name, PRO, IPI, publisher) will auto‑fill into templates where possible.
-        You can still edit anything manually.
-      </p>
+      <h3 class="cursive" style="font-size:1.8rem;">Active contract draft</h3>
 
       <div class="editor-meta">
         <input type="text" id="contract-name" placeholder="Contract name (e.g. Recording Agreement – Single)" />
@@ -372,19 +413,18 @@
       </div>
 
       <div class="editor-toolbar">
-        <button class="bubble-btn" id="btn-send-docs">Send to Documents Vault</button>
-        <button class="bubble-btn" id="btn-email">Send by Email</button>
-        <button class="bubble-btn" id="btn-print">Print Clean Contract</button>
-        <button class="bubble-btn secondary" id="btn-profile-fill">Re‑pull Profile Info</button>
+        <button class="bubble-btn" id="btn-autofill-profile">Insert my profile info</button>
+        <button class="bubble-btn" id="btn-save-doc">Send to Documents Vault</button>
+        <button class="bubble-btn" id="btn-email">Email this contract</button>
+        <button class="bubble-btn" id="btn-print">Print clean copy</button>
       </div>
 
       <div id="contract-editor" contenteditable="true" placeholder="Load a template above or start typing your own contract..."></div>
 
-      <p style="font-size:0.9rem; color:#ccc; margin-top:0.75rem;">
-        <strong>Signing options:</strong>  
-        1) Send to <a href="documents.html">Documents</a> and sign there (scan, upload, or e‑sign),  
-        2) Email as a PDF or text for e‑signature,  
-        3) Print and sign in person, then scan back into your Documents Vault.
+      <p class="signature-helper">
+        Signature lines are already built into the templates.  
+        For in‑person signing: print from the Documents Vault.  
+        For e‑signature: email this draft, have it signed, then upload the signed PDF back into Documents.
       </p>
     </section>
 
@@ -418,6 +458,12 @@
 </div>
 
 <script src="assets/js/contracts.js"></script>
+
+<script>
+  document.getElementById("rr-menu-btn").addEventListener("click", () => {
+    document.getElementById("rr-menu-panel").classList.toggle("show");
+  });
+</script>
 
 </body>
 </html>
