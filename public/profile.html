@@ -7,7 +7,6 @@
   <link rel="manifest" href="manifest.json" />
   <link rel="stylesheet" href="assets/css/style.css" />
 
-  <!-- Cursive Font -->
   <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600&display=swap" rel="stylesheet">
 
   <style>
@@ -61,7 +60,8 @@
     }
 
     .rr-form input,
-    .rr-form textarea {
+    .rr-form textarea,
+    .rr-form select {
       width: 100%;
       margin-top: 0.4rem;
     }
@@ -119,6 +119,78 @@
       background: var(--copper);
       transition: width 0.4s ease;
     }
+
+    .flash-item {
+      background: rgba(0,0,0,0.55);
+      border: 1px solid var(--copper);
+      border-radius: 8px;
+      padding: 0.7rem 1rem;
+      margin-bottom: 0.6rem;
+      font-size: 0.95rem;
+    }
+
+    .flash-item strong {
+      color: var(--copper-light);
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+
+    .button-share {
+      background: transparent;
+      border: 1px solid var(--copper);
+      color: var(--copper-light);
+      padding: 0.5rem 0.9rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+
+    .button-share:hover {
+      background: rgba(184,115,51,0.25);
+    }
+
+    .small-note {
+      font-size: 0.8rem;
+      color: #ccc;
+      margin-top: 0.5rem;
+    }
+
+    .helper-links a {
+      display: inline-block;
+      margin-right: 0.8rem;
+      margin-top: 0.4rem;
+      font-size: 0.9rem;
+      color: var(--copper-light);
+      text-decoration: underline;
+    }
+
+    .define {
+      color: var(--copper-light);
+      font-weight: bold;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .define:hover::after {
+      content: attr(data-definition);
+      position: absolute;
+      left: 0;
+      top: 1.6rem;
+      background: rgba(0,0,0,0.9);
+      border: 1px solid var(--copper);
+      padding: 0.7rem 1rem;
+      border-radius: 8px;
+      width: 260px;
+      font-size: 0.9rem;
+      color: #fff;
+      z-index: 9999;
+      white-space: normal;
+    }
   </style>
 </head>
 
@@ -145,7 +217,7 @@
     <!-- PROFILE STRENGTH -->
     <section class="profile-card">
       <h2 class="cursive" style="font-size:2rem;">Profile Strength</h2>
-      <p>Your profile powers auto‑fill across the entire app.</p>
+      <p>Your profile powers auto‑fill across Royalty Runner — contracts, registrations, splits, and more.</p>
 
       <div class="strength-bar">
         <div id="strength-fill" class="strength-fill"></div>
@@ -158,13 +230,18 @@
     <section id="flash-section" class="profile-card">
       <h3 class="cursive" style="font-size:1.8rem;">Recommended Actions</h3>
       <div id="flash-container"></div>
+      <div class="helper-links">
+        <a href="rights-and-registration.html">Get a PRO & IPI</a>
+        <a href="royalties.html">Learn Royalties</a>
+        <a href="contracts.html">Review Contracts</a>
+        <a href="glossary.html">Open Glossary</a>
+      </div>
     </section>
 
     <!-- PROFILE FORM -->
     <section class="profile-card">
       <form id="profile-form" class="rr-form">
 
-        <!-- FIXED PROFILE PHOTO SECTION -->
         <div class="photo-wrapper">
           <label class="cursive" style="font-size:1.4rem;">Profile Photo</label>
           <img id="profile-photo-preview" class="profile-photo" src="assets/img/default-avatar.png" alt="Avatar" />
@@ -187,24 +264,40 @@
           <input type="email" name="email" />
         </label>
 
-        <label>Performing Rights Organization (PRO)
-          <input type="text" name="pro" placeholder="ASCAP, BMI, SESAC, PRS, etc." />
+        <label>
+          <span class="define" data-definition="A Performing Rights Organization collects performance royalties when your music is played publicly.">
+            Performing Rights Organization (PRO)
+          </span>
+          <select name="pro">
+            <option value="">Select your PRO</option>
+            <option value="ASCAP">ASCAP</option>
+            <option value="BMI">BMI</option>
+            <option value="SESAC">SESAC</option>
+            <option value="PRS">PRS (UK)</option>
+            <option value="SOCAN">SOCAN (Canada)</option>
+            <option value="GEMA">GEMA (Germany)</option>
+            <option value="SACEM">SACEM (France)</option>
+            <option value="APRA AMCOS">APRA AMCOS (AU/NZ)</option>
+            <option value="Other">Other / Not Listed</option>
+          </select>
         </label>
 
-        <label>IPI / CAE number
+        <label>
+          <span class="define" data-definition="Your unique global ID as a songwriter or publisher, issued by your PRO.">
+            IPI / CAE number
+          </span>
           <input type="text" name="ipi" />
         </label>
 
-        <label>Publishing entity
-          <input type="text" name="publisher" />
+        <label>
+          <span class="define" data-definition="The company or entity that controls your publishing and collects your publishing royalties.">
+            Publishing entity
+          </span>
+          <input type="text" name="publisher" placeholder="Self-published or company name" />
         </label>
 
         <label>Country
           <input type="text" name="country" />
-        </label>
-
-        <label>Address
-          <textarea name="address" rows="2"></textarea>
         </label>
 
         <label>Social links
@@ -213,19 +306,42 @@
 
         <div class="form-actions">
           <button type="submit" class="button">Save profile</button>
-          <button type="button" id="delete-profile" class="button-secondary">Delete profile</button>
+          <button type="button" id="share-profile" class="button-share">Share profile</button>
+          <button type="button" id="delete-profile" class="button-secondary">Clear from this device</button>
         </div>
 
-        <p class="small-note">Deleting your profile removes it from this browser only.</p>
+        <p class="small-note">
+          Your profile is stored locally in this browser using Royalty Runner’s RRDB.  
+          Clearing it removes your data from <strong>this device only</strong> — there is no cloud login.
+        </p>
 
       </form>
+    </section>
+
+    <!-- DATA FLOW EXPLANATION -->
+    <section class="profile-card">
+      <h2 class="cursive" style="font-size:2rem;">How Your Profile Powers Royalty Runner</h2>
+      <p>
+        Your profile is the root identity for the entire app. Once saved, Royalty Runner uses this data to
+        auto‑fill and connect modules:
+      </p>
+      <ul>
+        <li><strong>Works:</strong> Uses your legal name, stage name, PRO, IPI, and publisher on every song.</li>
+        <li><strong>Contracts:</strong> Auto‑fills your name, email, PRO, and publisher into templates and red‑flag checkers.</li>
+        <li><strong>Rights & Registration:</strong> Uses your PRO and IPI when you register works or claim royalties.</li>
+        <li><strong>Documents:</strong> Tags files with your identity for quick search and export.</li>
+        <li><strong>Royalties:</strong> Connects your PRO and publishing info to royalty destinations and tools.</li>
+      </ul>
+      <p>
+        All of this is stored in <strong>RRDB</strong> (a local database in your browser), so your data stays on your device
+        while still powering the entire Royalty Runner ecosystem.
+      </p>
     </section>
 
   </main>
 
 </div>
 
-<!-- BURGER MENU PANEL -->
 <div id="rr-menu-panel" class="rr-menu-panel">
   <a href="index.html">Home</a>
   <a href="profile.html">Profile</a>
@@ -245,7 +361,6 @@
     document.getElementById("rr-menu-panel").classList.toggle("show");
   });
 
-  // Live photo preview
   const photoInput = document.getElementById("photo-input");
   const preview = document.getElementById("profile-photo-preview");
 
