@@ -1,40 +1,21 @@
-const CACHE_NAME = "royalty-runner-v1";
+const CACHE_NAME = "royalty-runner-v2";
 
 const ASSETS = [
-  "/",
-  "/index.html",
-  "/profile.html",
-  "/works.html",
-  "/rights-and-registration.html",
-  "/royalties.html",
-  "/manage.html",
-  "/law.html",
-  "/contracts.html",
-  "/documents.html",
-  "/protection.html",
-  "/glossary.html",
-  "/the-game.html",
-  "/about-me.html",
-  "/export.html",
-
-  "/manifest.json",
-  "/favicon.ico",
-
   "/assets/css/style.css",
   "/assets/js/app.js",
   "/assets/js/catalog.js",
   "/assets/js/db.js",
   "/assets/js/works.js",
-
   "/assets/img/royal-catalog.jpg",
   "/assets/img/royal-profile.jpg",
   "/assets/img/royal-randr.jpg",
-
   "/assets/icons/royal-192.png",
-  "/assets/icons/royal-512.png"
+  "/assets/icons/royal-512.png",
+  "/manifest.json",
+  "/favicon.ico"
 ];
 
-// INSTALL
+// INSTALL — cache static assets only
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
@@ -42,7 +23,7 @@ self.addEventListener("install", (event) => {
   self.skipWaiting();
 });
 
-// ACTIVATE
+// ACTIVATE — clean old caches
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys().then((keys) =>
@@ -56,16 +37,22 @@ self.addEventListener("activate", (event) => {
   self.clients.claim();
 });
 
-// FETCH
+// FETCH — network first for HTML, cache first for assets
 self.addEventListener("fetch", (event) => {
+  const req = event.request;
+
+  // HTML pages → network first
+  if (req.mode === "navigate") {
+    event.respondWith(
+      fetch(req).catch(() => caches.match("/index.html"))
+    );
+    return;
+  }
+
+  // Static assets → cache first
   event.respondWith(
-    caches.match(event.request).then((cached) => {
-      return (
-        cached ||
-        fetch(event.request).catch(() =>
-          caches.match("/index.html")
-        )
-      );
+    caches.match(req).then((cached) => {
+      return cached || fetch(req);
     })
   );
 });
