@@ -4,13 +4,10 @@
   <meta charset="UTF-8" />
   <title>Royalty Runner – Artist Management Command Center</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <!-- Manifest + Favicon -->
-  <link rel="manifest" href="/manifest.json" />
-  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
-
-  <!-- Global Styles -->
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
   <link rel="stylesheet" href="assets/css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600&display=swap" rel="stylesheet">
 
   <style>
     body {
@@ -40,7 +37,6 @@
 
     ul { padding-left: 1.2rem; }
 
-    /* Special Management Tools Hub */
     .tools-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -81,7 +77,11 @@
       text-decoration: none;
     }
 
-    /* Burger Menu */
+    .tool-card a:hover {
+      background: rgba(184,115,51,0.25);
+      color: var(--copper-light);
+    }
+
     .rr-menu-btn {
       position: absolute;
       right: 1rem;
@@ -130,14 +130,11 @@
   <h1 class="cursive" style="font-size:3rem;">Artist Management Command Center</h1>
   <p class="tagline cursive" style="font-size:1.4rem;">Everything a manager does — now in your hands.</p>
 
-  <!-- BURGER -->
   <button id="rr-menu-btn" class="rr-menu-btn">☰</button>
 
-  <!-- TOP NAV (cleaned) -->
   <nav class="rr-nav cursive">
     <a href="index.html">Home</a>
     <a href="profile.html">Profile</a>
-    <a href="my-catalog.html">My Catalog</a>
     <a href="works.html">Works</a>
     <a href="royalties.html">Royalties</a>
     <a href="rights-and-registration.html">Rights</a>
@@ -156,7 +153,6 @@
     A music manager is the architect of an artist’s career — strategist, negotiator, business partner,
     and shield. This page gives you the same tools and structure a real management team uses.
   </p>
-
   <p>Managers handle:</p>
   <ul>
     <li>Booking shows, tours, and appearances</li>
@@ -170,42 +166,41 @@
   </ul>
 </section>
 
-<!-- MANAGEMENT TOOLS HUB (NEW) -->
+<!-- MANAGEMENT TOOLS HUB -->
 <section class="section-card">
   <h2 class="cursive" style="font-size:2rem;">Management Tools Hub</h2>
-  <p>
-    These are your core management departments.  
-    This page is now the **only** place to access them.
-  </p>
+  <p>This is your access point to every department a manager controls.</p>
 
   <div class="tools-grid">
 
-    <!-- Documents -->
     <div class="tool-card">
       <h4>Documents Vault</h4>
       <p>Store contracts, riders, invoices, EPKs, legal proof, and all career files.</p>
       <a href="documents.html">Open Vault</a>
     </div>
 
-    <!-- Royalties -->
     <div class="tool-card">
       <h4>Royalties Center</h4>
       <p>Understand every royalty type and track where your money comes from.</p>
       <a href="royalties.html">Open Royalties</a>
     </div>
 
-    <!-- Contracts -->
     <div class="tool-card">
       <h4>Contracts Command</h4>
       <p>Editable templates, red flag detection, and auto-filled agreements.</p>
       <a href="contracts.html">Open Contracts</a>
     </div>
 
-    <!-- Law -->
     <div class="tool-card">
       <h4>Legal Center</h4>
       <p>Copyright, publishing law, negotiation rules, and lawyer directories.</p>
       <a href="law.html">Open Legal Center</a>
+    </div>
+
+    <div class="tool-card">
+      <h4>Protection Hub</h4>
+      <p>Copyright, trademark, brand protection, and proof of authorship tools.</p>
+      <a href="protection.html">Open Protection</a>
     </div>
 
   </div>
@@ -226,83 +221,4 @@
   </ul>
 
   <h3 class="cursive" style="font-size:1.6rem;">Booking Checklist</h3>
-  <ul>
-    <li>Confirm venue capacity</li>
-    <li>Negotiate performance fee</li>
-    <li>Review contract terms</li>
-    <li>Confirm sound requirements</li>
-    <li>Send stage plot & tech rider</li>
-    <li>Promote the event</li>
-    <li>Collect payment details</li>
-  </ul>
-</section>
-
-<!-- PUBLICIST -->
-<section class="section-card">
-  <h2 class="cursive" style="font-size:2rem;">Publicist Command Center</h2>
-  <p>
-    A publicist controls the narrative — press, media, storytelling, and brand image.
-  </p>
-
-  <ul>
-    <li>Press releases</li>
-    <li>Media outreach</li>
-    <li>Brand image and storytelling</li>
-    <li>Interview preparation</li>
-    <li>Press kits (EPKs)</li>
-    <li>Social media strategy</li>
-    <li>Crisis management</li>
-    <li>Blog, radio, and playlist placements</li>
-  </ul>
-
-  <h3 class="cursive" style="font-size:1.6rem;">Publicist Tools</h3>
-  <ul>
-    <li><a href="documents.html">EPK Builder</a></li>
-    <li><a href="contracts.html">Publicist Agreement Template</a></li>
-    <li><a href="glossary.html">Media & PR Terms</a></li>
-    <li><a href="https://www.submitmusic.com" target="_blank">SubmitHub – Press & Playlist Submissions</a></li>
-    <li><a href="https://www.prnewswire.com" target="_blank">PR Newswire – Press Release Distribution</a></li>
-    <li><a href="https://www.muckrack.com" target="_blank">MuckRack – Journalist Database</a></li>
-  </ul>
-</section>
-
-<!-- OFFICIAL LINKS -->
-<section class="section-card">
-  <h2 class="cursive" style="font-size:2rem;">Official Career Resources</h2>
-  <ul>
-    <li><a href="https://www.ascap.com" target="_blank">ASCAP</a></li>
-    <li><a href="https://www.bmi.com" target="_blank">BMI</a></li>
-    <li><a href="https://www.sesac.com" target="_blank">SESAC</a></li>
-    <li><a href="https://www.soundexchange.com" target="_blank">SoundExchange</a></li>
-    <li><a href="https://mlc.com" target="_blank">The MLC</a></li>
-    <li><a href="https://www.grammy.com" target="_blank">Recording Academy</a></li>
-    <li><a href="https://www.artistgrowth.com" target="_blank">Artist Growth – Management Tools</a></li>
-    <li><a href="https://www.songtrust.com" target="_blank">Songtrust – Publishing Admin</a></li>
-  </ul>
-</section>
-
-</main>
-
-</div>
-
-<!-- BURGER MENU PANEL -->
-<div id="rr-menu-panel" class="rr-menu-panel">
-  <a href="index.html">Home</a>
-  <a href="profile.html">Profile</a>
-  <a href="my-catalog.html">My Catalog</a>
-  <a href="works.html">Works</a>
-  <a href="royalties.html">Royalties</a>
-  <a href="rights-and-registration.html">Rights</a>
-  <a href="manage.html">Manage</a>
-  <a href="glossary.html">Glossary</a>
-  <a href="export.html">Export</a>
-</div>
-
-<script>
-  document.getElementById("rr-menu-btn").addEventListener("click", () => {
-    document.getElementById("rr-menu-panel").classList.toggle("show");
-  });
-</script>
-
-</body>
-</html>
+  <
