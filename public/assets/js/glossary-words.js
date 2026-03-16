@@ -1,415 +1,246 @@
 window.WORD_GLOSSARY = [
 
   {
-    term: "Artist",
+    term: "Acapella",
     definition: `
-      A person who creates music, performs music, or releases music. An artist can be a singer,
-      rapper, producer, instrumentalist, or any creative who contributes to the sound or identity
-      of a musical work. In the music industry, “artist” usually refers to the public-facing
-      performer whose name appears on the release.
+      A vocal recording with no instrumental backing. Used for remixes, live arrangements,
+      and vocal production work. Clean acapellas are valuable for DJs and producers.
     `,
-    tags: ["general", "music"]
+    tags: ["audio", "vocals"]
   },
 
   {
     term: "Album",
     definition: `
-      A collection of songs released together as a unified project. Albums typically contain
-      multiple tracks (often 8–20) and are treated as a single body of work for distribution,
-      marketing, and charting purposes.
+      A full-length body of work, usually 8–20 songs, representing a complete artistic era.
+      Albums often define an artist’s identity and creative direction.
     `,
-    tags: ["general", "music"]
+    tags: ["music", "projects"]
   },
 
   {
-    term: "Single",
+    term: "Artist",
     definition: `
-      A standalone song released independently of an album. Singles are often used to promote an
-      upcoming project or to test audience response.
+      A creative who performs, writes, produces, or releases music. The public-facing identity
+      behind a musical work — the voice, the brand, the story.
     `,
-    tags: ["general", "music"]
+    tags: ["music", "identity"]
+  },
+
+  {
+    term: "Beat",
+    definition: `
+      The instrumental foundation of a song. Beats include drums, melodies, basslines,
+      and textures that shape the vibe and energy of a track.
+    `,
+    tags: ["production", "music"]
+  },
+
+  {
+    term: "BPM (Beats Per Minute)",
+    definition: `
+      The tempo of a song. Higher BPM feels energetic; lower BPM feels relaxed.
+      BPM helps DJs, producers, and engineers match timing and groove.
+    `,
+    tags: ["audio", "production"]
+  },
+
+  {
+    term: "Bridge",
+    definition: `
+      A contrasting section in a song that breaks away from the verse and chorus.
+      Bridges add emotional lift, tension, or a new perspective before returning to the hook.
+    `,
+    tags: ["songwriting", "structure"]
+  },
+
+  {
+    term: "Catalog",
+    definition: `
+      The complete collection of an artist’s released and unreleased music.
+      A strong catalog increases long-term value, streams, and licensing potential.
+    `,
+    tags: ["music", "career"]
+  },
+
+  {
+    term: "Chorus / Hook",
+    definition: `
+      The most memorable part of a song — the section listeners repeat, sing along to,
+      and remember. Hooks define the identity of a track.
+    `,
+    tags: ["songwriting", "structure"]
+  },
+
+  {
+    term: "DAW (Digital Audio Workstation)",
+    definition: `
+      Software used to record, edit, mix, and produce music. Examples include FL Studio,
+      Logic Pro, Ableton Live, and Pro Tools.
+    `,
+    tags: ["audio", "production"]
+  },
+
+  {
+    term: "Demo",
+    definition: `
+      A rough version of a song used to capture the idea before full production.
+      Demos help artists, producers, and collaborators shape the final track.
+    `,
+    tags: ["music", "creation"]
+  },
+
+  {
+    term: "Drop",
+    definition: `
+      A high-energy moment in a song where the beat hits or changes dramatically.
+      Common in EDM, hip-hop, and pop production.
+    `,
+    tags: ["production", "music"]
   },
 
   {
     term: "EP (Extended Play)",
     definition: `
-      A short music release that is longer than a single but shorter than an album. Typically
-      contains 3–6 songs. Often used to introduce a new artist or era.
+      A short project, usually 3–6 songs. EPs introduce new eras, test sounds,
+      and build momentum between major releases.
     `,
-    tags: ["general", "music"]
-  },
-
-  {
-    term: "Producer",
-    definition: `
-      The person responsible for creating the instrumental, shaping the sound, arranging the
-      structure, and guiding the overall sonic direction of a song. A producer may also record
-      vocals, mix tracks, or contribute creatively to the composition.
-    `,
-    tags: ["general", "music"]
+    tags: ["music", "projects"]
   },
 
   {
     term: "Engineer",
     definition: `
-      A technical specialist who records, edits, mixes, or masters audio. Engineers ensure the
-      sound quality is clean, balanced, and ready for release.
+      A technical specialist who records, edits, mixes, or masters audio.
+      Engineers shape the clarity, balance, and polish of a track.
     `,
-    tags: ["general", "music"]
+    tags: ["audio", "production"]
   },
 
   {
-    term: "Mixing",
+    term: "Genre",
     definition: `
-      The process of adjusting levels, EQ, compression, effects, and spatial placement of each
-      element in a song to create a balanced and cohesive sound.
+      A category of music defined by style, sound, and cultural influence.
+      Genres help listeners discover music and help platforms categorize releases.
     `,
-    tags: ["general", "audio"]
+    tags: ["music", "identity"]
+  },
+
+  {
+    term: "Hook",
+    definition: `
+      The catchiest part of a song — the line or melody designed to stick in the listener’s mind.
+      Hooks drive replay value and define the song’s core message.
+    `,
+    tags: ["songwriting", "structure"]
+  },
+
+  {
+    term: "Instrumental",
+    definition: `
+      A version of a song without vocals. Used for performances, remixes, sync placements,
+      and production reference.
+    `,
+    tags: ["audio", "production"]
   },
 
   {
     term: "Mastering",
     definition: `
-      The final stage of audio production. Mastering ensures the song sounds polished, consistent,
-      and optimized for all playback systems (phones, cars, speakers, streaming platforms).
+      The final polish on a song — balancing loudness, EQ, and clarity so it sounds great
+      on all speakers, headphones, and platforms.
     `,
-    tags: ["general", "audio"]
-  },
-
-  {
-    term: "Stem",
-    definition: `
-      An isolated audio component of a song, such as vocals, drums, bass, or instruments. Stems are
-      used for mixing, remixes, live shows, and sync licensing.
-    `,
-    tags: ["general", "audio"]
+    tags: ["audio", "finishing"]
   },
 
   {
     term: "Metadata",
     definition: `
-      Information attached to a song or recording that identifies who created it, who owns it, and
-      how royalties should be paid. Metadata includes artist name, producer name, ISRC, ISWC,
-      release date, genre, and more.
+      The information attached to a song — artist name, producer, release date, genre,
+      and identifiers. Metadata ensures your music is found, credited, and paid correctly.
     `,
-    tags: ["general", "codes"]
+    tags: ["music", "data"]
   },
 
   {
-    term: "Distribution",
+    term: "Mixing",
     definition: `
-      The process of delivering your music to digital platforms like Spotify, Apple Music, Amazon
-      Music, and YouTube. Distributors handle uploads, metadata, payments, and reporting.
+      The process of balancing vocals, instruments, effects, and frequencies to create
+      a cohesive and professional sound.
     `,
-    tags: ["general", "business"]
+    tags: ["audio", "production"]
+  },
+
+  {
+    term: "Producer",
+    definition: `
+      The creative architect behind the sound of a song. Producers craft beats, guide
+      arrangements, shape sonic identity, and often co-write compositions.
+    `,
+    tags: ["music", "production"]
+  },
+
+  {
+    term: "Remix",
+    definition: `
+      A reimagined version of a song — new beat, new arrangement, or new features.
+      Remixes extend a song’s life and reach new audiences.
+    `,
+    tags: ["music", "creation"]
+  },
+
+  {
+    term: "Session",
+    definition: `
+      A collaborative recording or writing meeting where artists, producers, and writers
+      create music together. Sessions can produce demos, full songs, or ideas.
+    `,
+    tags: ["music", "creation"]
+  },
+
+  {
+    term: "Single",
+    definition: `
+      A standalone song released independently of an album or EP. Singles build momentum,
+      test new sounds, and introduce new eras.
+    `,
+    tags: ["music", "projects"]
+  },
+
+  {
+    term: "Stem",
+    definition: `
+      An isolated audio element — vocals, drums, bass, instruments. Stems are used for
+      mixing, remixes, live shows, and sync placements.
+    `,
+    tags: ["audio", "production"]
   },
 
   {
     term: "Streaming",
     definition: `
-      A method of listening to music without downloading it. Platforms like Spotify and Apple Music
-      pay royalties based on streams, which are counted each time someone listens to your track for
-      a minimum duration.
+      Listening to music without downloading it. Platforms count a stream when a listener
+      plays a track for a minimum duration. Streaming drives modern music discovery.
     `,
-    tags: ["general", "music"]
-  },
-
-  {
-    term: "Royalties",
-    definition: `
-      Money earned from the use of your music. Royalties come from streaming, radio, live
-      performances, downloads, physical sales, sync placements, and more.
-    `,
-    tags: ["general", "royalties"]
-  },
-
-  {
-    term: "Publishing",
-    definition: `
-      The business of managing and monetizing the composition (the underlying song). Publishing
-      covers the melody, lyrics, and structure — not the recording. Publishers collect royalties,
-      register works, and protect your rights.
-    `,
-    tags: ["general", "publishing"]
-  },
-
-  {
-    term: "Master",
-    definition: `
-      The final sound recording of a song. Whoever owns the master controls how the recording is
-      used, licensed, and monetized.
-    `,
-    tags: ["general", "rights"]
-  },
-
-  {
-    term: "Composition",
-    definition: `
-      The underlying musical work — the melody, lyrics, and structure. This is separate from the
-      master recording. Compositions earn publishing royalties.
-    `,
-    tags: ["general", "publishing"]
-  },
-
-  {
-    term: "PRO (Performing Rights Organization)",
-    definition: `
-      An organization that collects performance royalties on behalf of songwriters and publishers.
-      Examples include ASCAP, BMI, SESAC, SOCAN, PRS, and GEMA.
-    `,
-    tags: ["general", "royalties"]
-  },
-
-  {
-    term: "ISRC",
-    definition: `
-      A unique code assigned to each sound recording. Used to track plays, streams, and royalties
-      for the master.
-    `,
-    tags: ["general", "codes"]
-  },
-
-  {
-    term: "ISWC",
-    definition: `
-      A unique code assigned to the composition (the song itself). Used by PROs and publishers to
-      track royalties for the underlying work.
-    `,
-    tags: ["general", "codes"]
-  },
-
-  {
-    term: "IPI / CAE Number",
-    definition: `
-      A unique number assigned to songwriters and publishers by PROs. Identifies you worldwide as a
-      rights holder.
-    `,
-    tags: ["general", "codes"]
-  },
-
-  {
-    term: "UPC / EAN",
-    definition: `
-      Barcodes used to identify releases (albums, singles, EPs) in stores and digital platforms.
-    `,
-    tags: ["general", "codes"]
-  },
-
-  {
-    term: "Split Sheet",
-    definition: `
-      A document listing all contributors to a song and their ownership percentages. Essential for
-      avoiding disputes and ensuring everyone gets paid correctly.
-    `,
-    tags: ["general", "contracts"]
-  },
-
-  {
-    term: "Contract",
-    definition: `
-      A legally binding agreement that defines rights, responsibilities, payments, ownership, and
-      obligations between parties. Contracts are essential in the music industry to protect your
-      work and income.
-    `,
-    tags: ["general", "legal"]
-  },
-
-  {
-    term: "Recoupment",
-    definition: `
-      The process where a company (label, publisher, distributor) recovers money they advanced to
-      you from your future royalties. You may not receive additional payments until recoupment is
-      complete.
-    `,
-    tags: ["general", "business"]
-  },
-
-  {
-    term: "Advance",
-    definition: `
-      Upfront money paid to you by a label, publisher, or distributor. This is not free money — it
-      is recoupable, meaning it must be paid back through your royalties.
-    `,
-    tags: ["general", "business"]
-  },
-
-  {
-    term: "Territory",
-    definition: `
-      The geographic area where a contract applies. Common territories include “World,” “North
-      America,” “EU,” or specific countries.
-    `,
-    tags: ["general", "legal"]
-  },
-
-  {
-    term: "Term",
-    definition: `
-      The length of time a contract lasts. Can be measured in years, album cycles, or options
-      controlled by the label or publisher.
-    `,
-    tags: ["general", "legal"]
-  },
-
-  {
-    term: "Licensing",
-    definition: `
-      The process of granting permission for someone to use your music in exchange for payment.
-      Licensing includes sync deals, samples, covers, and more.
-    `,
-    tags: ["general", "business"]
-  },
-
-  {
-    term: "Sync",
-    definition: `
-      Short for “synchronization.” Sync refers to pairing music with visual media such as film, TV,
-      ads, games, and trailers. Sync deals often include upfront fees and royalties.
-    `,
-    tags: ["general", "royalties"]
-  },
-
-  {
-    term: "Sample",
-    definition: `
-      A portion of an existing recording used in a new song. Sampling requires clearance from both
-      the master owner and the composition owner.
-    `,
-    tags: ["general", "legal"]
-  },
-
-  {
-    term: "Clearance",
-    definition: `
-      Legal permission to use copyrighted material such as samples, lyrics, or recordings. Without
-      clearance, you risk legal action and loss of revenue.
-    `,
-    tags: ["general", "legal"]
-  },
-
-  {
-    term: "Publishing Deal",
-    definition: `
-      An agreement where a publisher helps manage your compositions, register works, collect
-      royalties, and pitch your music for opportunities in exchange for a percentage of income.
-    `,
-    tags: ["general", "publishing"]
-  },
-
-  {
-    term: "Distribution Deal",
-    definition: `
-      An agreement where a distributor delivers your music to platforms and pays you a share of
-      revenue. Some distributors charge fees, others take percentages.
-    `,
-    tags: ["general", "business"]
-  },
-
-  {
-    term: "Label",
-    definition: `
-      A company that signs artists, funds music production, handles marketing, and distributes
-      releases. Labels often own masters and recoup expenses before paying artists.
-    `,
-    tags: ["general", "business"]
-  },
-
-  {
-    term: "Independent Artist",
-    definition: `
-      An artist who releases music without being signed to a major label. Independent artists retain
-      more control and ownership but must handle their own business operations.
-    `,
-    tags: ["general", "music"]
-  },
-
-  {
-    term: "Major Label",
-    definition: `
-      A large, multinational record company with extensive resources, marketing power, and global
-      reach. Examples include Universal Music Group, Sony Music, and Warner Music Group.
-    `,
-    tags: ["general", "business"]
-  },
-
-  {
-    term: "A&R (Artists and Repertoire)",
-    definition: `
-      The department within a label responsible for discovering talent, signing artists, and
-      overseeing creative development.
-    `,
-    tags: ["general", "business"]
-  },
-
-  {
-    term: "Manager",
-    definition: `
-      A professional who guides an artist’s career, negotiates deals, coordinates opportunities, and
-      earns a percentage of the artist’s income.
-    `,
-    tags: ["general", "business"]
-  },
-
-  {
-    term: "Booking Agent",
-    definition: `
-      A professional responsible for securing live performances, tours, and appearances for an
-      artist. Agents typically earn a percentage of show revenue.
-    `,
-    tags: ["general", "business"]
+    tags: ["music", "platforms"]
   },
 
   {
     term: "Tour",
     definition: `
-      A series of live performances across multiple cities or countries. Tours generate income from
-      ticket sales, merch, sponsorships, and more.
+      A series of live performances across multiple cities or countries. Tours build fanbases,
+      generate income, and strengthen an artist’s brand.
     `,
-    tags: ["general", "music"]
+    tags: ["music", "career"]
   },
 
   {
-    term: "Merch",
+    term: "Verse",
     definition: `
-      Short for “merchandise.” Items sold by an artist such as shirts, hoodies, posters, vinyl,
-      hats, and accessories. Merch is a major income stream.
+      The storytelling section of a song. Verses deliver detail, emotion, and narrative
+      before returning to the hook.
     `,
-    tags: ["general", "business"]
-  },
-
-  {
-    term: "Brand Deal",
-    definition: `
-      A partnership between an artist and a company where the artist promotes a product or service
-      in exchange for payment or benefits.
-    `,
-    tags: ["general", "business"]
-  },
-
-  {
-    term: "Royalty Statement",
-    definition: `
-      A report showing how much money your music earned, where it earned it, and how payments were
-      calculated. Provided by distributors, publishers, and labels.
-    `,
-    tags: ["general", "royalties"]
-  },
-
-  {
-    term: "Backend Points",
-    definition: `
-      A percentage of revenue earned from a master recording. Common in producer agreements.
-    `,
-    tags: ["general", "business"]
-  },
-
-  {
-    term: "Work for Hire",
-    definition: `
-      A contract where you are paid to create something, but the person paying owns the copyright
-      from the start. Common in production and custom compositions.
-    `,
-    tags: ["general", "legal"]
+    tags: ["songwriting", "structure"]
   }
 
 ];
