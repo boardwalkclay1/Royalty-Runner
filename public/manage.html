@@ -120,6 +120,35 @@
       font-size: 1.5rem;
       text-decoration: none;
     }
+
+    /* Mini Calendar */
+    #mini-calendar {
+      background: rgba(0,0,0,0.55);
+      border: 1px solid var(--copper);
+      border-radius: 10px;
+      padding: 1rem;
+      margin-top: 1rem;
+      color: var(--copper-light);
+    }
+
+    #mini-calendar .day {
+      padding: 0.4rem;
+      border-bottom: 1px solid rgba(184,115,51,0.3);
+    }
+
+    #mini-calendar .day strong {
+      color: var(--copper);
+    }
+
+    /* Reminders */
+    #reminders-list {
+      background: rgba(0,0,0,0.55);
+      border: 1px solid var(--copper);
+      border-radius: 10px;
+      padding: 1rem;
+      margin-top: 1rem;
+      color: var(--copper-light);
+    }
   </style>
 </head>
 
@@ -134,26 +163,35 @@
 
   <nav class="rr-nav cursive">
     <a href="index.html">Home</a>
-    <a href="profile.html">Profile</a>
-    <a href="works.html">Works</a>
-    <a href="royalties.html">Royalties</a>
-    <a href="rights-and-registration.html">Rights</a>
     <a href="manage.html">Manage</a>
+    <a href="calendar.html">Calendar</a>
+    <a href="rights-and-registration.html">Rights</a>
+    <a href="documents.html">Documents</a>
     <a href="glossary.html">Glossary</a>
-    <a href="export.html">Export</a>
   </nav>
 </header>
 
 <main class="rr-main">
 
+<!-- REMINDERS -->
+<section class="section-card">
+  <h2 class="cursive" style="font-size:2rem;">Upcoming Reminders</h2>
+  <p>Your next deadlines, bookings, and tasks appear here automatically.</p>
+  <div id="reminders-list"><p style="opacity:0.7;">Loading reminders…</p></div>
+</section>
+
+<!-- MINI CALENDAR -->
+<section class="section-card">
+  <h2 class="cursive" style="font-size:2rem;">Weekly Calendar</h2>
+  <p>Tap any date to open the full calendar.</p>
+  <div id="mini-calendar"><p style="opacity:0.7;">Loading weekly view…</p></div>
+  <a href="calendar.html" class="tool-card a" style="margin-top:1rem;">Open Full Calendar</a>
+</section>
+
 <!-- INTRO -->
 <section class="section-card">
   <h2 class="cursive" style="font-size:2rem;">What a Manager Really Does</h2>
-  <p>
-    A music manager is the architect of an artist’s career — strategist, negotiator, business partner,
-    and shield. This page gives you the same tools and structure a real management team uses.
-  </p>
-  <p>Managers handle:</p>
+  <p>A manager is the architect of an artist’s career — strategist, negotiator, business partner, and shield.</p>
   <ul>
     <li>Booking shows, tours, and appearances</li>
     <li>Negotiating performance fees and contracts</li>
@@ -161,15 +199,15 @@
     <li>Building industry relationships</li>
     <li>Managing budgets, revenue, and expenses</li>
     <li>Protecting the artist from bad deals and bad actors</li>
-    <li>Overseeing branding, image, and long-term strategy</li>
+    <li>Overseeing branding and long-term strategy</li>
     <li>Connecting the artist with lawyers, publicists, and agencies</li>
   </ul>
 </section>
 
-<!-- MANAGEMENT TOOLS HUB -->
+<!-- TOOLS HUB -->
 <section class="section-card">
   <h2 class="cursive" style="font-size:2rem;">Management Tools Hub</h2>
-  <p>This is your access point to every department a manager controls.</p>
+  <p>Your access point to every department a manager controls.</p>
 
   <div class="tools-grid">
 
@@ -180,15 +218,15 @@
     </div>
 
     <div class="tool-card">
-      <h4>Royalties Center</h4>
-      <p>Understand every royalty type and track where your money comes from.</p>
-      <a href="royalties.html">Open Royalties</a>
-    </div>
-
-    <div class="tool-card">
       <h4>Contracts Command</h4>
       <p>Editable templates, red flag detection, and auto-filled agreements.</p>
       <a href="contracts.html">Open Contracts</a>
+    </div>
+
+    <div class="tool-card">
+      <h4>Royalties Center</h4>
+      <p>Understand every royalty type and track where your money comes from.</p>
+      <a href="royalties.html">Open Royalties</a>
     </div>
 
     <div class="tool-card">
@@ -199,7 +237,7 @@
 
     <div class="tool-card">
       <h4>Protection Hub</h4>
-      <p>Copyright, trademark, brand protection, and proof of authorship tools.</p>
+      <p>Copyright, trademark, brand protection, and proof of authorship.</p>
       <a href="protection.html">Open Protection</a>
     </div>
 
@@ -209,7 +247,7 @@
 <!-- BOOKING -->
 <section class="section-card">
   <h2 class="cursive" style="font-size:2rem;">Booking Shows & Touring</h2>
-  <p>Managers secure shows, negotiate fees, and build touring schedules. Here’s how you can do it:</p>
+  <p>Managers secure shows, negotiate fees, and build touring schedules.</p>
 
   <h3 class="cursive" style="font-size:1.6rem;">Essential Booking Tools</h3>
   <ul>
@@ -221,4 +259,40 @@
   </ul>
 
   <h3 class="cursive" style="font-size:1.6rem;">Booking Checklist</h3>
-  <
+  <ul>
+    <li>Confirm venue capacity and age restrictions</li>
+    <li>Negotiate performance fee and payment schedule</li>
+    <li>Review contract terms and cancellation clauses</li>
+    <li>Confirm sound requirements and stage plot</li>
+    <li>Send tech rider, hospitality rider, and EPK</li>
+    <li>Verify backline availability</li>
+    <li>Arrange travel and lodging</li>
+    <li>Promote the event</li>
+    <li>Collect payment details</li>
+    <li>Confirm load‑in time, soundcheck, and set length</li>
+  </ul>
+</section>
+
+</main>
+</div>
+
+<!-- BURGER MENU PANEL -->
+<div id="rr-menu-panel" class="rr-menu-panel">
+  <a href="index.html">Home</a>
+  <a href="manage.html">Manage</a>
+  <a href="calendar.html">Calendar</a>
+  <a href="rights-and-registration.html">Rights</a>
+  <a href="documents.html">Documents</a>
+  <a href="glossary.html">Glossary</a>
+</div>
+
+<script src="assets/js/manage-calendar.js"></script>
+
+<script>
+  document.getElementById("rr-menu-btn").addEventListener("click", () => {
+    document.getElementById("rr-menu-panel").classList.toggle("show");
+  });
+</script>
+
+</body>
+</html>
