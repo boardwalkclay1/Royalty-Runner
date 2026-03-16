@@ -14,15 +14,18 @@
       background-size: cover;
       background-color: #000;
     }
+
     .overlay {
       background: rgba(0, 0, 0, 0.78);
       min-height: 100vh;
       padding-bottom: 4rem;
     }
+
     .cursive {
       font-family: 'Dancing Script', cursive;
       letter-spacing: 1px;
     }
+
     .section-card {
       background: rgba(0, 0, 0, 0.65);
       border: 1px solid var(--copper);
@@ -31,6 +34,7 @@
       margin-bottom: 2rem;
       backdrop-filter: blur(4px);
     }
+
     .rr-menu-btn {
       position: absolute;
       right: 1rem;
@@ -42,6 +46,7 @@
       cursor: pointer;
       z-index: 9999;
     }
+
     .rr-menu-panel {
       position: fixed;
       top: 0;
@@ -55,9 +60,11 @@
       transform: translateX(100%);
       z-index: 9998;
     }
+
     .rr-menu-panel.show {
       transform: translateX(0);
     }
+
     .rr-menu-panel a {
       display: block;
       margin-bottom: 1.2rem;
@@ -66,6 +73,7 @@
       font-size: 1.5rem;
       text-decoration: none;
     }
+
     .bubble-btn {
       display: inline-block;
       padding: 0.4rem 1rem;
@@ -79,6 +87,13 @@
       border: none;
       cursor: pointer;
     }
+
+    .bubble-btn.secondary {
+      background: transparent;
+      color: var(--copper);
+      border: 1px solid var(--copper);
+    }
+
     .work-card {
       background: rgba(0,0,0,0.55);
       border: 1px solid var(--copper);
@@ -86,29 +101,84 @@
       border-radius: 10px;
       margin-bottom: 1rem;
     }
-    .mixer-frame {
-      width: 100%;
-      height: 520px;
-      border: 1px solid var(--copper);
-      border-radius: 10px;
-      overflow: hidden;
-      background: #000;
+
+    .field-row {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.75rem;
     }
-    #mixer-waveform-preview {
-      width: 100%;
-      height: 120px;
-      background: #000;
-      border: 1px solid var(--copper);
-      border-radius: 8px;
-      margin-top: 1rem;
+
+    .field-row label {
+      flex: 1 1 160px;
     }
-    .meta-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0.5rem;
-      margin-top: 0.75rem;
+
+    .field-row input,
+    .field-row textarea,
+    .field-row select {
+      width: 100%;
+    }
+
+    .small-note {
       font-size: 0.9rem;
+      color: #ccc;
+    }
+
+    .audio-controls {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 0.5rem;
+      align-items: center;
+    }
+
+    .audio-status {
+      font-size: 0.9rem;
+      color: var(--copper-light);
+      margin-top: 0.3rem;
+    }
+
+    .journal-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      gap: 1rem;
+    }
+
+    @media (max-width: 900px) {
+      .journal-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    #journal-body {
+      width: 100%;
+      min-height: 220px;
+      resize: vertical;
+    }
+
+    #journal-title {
+      width: 100%;
+    }
+
+    .journal-entry {
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      padding: 0.5rem 0;
+      cursor: pointer;
+    }
+
+    .journal-entry-title {
       color: var(--copper);
+      font-size: 1rem;
+    }
+
+    .journal-entry-meta {
+      font-size: 0.8rem;
+      color: #aaa;
+    }
+
+    audio {
+      width: 100%;
+      margin-top: 0.4rem;
     }
   </style>
 </head>
@@ -117,7 +187,7 @@
 <div class="overlay">
 
   <header class="rr-header">
-    <h1 class="cursive" style="font-size:3rem;">Works – External Studio</h1>
+    <h1 class="cursive" style="font-size:3rem;">Works Studio</h1>
 
     <button id="rr-menu-btn" class="rr-menu-btn">☰</button>
 
@@ -125,109 +195,169 @@
       <a href="index.html">Home</a>
       <a href="profile.html">Profile</a>
       <a href="rights-and-registration.html">Rights</a>
-      <a href="manage.html">Manage</a>
-      <a href="law.html">Law</a>
+      <a href="royalties.html">Royalties</a>
+      <a href="contracts.html">Contracts</a>
+      <a href="documents.html">Documents</a>
+      <a href="protection.html">Protection</a>
       <a href="glossary.html">Glossary</a>
     </nav>
   </header>
 
   <main class="rr-main">
 
+    <!-- INTRO -->
     <section class="section-card">
-      <h2 class="cursive" style="font-size:2rem;">Your Studio, Your Mixers</h2>
+      <h2 class="cursive" style="font-size:2rem;">Lock Your Songs into Your Catalog</h2>
       <p>
-        Use the built‑in free mixer below to edit, trim, process, and export your audio.
-        When you're done, import your renders or stems back into Royalty Runner as Works.
+        This is your song vault and writing room.  
+        Save finished songs, capture quick voice notes, and write lyrics or ideas in a real journal
+        that lives inside Royalty Runner on this device.
+      </p>
+      <p class="small-note">
+        Everything here is local‑only and offline‑ready. No cloud, no accounts, just your browser.
       </p>
     </section>
 
-    <!-- REAL MIXER EMBED -->
+    <!-- SONG LIBRARY -->
     <section class="section-card">
-      <h3 class="cursive" style="font-size:1.8rem;">Live Mixer</h3>
-      <p style="margin-bottom:0.75rem;">
-        This is a full, free, browser‑based DAW.
-        No login. No ads. No limits.
-        Edit your audio directly inside this frame.
-      </p>
+      <h3 class="cursive" style="font-size:1.8rem;">Save Finished Songs to Your Works Catalog</h3>
 
-      <div class="mixer-frame">
-        <iframe
-          id="rr-external-mixer"
-          src="https://audiomass.co"
-          style="width:100%;height:100%;border:0;"
-          allow="microphone; clipboard-read; clipboard-write"
-        ></iframe>
-      </div>
-    </section>
+      <form id="song-upload-form" class="rr-form">
+        <div class="field-row">
+          <label>
+            Default Role
+            <select name="role" id="song-default-role">
+              <option value="Artist">Artist</option>
+              <option value="Writer">Writer</option>
+              <option value="Producer">Producer</option>
+              <option value="Composer">Composer</option>
+            </select>
+          </label>
 
-    <!-- IMPORT RENDERS AS WORKS -->
-    <section class="section-card">
-      <h3 class="cursive" style="font-size:1.8rem;">Import Renders / Stems as Works</h3>
+          <label>
+            Default Project / Album
+            <input type="text" id="song-default-project" placeholder="Album, EP, or project name" />
+          </label>
+        </div>
 
-      <form id="mixer-import-form" class="rr-form">
         <label>
-          Default Role
-          <select name="role">
-            <option>Artist</option>
-            <option>Writer</option>
-            <option>Producer</option>
-            <option>Composer</option>
-          </select>
+          Notes (applied to all uploaded files)
+          <textarea id="song-default-notes" rows="2" placeholder="Session notes, collaborators, mix version, etc."></textarea>
         </label>
 
-        <label>
-          Notes (applied to all imported files)
-          <textarea name="notes" rows="2" placeholder="Session notes, collaborators, mix version, etc."></textarea>
-        </label>
-
-        <label>
-          Upload rendered audio (WAV / FLAC / OGG / WEBM – no MP3)
+        <label style="margin-top:0.75rem;">
+          Upload finished audio (WAV, MP3, FLAC, OGG, M4A, etc.)
           <input
             type="file"
-            id="mixer-files"
-            name="mixerFiles"
-            accept=".wav,.flac,.ogg,.webm,audio/*"
+            id="song-files"
+            accept="audio/*"
             multiple
           />
         </label>
 
-        <!-- WAVEFORM PREVIEW -->
-        <canvas id="mixer-waveform-preview"></canvas>
-
-        <!-- METADATA PREVIEW -->
-        <div class="meta-grid">
-          <div>Duration: <span id="mixer-meta-duration">—</span></div>
-          <div>Rate: <span id="mixer-meta-samplerate">—</span></div>
-          <div>Channels: <span id="mixer-meta-channels">—</span></div>
-          <div>Peak: <span id="mixer-meta-peak">—</span></div>
-          <div>RMS: <span id="mixer-meta-rms">—</span></div>
-          <div>BPM: <span id="mixer-meta-bpm">—</span></div>
-          <div>Key: <span id="mixer-meta-key">—</span></div>
-        </div>
-
-        <button type="submit" class="bubble-btn">Save Selected Files as Works</button>
+        <button type="submit" class="bubble-btn">Save Songs to Works</button>
       </form>
 
       <p class="small-note" style="margin-top:0.75rem;">
-        Each file becomes its own Work in your local IndexedDB catalog, with timestamps and metadata.
+        Each file becomes a Work entry with filename, size, type, and timestamp.  
+        Audio is stored in your browser’s IndexedDB so you can play it back later.
       </p>
+
+      <div id="works-list" style="margin-top:1rem;"></div>
     </section>
 
-    <!-- WORKS LIST -->
+    <!-- AUDIO MEMO RECORDER -->
     <section class="section-card">
-      <h3 class="cursive" style="font-size:1.8rem;">Your Works Catalog</h3>
-      <div id="works-list"></div>
+      <h3 class="cursive" style="font-size:1.8rem;">Quick Audio Memo Recorder</h3>
+      <p>
+        Capture melodies, hooks, or spoken notes the moment they hit you.  
+        Name each memo, record, save, and play it back later — all inside your Works Studio.
+      </p>
+
+      <div class="work-card">
+        <div class="field-row">
+          <label>
+            Memo Title
+            <input type="text" id="memo-title" placeholder="Verse idea, hook, riff, etc." />
+          </label>
+        </div>
+
+        <div class="audio-controls">
+          <button id="memo-record-btn" type="button" class="bubble-btn">Start Recording</button>
+          <button id="memo-stop-btn" type="button" class="bubble-btn secondary" disabled>Stop</button>
+          <button id="memo-save-btn" type="button" class="bubble-btn secondary" disabled>Save Memo</button>
+        </div>
+
+        <div class="audio-status" id="memo-status">Idle.</div>
+        <audio id="memo-preview" controls style="display:none;"></audio>
+      </div>
+
+      <h4 class="cursive" style="font-size:1.4rem;margin-top:1rem;">Saved Memos</h4>
+      <div id="memo-list"></div>
+    </section>
+
+    <!-- WRITER'S JOURNAL -->
+    <section class="section-card">
+      <h3 class="cursive" style="font-size:1.8rem;">Writer’s Journal</h3>
+      <p>
+        A real journal for lyrics, concepts, and planning.  
+        Your current page auto‑saves as you type. You can also save snapshots as separate entries
+        and revisit them later.
+      </p>
+
+      <div class="journal-layout">
+        <!-- Editor -->
+        <div>
+          <label>
+            Entry Title
+            <input
+              type="text"
+              id="journal-title"
+              placeholder="Song title, concept, or session name"
+              autocomplete="off"
+            />
+          </label>
+
+          <label style="margin-top:0.75rem; display:block;">
+            Journal Body
+            <textarea
+              id="journal-body"
+              rows="10"
+              spellcheck="true"
+              placeholder="Write lyrics, structure ideas, to‑do lists, or session notes here..."
+            ></textarea>
+          </label>
+
+          <div class="audio-status" id="journal-status">Draft auto‑saving…</div>
+
+          <div style="margin-top:0.75rem;">
+            <button id="journal-save-entry" type="button" class="bubble-btn">Save as New Entry</button>
+            <button id="journal-clear-draft" type="button" class="bubble-btn secondary">Clear Draft</button>
+          </div>
+        </div>
+
+        <!-- Saved entries -->
+        <div>
+          <h4 class="cursive" style="font-size:1.4rem;">Saved Journal Entries</h4>
+          <p class="small-note">
+            Click an entry to load it into the editor. You can edit and save again as a new entry.
+          </p>
+          <div id="journal-entries"></div>
+        </div>
+      </div>
     </section>
 
   </main>
 </div>
 
+<!-- BURGER MENU PANEL -->
 <div id="rr-menu-panel" class="rr-menu-panel">
   <a href="index.html">Home</a>
   <a href="profile.html">Profile</a>
   <a href="my-catalog.html">My Catalog</a>
   <a href="works.html">Works</a>
   <a href="rights-and-registration.html">Rights</a>
+  <a href="royalties.html">Royalties</a>
   <a href="manage.html">Manage</a>
   <a href="law.html">Law</a>
   <a href="contracts.html">Contracts</a>
@@ -239,10 +369,8 @@
   <a href="export.html">Export</a>
 </div>
 
-<script src="assets/js/db.js"></script>
-
-<!-- UPGRADED ES MODULE -->
-<script type="module" src="assets/js/works-mixer.js"></script>
+<!-- IndexedDB + Works logic -->
+<script type="module" src="assets/js/works.js"></script>
 
 <script>
   document.getElementById("rr-menu-btn").addEventListener("click", () => {
