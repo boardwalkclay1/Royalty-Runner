@@ -121,25 +121,6 @@
       text-decoration: none;
     }
 
-    /* Mini Calendar */
-    #mini-calendar {
-      background: rgba(0,0,0,0.55);
-      border: 1px solid var(--copper);
-      border-radius: 10px;
-      padding: 1rem;
-      margin-top: 1rem;
-      color: var(--copper-light);
-    }
-
-    #mini-calendar .day {
-      padding: 0.4rem;
-      border-bottom: 1px solid rgba(184,115,51,0.3);
-    }
-
-    #mini-calendar .day strong {
-      color: var(--copper);
-    }
-
     /* Reminders */
     #reminders-list {
       background: rgba(0,0,0,0.55);
@@ -148,6 +129,114 @@
       padding: 1rem;
       margin-top: 1rem;
       color: var(--copper-light);
+    }
+
+    .reminder-item {
+      padding: 0.4rem 0;
+      border-bottom: 1px solid rgba(184,115,51,0.3);
+      font-size: 0.95rem;
+    }
+
+    .reminder-item:last-child {
+      border-bottom: none;
+    }
+
+    .reminder-date {
+      color: var(--copper);
+      font-weight: 600;
+    }
+
+    /* Mini weekly calendar */
+    #mini-calendar {
+      background: rgba(0,0,0,0.55);
+      border: 1px solid var(--copper);
+      border-radius: 10px;
+      padding: 1rem;
+      margin-top: 1rem;
+      color: var(--copper-light);
+      font-size: 0.9rem;
+    }
+
+    #mini-calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    #mini-calendar-header button {
+      background: none;
+      border: 1px solid var(--copper);
+      color: var(--copper-light);
+      border-radius: 999px;
+      padding: 0.1rem 0.6rem;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+
+    #mini-calendar-days {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 0.25rem;
+    }
+
+    .mini-day {
+      border-radius: 6px;
+      padding: 0.3rem;
+      text-align: center;
+      cursor: pointer;
+      border: 1px solid transparent;
+    }
+
+    .mini-day.has-events {
+      border-color: var(--copper);
+      background: rgba(184,115,51,0.15);
+    }
+
+    .mini-day.today {
+      background: rgba(184,115,51,0.35);
+      border-color: var(--copper);
+      font-weight: 600;
+    }
+
+    .mini-day span {
+      display: block;
+    }
+
+    .mini-day .mini-date {
+      font-size: 0.85rem;
+    }
+
+    .mini-day .mini-label {
+      font-size: 0.7rem;
+      opacity: 0.8;
+    }
+
+    .mini-footer-link {
+      display: inline-block;
+      margin-top: 0.75rem;
+      padding: 0.35rem 0.9rem;
+      border-radius: 999px;
+      background: var(--copper);
+      color: #000;
+      font-family: 'Dancing Script', cursive;
+      font-size: 1rem;
+      text-decoration: none;
+    }
+
+    .mini-footer-link:hover {
+      background: rgba(184,115,51,0.25);
+      color: var(--copper-light);
+    }
+
+    /* Booking links copper */
+    a[href^="http"] {
+      color: var(--copper-light);
+      text-decoration: underline;
+    }
+
+    a[href^="http"]:hover {
+      color: var(--copper);
     }
   </style>
 </head>
@@ -176,22 +265,34 @@
 <!-- REMINDERS -->
 <section class="section-card">
   <h2 class="cursive" style="font-size:2rem;">Upcoming Reminders</h2>
-  <p>Your next deadlines, bookings, and tasks appear here automatically.</p>
-  <div id="reminders-list"><p style="opacity:0.7;">Loading reminders…</p></div>
+  <p>Deadlines, shows, releases, and tasks from your calendar surface here automatically.</p>
+  <div id="reminders-list">
+    <p style="opacity:0.7;">Loading reminders…</p>
+  </div>
 </section>
 
-<!-- MINI CALENDAR -->
+<!-- MINI WEEKLY CALENDAR -->
 <section class="section-card">
   <h2 class="cursive" style="font-size:2rem;">Weekly Calendar</h2>
-  <p>Tap any date to open the full calendar.</p>
-  <div id="mini-calendar"><p style="opacity:0.7;">Loading weekly view…</p></div>
-  <a href="calendar.html" class="tool-card a" style="margin-top:1rem;">Open Full Calendar</a>
+  <p>See this week at a glance. Tap any day to open the full calendar and edit details.</p>
+  <div id="mini-calendar">
+    <div id="mini-calendar-header">
+      <button id="mini-prev-week">&lt;</button>
+      <div id="mini-week-label">This Week</div>
+      <button id="mini-next-week">&gt;</button>
+    </div>
+    <div id="mini-calendar-days"></div>
+  </div>
+  <a href="calendar.html" class="mini-footer-link">Open Full Calendar</a>
 </section>
 
 <!-- INTRO -->
 <section class="section-card">
   <h2 class="cursive" style="font-size:2rem;">What a Manager Really Does</h2>
-  <p>A manager is the architect of an artist’s career — strategist, negotiator, business partner, and shield.</p>
+  <p>
+    A music manager is the architect of an artist’s career — strategist, negotiator, business partner,
+    and shield. This page gives you the same tools and structure a real management team uses.
+  </p>
   <ul>
     <li>Booking shows, tours, and appearances</li>
     <li>Negotiating performance fees and contracts</li>
@@ -199,7 +300,7 @@
     <li>Building industry relationships</li>
     <li>Managing budgets, revenue, and expenses</li>
     <li>Protecting the artist from bad deals and bad actors</li>
-    <li>Overseeing branding and long-term strategy</li>
+    <li>Overseeing branding, image, and long-term strategy</li>
     <li>Connecting the artist with lawyers, publicists, and agencies</li>
   </ul>
 </section>
@@ -207,7 +308,7 @@
 <!-- TOOLS HUB -->
 <section class="section-card">
   <h2 class="cursive" style="font-size:2rem;">Management Tools Hub</h2>
-  <p>Your access point to every department a manager controls.</p>
+  <p>This is your access point to every department a manager controls.</p>
 
   <div class="tools-grid">
 
@@ -237,7 +338,7 @@
 
     <div class="tool-card">
       <h4>Protection Hub</h4>
-      <p>Copyright, trademark, brand protection, and proof of authorship.</p>
+      <p>Copyright, trademark, brand protection, and proof of authorship tools.</p>
       <a href="protection.html">Open Protection</a>
     </div>
 
@@ -247,7 +348,7 @@
 <!-- BOOKING -->
 <section class="section-card">
   <h2 class="cursive" style="font-size:2rem;">Booking Shows & Touring</h2>
-  <p>Managers secure shows, negotiate fees, and build touring schedules.</p>
+  <p>Managers secure shows, negotiate fees, and build touring schedules. Use your calendar to lock in dates and reminders.</p>
 
   <h3 class="cursive" style="font-size:1.6rem;">Essential Booking Tools</h3>
   <ul>
@@ -267,9 +368,10 @@
     <li>Send tech rider, hospitality rider, and EPK</li>
     <li>Verify backline availability</li>
     <li>Arrange travel and lodging</li>
-    <li>Promote the event</li>
-    <li>Collect payment details</li>
+    <li>Promote the event across socials and email</li>
+    <li>Collect payment details and tax forms</li>
     <li>Confirm load‑in time, soundcheck, and set length</li>
+    <li>Add all key dates and reminders to your calendar</li>
   </ul>
 </section>
 
@@ -286,8 +388,7 @@
   <a href="glossary.html">Glossary</a>
 </div>
 
-<script src="assets/js/manage-calendar.js"></script>
-
+<script src="assets/js/calendar.js"></script>
 <script>
   document.getElementById("rr-menu-btn").addEventListener("click", () => {
     document.getElementById("rr-menu-panel").classList.toggle("show");
