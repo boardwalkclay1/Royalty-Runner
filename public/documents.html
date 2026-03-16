@@ -12,7 +12,7 @@
 
   <style>
     body {
-      background: url("/assets/img/royal-catalog.jpg") no-repeat center center fixed;
+      background: url("assets/img/royal-catalog.jpg") no-repeat center center fixed;
       background-size: cover;
       background-color: #000;
     }
@@ -158,7 +158,7 @@
       border: 1px solid var(--copper);
       padding: 1.5rem;
       border-radius: 12px;
-      max-width: 800px;
+      max-width: 900px;
       width: 100%;
       max-height: 90vh;
       overflow-y: auto;
@@ -172,6 +172,23 @@
       cursor: pointer;
       font-size: 2rem;
       color: var(--copper);
+    }
+
+    .doc-actions {
+      margin-top: 0.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .doc-actions button {
+      padding: 0.3rem 0.8rem;
+      border-radius: 999px;
+      border: 1px solid var(--copper);
+      background: transparent;
+      color: var(--copper-light);
+      cursor: pointer;
+      font-size: 0.85rem;
     }
   </style>
 </head>
@@ -198,19 +215,29 @@
 
     <!-- INTRO -->
     <section class="section-card">
-      <h2 class="cursive" style="font-size:2rem;">Your Private Artist Filing Cabinet</h2>
+      <h2 class="cursive" style="font-size:2rem;">Your private artist filing cabinet</h2>
       <p>
         Every contract you draft, every agreement you generate, every legal document you upload —
-        all saved here with timestamps, tags, folders, and full previews.
+        all saved here with timestamps, folders, tags, and full previews.
       </p>
       <p>
-        Documents saved from the <a href="contracts.html">Contracts Command Center</a> appear here automatically.
+        Documents sent from the <a href="contracts.html">Contracts Command Center</a> appear here automatically
+        with their original draft text and metadata.
       </p>
+      <p>
+        From here you can:
+      </p>
+      <ul>
+        <li>Preview and print clean copies for in‑person signing</li>
+        <li>Email documents for e‑signature</li>
+        <li>Re‑upload signed PDFs or scans into the same vault</li>
+        <li>Filter by folder (Contracts, Legal, Creative, Uploads, etc.)</li>
+      </ul>
     </section>
 
     <!-- FOLDER FILTER -->
     <section class="section-card">
-      <h3 class="cursive" style="font-size:1.8rem;">Folders</h3>
+      <h3 class="cursive" style="font-size:1.8rem;">Folders & filters</h3>
       <select id="folder-filter" class="folder-select">
         <option value="all">All Documents</option>
         <option value="Contracts">Contracts</option>
@@ -219,27 +246,44 @@
         <option value="Creative">Creative</option>
         <option value="Other">Other</option>
       </select>
+
+      <input
+        type="search"
+        id="doc-search"
+        placeholder="Search by name, type, or tags..."
+        style="width:100%;padding:0.5rem;border-radius:6px;border:1px solid var(--copper);background:#000;color:var(--copper-light);"
+      />
     </section>
 
     <!-- UPLOAD -->
     <section class="section-card">
-      <h3 class="cursive" style="font-size:1.8rem;">Upload Documents</h3>
+      <h3 class="cursive" style="font-size:1.8rem;">Upload signed or external documents</h3>
 
       <div class="upload-box">
-        <p>Upload any file (PDF, DOCX, TXT, JPG, MP3, ZIP, etc.)</p>
+        <p>Upload any file (PDF, DOCX, TXT, JPG, PNG, MP3, ZIP, etc.)</p>
         <input type="file" id="doc-upload" multiple />
       </div>
+
+      <label class="cursive" style="font-size:1.1rem;">Folder for these uploads</label>
+      <select id="upload-folder" class="folder-select">
+        <option value="Uploads">Uploads</option>
+        <option value="Contracts">Contracts</option>
+        <option value="Legal">Legal</option>
+        <option value="Creative">Creative</option>
+        <option value="Other">Other</option>
+      </select>
 
       <button class="bubble-btn" id="save-docs">Save to Vault</button>
     </section>
 
     <!-- DOCUMENT LIST -->
     <section class="section-card">
-      <h3 class="cursive" style="font-size:1.8rem;">Your Saved Documents</h3>
-
-      <input type="search" id="doc-search" placeholder="Search documents..." style="width:100%;padding:0.5rem;margin-bottom:1rem;border-radius:6px;border:1px solid var(--copper);background:#000;color:var(--copper-light);" />
+      <h3 class="cursive" style="font-size:1.8rem;">Your saved documents</h3>
 
       <div id="documents-list"></div>
+      <p id="documents-empty" style="display:none;color:var(--muted);">
+        No documents yet. Draft something in <a href="contracts.html">Contracts</a> or upload a file above.
+      </p>
     </section>
 
   </main>
@@ -250,7 +294,15 @@
   <div id="doc-modal-content">
     <span id="doc-modal-close">×</span>
     <h2 id="doc-modal-title" class="cursive" style="color:var(--copper);"></h2>
+    <p id="doc-modal-meta" style="font-size:0.85rem;color:var(--muted);margin-top:0.25rem;"></p>
     <pre id="doc-modal-body"></pre>
+
+    <div class="doc-actions">
+      <button id="doc-print">Print</button>
+      <button id="doc-email">Email</button>
+      <button id="doc-download">Download</button>
+      <button id="doc-delete">Delete</button>
+    </div>
   </div>
 </div>
 
@@ -258,7 +310,6 @@
 <div id="rr-menu-panel" class="rr-menu-panel">
   <a href="index.html">Home</a>
   <a href="profile.html">Profile</a>
-  <a href="my-catalog.html">My Catalog</a>
   <a href="works.html">Works</a>
   <a href="royalties.html">Royalties</a>
   <a href="rights-and-registration.html">Rights & Registration</a>
