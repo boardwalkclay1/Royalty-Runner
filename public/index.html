@@ -4,15 +4,18 @@
   <meta charset="UTF-8" />
   <title>Royalty Runner – Artist Rights & Royalty Command Center</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="manifest" href="manifest.json" />
-  <link rel="stylesheet" href="assets/css/style.css" />
 
-  <!-- Cursive Font -->
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="assets/css/style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600&display=swap" rel="stylesheet">
 
   <style>
     body {
-      background: url("/assets/img/royal-index.jpg") no-repeat center center fixed;
+      background: url("assets/img/royal-index.jpg") no-repeat center center fixed;
       background-size: cover;
       background-color: #000;
     }
@@ -20,7 +23,6 @@
     .overlay {
       background: rgba(0, 0, 0, 0.72);
       min-height: 100vh;
-      width: 100%;
       padding-bottom: 4rem;
     }
 
@@ -38,14 +40,10 @@
       backdrop-filter: blur(4px);
     }
 
-    .dropdown {
-      margin-bottom: 1rem;
-    }
-
     .dropdown-header {
       cursor: pointer;
       font-family: 'Dancing Script', cursive;
-      font-size: 1.4rem;
+      font-size: 1.6rem;
       color: var(--copper);
       margin-bottom: 0.5rem;
     }
@@ -70,6 +68,7 @@
       margin-top: 0.5rem;
     }
 
+    /* Burger */
     .rr-menu-btn {
       position: absolute;
       right: 1rem;
@@ -103,10 +102,30 @@
     .rr-menu-panel a {
       display: block;
       margin-bottom: 1.2rem;
-      color: var(--copper);
+      color: var(--copper-light);
       font-family: 'Dancing Script', cursive;
       font-size: 1.5rem;
       text-decoration: none;
+    }
+
+    /* QR + Pay Section */
+    .pay-section {
+      text-align: center;
+      margin-top: 3rem;
+    }
+
+    .pay-section img {
+      width: 180px;
+      height: 180px;
+      border-radius: 12px;
+      border: 2px solid var(--copper);
+      margin-bottom: 1rem;
+    }
+
+    .pay-section a {
+      color: var(--copper-light);
+      font-size: 1.1rem;
+      text-decoration: underline;
     }
   </style>
 </head>
@@ -120,20 +139,19 @@
 
     <button id="rr-menu-btn" class="rr-menu-btn">☰</button>
 
+    <!-- MAIN NAV (only the 5 you requested) -->
     <nav class="rr-nav cursive">
-      <a href="profile.html">Profile</a>
-      <a href="works.html">Works</a>
-      <a href="royalties.html">Royalties</a>
-      <a href="rights-and-registration.html">Rights</a>
       <a href="manage.html">Manage</a>
-      <a href="law.html">Law</a>
-      <a href="contracts.html">Contracts</a>
+      <a href="works.html">Works</a>
       <a href="documents.html">Docs</a>
+      <a href="profile.html">Profile</a>
+      <a href="glossary.html">Glossary</a>
     </nav>
   </header>
 
   <main class="rr-main">
 
+    <!-- HERO -->
     <section class="hero section-card">
       <h2 class="cursive" style="font-size:2.2rem;">Own your rights. Control your royalties. Protect your art.</h2>
       <p>
@@ -143,108 +161,103 @@
       </p>
     </section>
 
+    <!-- FEATURE DROPDOWNS -->
     <section class="features section-card">
-      <h3 class="cursive" style="font-size:2rem;">What you can do</h3>
+      <h3 class="cursive" style="font-size:2rem;">Explore Your Command Center</h3>
 
+      <!-- MANAGE -->
       <div class="dropdown">
-        <div class="dropdown-header">Build your profile</div>
+        <div class="dropdown-header">Management Command Center</div>
         <div class="dropdown-content">
-          <p>Your legal + artist identity powers every form in the app.</p>
-          <a href="profile.html" class="bubble-btn">Go to Profile</a>
+          <p>Your booking tools, publicist tools, budgeting, routing, and career strategy live here.</p>
+          <a href="manage.html" class="bubble-btn">Open Management</a>
         </div>
       </div>
 
+      <!-- WORKS -->
       <div class="dropdown">
-        <div class="dropdown-header">Store your works</div>
+        <div class="dropdown-header">Works</div>
         <div class="dropdown-content">
-          <p>Save titles, ISRCs, splits, metadata, and audio files.</p>
-          <a href="works.html" class="bubble-btn">Go to Works</a>
+          <p>Save songs, stems, memos, metadata, and your entire catalog.</p>
+          <a href="works.html" class="bubble-btn">Open Works</a>
         </div>
       </div>
 
-      <div class="dropdown">
-        <div class="dropdown-header">Upload & earn royalties</div>
-        <div class="dropdown-content">
-          <p>Learn every platform that pays artists — free and paid.</p>
-          <a href="royalties.html" class="bubble-btn">Go to Royalties</a>
-        </div>
-      </div>
-
-      <div class="dropdown">
-        <div class="dropdown-header">Rights & Registration</div>
-        <div class="dropdown-content">
-          <p>Understand PROs, MLC, SoundExchange, copyright, and more.</p>
-          <a href="rights-and-registration.html" class="bubble-btn">Go to Rights</a>
-        </div>
-      </div>
-
-      <div class="dropdown">
-        <div class="dropdown-header">Career Management</div>
-        <div class="dropdown-content">
-          <p>Tools for planning, booking, routing, and managing your career.</p>
-          <a href="manage.html" class="bubble-btn">Go to Manage</a>
-        </div>
-      </div>
-
-      <div class="dropdown">
-        <div class="dropdown-header">Legal Center</div>
-        <div class="dropdown-content">
-          <p>Understand contracts, publishing, copyright, and red flags.</p>
-          <a href="law.html" class="bubble-btn">Go to Legal Center</a>
-        </div>
-      </div>
-
-      <div class="dropdown">
-        <div class="dropdown-header">Contract Templates</div>
-        <div class="dropdown-content">
-          <p>Artist-friendly agreements, notices, and deal breakdowns.</p>
-          <a href="contracts.html" class="bubble-btn">Go to Contracts</a>
-        </div>
-      </div>
-
+      <!-- DOCS -->
       <div class="dropdown">
         <div class="dropdown-header">Document Vault</div>
         <div class="dropdown-content">
           <p>Store contracts, EPKs, invoices, and legal files offline.</p>
-          <a href="documents.html" class="bubble-btn">Go to Documents</a>
+          <a href="documents.html" class="bubble-btn">Open Documents</a>
         </div>
       </div>
 
+      <!-- PROFILE -->
       <div class="dropdown">
-        <div class="dropdown-header">Export Your Data</div>
+        <div class="dropdown-header">Profile</div>
         <div class="dropdown-content">
-          <p>Download your profile, works, and forms as JSON backups.</p>
-          <a href="export.html" class="bubble-btn">Go to Export</a>
+          <p>Your legal + artist identity powers every form in the app.</p>
+          <a href="profile.html" class="bubble-btn">Open Profile</a>
+        </div>
+      </div>
+
+      <!-- GLOSSARY -->
+      <div class="dropdown">
+        <div class="dropdown-header">Glossary</div>
+        <div class="dropdown-content">
+          <p>Every industry term explained in plain language.</p>
+          <a href="glossary.html" class="bubble-btn">Open Glossary</a>
         </div>
       </div>
 
     </section>
 
-    <section class="cta section-card">
-      <h3 class="cursive" style="font-size:1.8rem;">Start with your artist profile</h3>
-      <a class="bubble-btn" href="profile.html">Create your profile</a>
+    <!-- PAY WHAT YOU WANT -->
+    <section class="pay-section section-card">
+      <h3 class="cursive" style="font-size:2rem;">Support Royalty Runner</h3>
+
+      <img src="assets/img/rr-qr.png" alt="Royalty Runner QR Code">
+
+      <p class="cursive" style="font-size:1.4rem; margin-top:1rem;">
+        Royalty Runner is a <strong>Pay What You Want</strong> app.
+      </p>
+
+      <p>
+        Scan the QR code or use the link below to contribute.  
+        Every dollar goes toward getting <strong>ROYALTY RUNNER ONLINE</strong> —  
+        hosting, servers, artist tools, and the full cloud version.
+      </p>
+
+      <p style="margin-top:1rem;">
+        <a href="https://www.paypal.com/ncp/payment/7ZRSKPQGURJD4" target="_blank">
+          PayPal – Support Royalty Runner
+        </a>
+      </p>
+
+      <p style="margin-top:1rem; color:#ccc;">
+        Thank you for helping build the future of artist independence.
+      </p>
     </section>
 
   </main>
 
 </div>
 
-<!-- FULL BURGER MENU -->
+<!-- BURGER MENU -->
 <div id="rr-menu-panel" class="rr-menu-panel">
   <a href="index.html">Home</a>
-  <a href="profile.html">Profile</a>
-  <a href="my-catalog.html">My Catalog</a>
-  <a href="works.html">Works</a>
-  <a href="royalties.html">Royalties</a>
-  <a href="rights-and-registration.html">Rights & Registration</a>
   <a href="manage.html">Manage</a>
+  <a href="works.html">Works</a>
+  <a href="documents.html">Docs</a>
+  <a href="profile.html">Profile</a>
+  <a href="glossary.html">Glossary</a>
+
+  <!-- Management-only pages -->
+  <a href="royalties.html">Royalties</a>
+  <a href="rights-and-registration.html">Rights</a>
   <a href="law.html">Law</a>
   <a href="contracts.html">Contracts</a>
-  <a href="documents.html">Documents</a>
   <a href="protection.html">Protection</a>
-  <a href="glossary.html">Glossary</a>
-  <a href="the-game.html">The Game</a>
-  <a href="about-me.html">About Me</a>
   <a href="export.html">Export</a>
 </div>
 
