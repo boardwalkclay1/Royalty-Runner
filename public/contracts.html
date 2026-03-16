@@ -12,7 +12,7 @@
 
   <style>
     body {
-      background: url("/assets/img/royal-catalog.jpg") no-repeat center center fixed;
+      background: url("public/assets/img/royal-catalog.jpg") no-repeat center center fixed;
       background-size: cover;
       background-color: #000;
     }
@@ -35,10 +35,6 @@
       padding: 1.5rem;
       margin-bottom: 2rem;
       backdrop-filter: blur(4px);
-    }
-
-    .dropdown {
-      margin-bottom: 1rem;
     }
 
     .dropdown-header {
@@ -71,33 +67,50 @@
       border: none;
     }
 
-    .contract-card {
-      background: rgba(0,0,0,0.55);
-      border: 1px solid var(--copper);
-      padding: 1rem;
-      border-radius: 10px;
-      margin-bottom: 1rem;
+    .editor-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
     }
 
-    .template-box {
-      background: rgba(0,0,0,0.65);
+    .editor-meta input {
+      background: #000;
       border: 1px solid var(--copper);
-      padding: 1rem;
-      border-radius: 10px;
-      margin-top: 0.75rem;
-      white-space: pre-wrap;
-      font-family: ui-monospace, monospace;
+      border-radius: 6px;
+      padding: 0.3rem 0.5rem;
       color: var(--copper-light);
-      max-height: 320px;
+      min-width: 180px;
+    }
+
+    .editor-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    #contract-editor {
+      width: 100%;
+      min-height: 460px;
+      background: rgba(0,0,0,0.9);
+      border: 1px solid var(--copper);
+      border-radius: 10px;
+      padding: 1rem;
+      color: var(--copper-light);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      white-space: pre-wrap;
       overflow-y: auto;
     }
 
-    .upload-box {
-      border: 2px dashed var(--copper);
-      padding: 1rem;
-      border-radius: 10px;
-      text-align: center;
-      margin-bottom: 1rem;
+    #contract-editor[contenteditable="true"]:focus {
+      outline: 1px solid var(--copper-light);
+    }
+
+    .glossary-term {
+      color: var(--copper-light);
+      border-bottom: 1px dotted var(--copper);
+      cursor: pointer;
     }
 
     .rr-menu-btn {
@@ -133,36 +146,53 @@
     .rr-menu-panel a {
       display: block;
       margin-bottom: 1.2rem;
-      color: var(--copper-light);
+      color: var(--copper);
       font-family: 'Dancing Script', cursive;
       font-size: 1.5rem;
       text-decoration: none;
     }
 
-    /* Signature pad */
-    #signature-pad {
-      border: 1px solid var(--copper);
-      border-radius: 8px;
-      background: #000;
-      width: 100%;
-      max-width: 500px;
-      height: 200px;
-      display: block;
-      margin-bottom: 0.5rem;
-    }
-
-    .compare-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1rem;
-    }
-
-    .compare-card {
-      background: rgba(0,0,0,0.55);
+    /* Glossary popup */
+    #glossary-popup {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      max-width: 320px;
+      background: rgba(0,0,0,0.95);
       border: 1px solid var(--copper);
       border-radius: 10px;
-      padding: 0.75rem 1rem;
-      font-size: 0.9rem;
+      padding: 1rem;
+      color: var(--copper-light);
+      display: none;
+      z-index: 99999;
+    }
+
+    #glossary-popup h4 {
+      margin: 0 0 0.5rem 0;
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.4rem;
+      color: var(--copper);
+    }
+
+    #glossary-popup-close {
+      position: absolute;
+      top: 0.3rem;
+      right: 0.6rem;
+      cursor: pointer;
+      font-size: 1.4rem;
+      color: var(--copper);
+    }
+
+    #glossary-popup .popup-link {
+      display: inline-block;
+      margin-top: 0.5rem;
+      padding: 0.2rem 0.7rem;
+      border-radius: 999px;
+      background: var(--copper);
+      color: #000;
+      font-family: 'Dancing Script', cursive;
+      font-size: 1rem;
+      text-decoration: none;
     }
   </style>
 </head>
@@ -190,243 +220,119 @@
 
     <!-- INTRO -->
     <section class="section-card">
-      <h2 class="cursive" style="font-size:2rem;">Understand, Upload, Create, and Protect</h2>
+      <h2 class="cursive" style="font-size:2rem;">Draft, Edit, Learn, and Export</h2>
       <p>
-        This is your legal headquarters. Every contract you sign, every agreement you draft,
-        every red flag you need to catch — it all lives here.
+        Every agreement here is fully editable. Any industry term that might be confusing is highlighted —
+        click it to see a plain‑language definition without leaving the page.
       </p>
       <p>
-        Royalty Runner pulls from your <a href="profile.html">Profile</a> to auto‑fill real templates
-        with your legal name, stage name, PRO, IPI, publisher, and contact info.
+        Load a template, customize it, save it to your Documents Vault, email it, or print a clean copy.
       </p>
     </section>
 
-    <!-- CONTRACT TYPES (DROPDOWNS) -->
+    <!-- CONTRACT TYPES -->
     <section class="section-card">
-      <h3 class="cursive" style="font-size:1.8rem;">Types of Contracts</h3>
+      <h3 class="cursive" style="font-size:1.8rem;">Contract Templates</h3>
 
       <div class="dropdown">
-        <div class="dropdown-header">Recording Contract</div>
+        <div class="dropdown-header">Recording Agreement (Artist ↔ Label)</div>
         <div class="dropdown-content">
-          <p>Deal between artist and label for recording, releasing, and distributing music.</p>
-          <ul>
-            <li>Ownership of masters</li>
-            <li>Advance & recoupment</li>
-            <li>Royalty rate & escalations</li>
-            <li>Term & options</li>
-            <li>Territory</li>
-          </ul>
-          <button class="bubble-btn" onclick="scrollToTemplate('template-recording-box')">Open Recording Template</button>
+          <p>
+            Covers master ownership, advances, recoupment, royalty rate, delivery, term, options, and territory.
+          </p>
+          <button class="bubble-btn" data-template="recording">Load Recording Agreement</button>
         </div>
       </div>
 
       <div class="dropdown">
-        <div class="dropdown-header">Producer Agreement</div>
+        <div class="dropdown-header">Producer Agreement (Producer Points on Master)</div>
         <div class="dropdown-content">
-          <p>Defines payment, ownership, royalties, and responsibilities between artist and producer.</p>
-          <ul>
-            <li>Work‑for‑hire vs. royalty share</li>
-            <li>Points on the master</li>
-            <li>Delivery requirements</li>
-          </ul>
-          <button class="bubble-btn" onclick="scrollToTemplate('template-producer-box')">Open Producer Template</button>
+          <p>
+            Defines producer fee, points, recoupment, credit, stems delivery, and mix approvals.
+          </p>
+          <button class="bubble-btn" data-template="producer">Load Producer Agreement</button>
         </div>
       </div>
 
       <div class="dropdown">
-        <div class="dropdown-header">Split Sheet</div>
+        <div class="dropdown-header">Split Sheet (Songwriter / Composer Splits)</div>
         <div class="dropdown-content">
-          <p>Lists all contributors and their ownership percentages for a song.</p>
-          <button class="bubble-btn" onclick="scrollToTemplate('template-split-box')">Open Split Sheet Template</button>
+          <p>
+            Documents ownership percentages of the composition, PRO info, IPI numbers, and admin rights.
+          </p>
+          <button class="bubble-btn" data-template="split">Load Split Sheet</button>
         </div>
       </div>
 
       <div class="dropdown">
-        <div class="dropdown-header">Management Agreement</div>
+        <div class="dropdown-header">Management Agreement (Artist ↔ Manager)</div>
         <div class="dropdown-content">
-          <p>Defines the relationship between artist and manager.</p>
-          <ul>
-            <li>Commission %</li>
-            <li>Term</li>
-            <li>Scope of services</li>
-            <li>Sunset clause</li>
-          </ul>
-          <button class="bubble-btn" onclick="scrollToTemplate('template-management-box')">Open Management Template</button>
-        </div>
-      </div>
-
-      <div class="dropdown">
-        <div class="dropdown-header">Publicist Agreement</div>
-        <div class="dropdown-content">
-          <p>Covers PR services, deliverables, timelines, and payment.</p>
-          <button class="bubble-btn" onclick="scrollToTemplate('template-publicist-box')">Open Publicist Template</button>
+          <p>
+            Covers commission %, term, territory, scope of services, expenses, and sunset clause.
+          </p>
+          <button class="bubble-btn" data-template="management">Load Management Agreement</button>
         </div>
       </div>
 
       <div class="dropdown">
         <div class="dropdown-header">Work‑for‑Hire Agreement</div>
         <div class="dropdown-content">
-          <p>Transfers ownership of the work to the hiring party.</p>
-          <button class="bubble-btn" onclick="scrollToTemplate('template-wfh-box')">Open Work‑for‑Hire Template</button>
+          <p>
+            Used when you pay someone a flat fee and you own 100% of the results (masters or compositions).
+          </p>
+          <button class="bubble-btn" data-template="workforhire">Load Work‑for‑Hire</button>
         </div>
       </div>
 
       <div class="dropdown">
-        <div class="dropdown-header">Feature Verse Agreement</div>
+        <div class="dropdown-header">Sync License (Music ↔ Film / TV / Content)</div>
         <div class="dropdown-content">
-          <p>Defines terms when an artist features on another artist’s song.</p>
-          <button class="bubble-btn" onclick="scrollToTemplate('template-feature-box')">Open Feature Template</button>
+          <p>
+            Grants the right to sync your master and/or composition to picture, with fee, term, territory, and media.
+          </p>
+          <button class="bubble-btn" data-template="sync">Load Sync License</button>
         </div>
       </div>
 
       <div class="dropdown">
-        <div class="dropdown-header">Sync License Agreement</div>
+        <div class="dropdown-header">Custom Contract (Blank Structured Template)</div>
         <div class="dropdown-content">
-          <p>Grants permission to use music in film, TV, ads, games, etc.</p>
-          <button class="bubble-btn" onclick="scrollToTemplate('template-sync-box')">Open Sync Template</button>
+          <p>
+            Start from a clean, structured layout and build any agreement you need from scratch.
+          </p>
+          <button class="bubble-btn" data-template="custom">Start Custom Contract</button>
         </div>
       </div>
     </section>
 
-    <!-- UPLOAD + ANALYSIS -->
-    <section class="section-card">
-      <h3 class="cursive" style="font-size:1.8rem;">Upload a Contract for Breakdown</h3>
+    <!-- EDITOR -->
+    <section class="section-card" id="editor-section">
+      <h3 class="cursive" style="font-size:1.8rem;">Active Contract Draft</h3>
 
-      <div class="upload-box">
-        <p>Upload PDF, DOCX, or TXT (for now, TXT/DOCX will analyze best).</p>
-        <input type="file" id="contract-upload" accept=".pdf,.doc,.docx,.txt" />
+      <div class="editor-meta">
+        <input type="text" id="contract-name" placeholder="Contract name (e.g. Recording Agreement – Single)" />
+        <input type="text" id="contract-type" placeholder="Type (e.g. Recording, Split Sheet, Producer)" />
+        <input type="text" id="contract-org" placeholder="Organization / Label / Company" />
       </div>
 
-      <textarea id="contract-analysis" rows="10" placeholder="Contract breakdown will appear here..." style="width:100%;"></textarea>
-
-      <button class="bubble-btn" id="analyze-contract">Analyze Contract</button>
-    </section>
-
-    <!-- RED FLAG CHECKLIST + COMPARISON -->
-    <section class="section-card">
-      <h3 class="cursive" style="font-size:1.8rem;">Red‑Flag Checklist & Quick Comparison</h3>
-
-      <p>Use this as a mental checklist before signing anything:</p>
-      <ul>
-        <li>Is there a clear <strong>term</strong> (start/end date)?</li>
-        <li>Is the <strong>territory</strong> defined?</li>
-        <li>Who owns the <strong>masters</strong> and <strong>publishing</strong>?</li>
-        <li>Is there a <strong>perpetuity</strong> or “in perpetuity” clause?</li>
-        <li>Is there a clear <strong>royalty rate</strong> and <strong>recoupment</strong> language?</li>
-        <li>Is there a <strong>termination</strong> clause?</li>
-        <li>Is there a <strong>non‑compete</strong> or overly broad exclusivity?</li>
-      </ul>
-
-      <div class="compare-grid">
-        <div class="compare-card">
-          <strong>Recording Deal</strong><br/>
-          Label often owns masters, pays advance, recoups from royalties.  
-          Watch: recoupment, options, cross‑collateralization.
-        </div>
-        <div class="compare-card">
-          <strong>Distribution Deal</strong><br/>
-          You usually keep masters, distributor takes % of revenue.  
-          Watch: term, fees, takedown rights.
-        </div>
-        <div class="compare-card">
-          <strong>Publishing Deal</strong><br/>
-          Publisher collects and sometimes owns part of your songs.  
-          Watch: admin vs. full pub, term, reversion.
-        </div>
-        <div class="compare-card">
-          <strong>Work‑for‑Hire</strong><br/>
-          You get paid once, no ownership.  
-          Watch: scope of work, credit, payment timing.
-        </div>
-      </div>
-    </section>
-
-    <!-- SIGNATURE PAD -->
-    <section class="section-card">
-      <h3 class="cursive" style="font-size:1.8rem;">Signature Pad (Local Only)</h3>
-      <p>Use this to practice signing or to capture a quick signature screenshot (not legally binding by itself).</p>
-      <canvas id="signature-pad"></canvas>
-      <button class="bubble-btn" id="clear-signature">Clear</button>
-    </section>
-
-    <!-- TEMPLATES -->
-    <section class="section-card" id="templates">
-      <h3 class="cursive" style="font-size:1.8rem;">Contract Templates (Auto‑Filled)</h3>
-
-      <!-- RECORDING -->
-      <div class="contract-card">
-        <h4 class="cursive">Recording Agreement</h4>
-        <p>Label/artist recording deal with masters, advance, and royalties.</p>
-        <div class="template-box" id="template-recording-box"></div>
-        <button class="bubble-btn" onclick="copyTemplate('template-recording-box')">Copy</button>
-        <button class="bubble-btn" onclick="emailTemplate('template-recording-box','Recording Agreement')">Email</button>
+      <div class="editor-toolbar">
+        <button class="bubble-btn" id="btn-save-doc">Save to Documents</button>
+        <button class="bubble-btn" id="btn-email">Send by Email</button>
+        <button class="bubble-btn" id="btn-print">Print Clean Contract</button>
       </div>
 
-      <!-- PRODUCER -->
-      <div class="contract-card">
-        <h4 class="cursive">Producer Agreement</h4>
-        <p>Defines payment, points, and responsibilities.</p>
-        <div class="template-box" id="template-producer-box"></div>
-        <button class="bubble-btn" onclick="copyTemplate('template-producer-box')">Copy</button>
-        <button class="bubble-btn" onclick="emailTemplate('template-producer-box','Producer Agreement')">Email</button>
-      </div>
-
-      <!-- SPLIT SHEET -->
-      <div class="contract-card">
-        <h4 class="cursive">Split Sheet</h4>
-        <p>Simple, clean split sheet for collaborators.</p>
-        <div class="template-box" id="template-split-box"></div>
-        <button class="bubble-btn" onclick="copyTemplate('template-split-box')">Copy</button>
-        <button class="bubble-btn" onclick="emailTemplate('template-split-box','Split Sheet')">Email</button>
-      </div>
-
-      <!-- MANAGEMENT -->
-      <div class="contract-card">
-        <h4 class="cursive">Management Agreement</h4>
-        <p>Defines the artist–manager relationship.</p>
-        <div class="template-box" id="template-management-box"></div>
-        <button class="bubble-btn" onclick="copyTemplate('template-management-box')">Copy</button>
-        <button class="bubble-btn" onclick="emailTemplate('template-management-box','Management Agreement')">Email</button>
-      </div>
-
-      <!-- PUBLICIST -->
-      <div class="contract-card">
-        <h4 class="cursive">Publicist Agreement</h4>
-        <p>Outlines PR services, deliverables, and payment.</p>
-        <div class="template-box" id="template-publicist-box"></div>
-        <button class="bubble-btn" onclick="copyTemplate('template-publicist-box')">Copy</button>
-        <button class="bubble-btn" onclick="emailTemplate('template-publicist-box','Publicist Agreement')">Email</button>
-      </div>
-
-      <!-- WORK FOR HIRE -->
-      <div class="contract-card">
-        <h4 class="cursive">Work‑for‑Hire Agreement</h4>
-        <p>Transfers ownership of the work to the hiring party.</p>
-        <div class="template-box" id="template-wfh-box"></div>
-        <button class="bubble-btn" onclick="copyTemplate('template-wfh-box')">Copy</button>
-        <button class="bubble-btn" onclick="emailTemplate('template-wfh-box','Work for Hire Agreement')">Email</button>
-      </div>
-
-      <!-- FEATURE VERSE -->
-      <div class="contract-card">
-        <h4 class="cursive">Feature Verse Agreement</h4>
-        <p>Defines terms for a feature on another artist’s track.</p>
-        <div class="template-box" id="template-feature-box"></div>
-        <button class="bubble-btn" onclick="copyTemplate('template-feature-box')">Copy</button>
-        <button class="bubble-btn" onclick="emailTemplate('template-feature-box','Feature Verse Agreement')">Email</button>
-      </div>
-
-      <!-- SYNC LICENSE -->
-      <div class="contract-card">
-        <h4 class="cursive">Sync License Agreement</h4>
-        <p>Grants permission to use music in visual media.</p>
-        <div class="template-box" id="template-sync-box"></div>
-        <button class="bubble-btn" onclick="copyTemplate('template-sync-box')">Copy</button>
-        <button class="bubble-btn" onclick="emailTemplate('template-sync-box','Sync License Agreement')">Email</button>
-      </div>
+      <div id="contract-editor" contenteditable="true" placeholder="Load a template above or start typing your own contract..."></div>
     </section>
 
   </main>
+</div>
+
+<!-- GLOSSARY POPUP -->
+<div id="glossary-popup">
+  <span id="glossary-popup-close">×</span>
+  <h4 id="glossary-popup-title" class="cursive"></h4>
+  <p id="glossary-popup-body"></p>
+  <a href="glossary.html" class="popup-link">Open full Glossary</a>
 </div>
 
 <!-- BURGER MENU PANEL -->
@@ -449,12 +355,12 @@
 </div>
 
 <script>
-  // BURGER MENU
+  // Burger menu
   document.getElementById("rr-menu-btn").addEventListener("click", () => {
     document.getElementById("rr-menu-panel").classList.toggle("show");
   });
 
-  // DROPDOWNS
+  // Dropdowns
   document.querySelectorAll(".dropdown-header").forEach(header => {
     header.addEventListener("click", () => {
       const content = header.nextElementSibling;
@@ -462,372 +368,544 @@
     });
   });
 
-  function scrollToTemplate(id) {
-    const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-  }
+  const editor = document.getElementById("contract-editor");
+  const nameInput = document.getElementById("contract-name");
+  const typeInput = document.getElementById("contract-type");
+  const orgInput  = document.getElementById("contract-org");
 
-  // PROFILE AUTO-FILL
-  const profile = JSON.parse(localStorage.getItem("rr_profile") || "{}");
-  const today = new Date().toLocaleDateString();
+  // Glossary dictionary
+  const GLOSSARY = {
+    "advance": "An upfront payment to the artist that is usually recoupable from future royalties.",
+    "recoupment": "The process where a label or company recovers advances and expenses from the artist's royalties before paying out.",
+    "royalty": "A percentage of income paid to a rights holder (artist, songwriter, producer) when music is used or sold.",
+    "royalties": "Ongoing payments to rights holders based on usage of their music (streams, sales, sync, etc.).",
+    "masters": "The final sound recordings that are commercially released; whoever owns the masters controls the recording.",
+    "master": "A single sound recording that is commercially released.",
+    "mechanical royalties": "Royalties paid for the reproduction of a composition (streams, downloads, physical copies).",
+    "performance royalties": "Royalties paid when music is performed publicly (radio, live, TV, streaming).",
+    "publishing": "The rights and income related to the underlying composition (songwriting), not the recording.",
+    "publisher": "The person or company that administers and collects publishing income for a songwriter.",
+    "neighboring rights": "Royalties paid to performers and master owners when recordings are played publicly, especially outside the US.",
+    "sync": "Short for synchronization; using music in timed relation with visual media (film, TV, ads, games).",
+    "synchronization": "The right to use music in timed relation with visual media.",
+    "work-for-hire": "A legal arrangement where the hiring party is considered the owner of the work from creation.",
+    "points": "Percentage points on a royalty stream, often used for producer shares on master income.",
+    "gross earnings": "All income received before any deductions or expenses.",
+    "net receipts": "Income received after certain agreed deductions (fees, taxes, distributor cuts).",
+    "exclusive": "A clause that prevents the artist from working with others in the same capacity during the term.",
+    "perpetuity": "A term that lasts forever, with no end date.",
+    "term": "The length of time a contract is in effect.",
+    "territory": "The geographic area where the rights in the contract apply.",
+    "sunset clause": "A clause that gradually reduces a manager’s commission after the contract ends.",
+    "pro": "Performing Rights Organization (e.g. ASCAP, BMI, SESAC, PRS) that collects performance royalties.",
+    "ipi": "Interested Party Information number; a unique identifier for songwriters and publishers.",
+    "admin": "Short for administration; handling registrations, licensing, and royalty collection on behalf of rights holders."
+  };
 
-  function fill(template) {
-    return template
-      .replaceAll("{LEGAL_NAME}", profile.legalName || "________________")
-      .replaceAll("{STAGE_NAME}", profile.stageName || "________________")
-      .replaceAll("{EMAIL}", profile.email || "________________")
-      .replaceAll("{ADDRESS}", profile.address || "________________")
-      .replaceAll("{PRO}", profile.pro || "________________")
-      .replaceAll("{IPI}", profile.ipi || "________________")
-      .replaceAll("{PUBLISHER}", profile.publisher || "________________")
-      .replaceAll("{DATE}", today);
-  }
-
-  // REAL TEMPLATES
-  document.getElementById("template-recording-box").textContent = fill(`
+  // Templates (plain text, then highlighted)
+  const TEMPLATES = {
+    recording: `
 RECORDING AGREEMENT
-Date: {DATE}
 
-This Recording Agreement ("Agreement") is made between:
+This RECORDING AGREEMENT (the "Agreement") is made as of [DATE] (the "Effective Date") by and between:
 
-Artist: {LEGAL_NAME} (Stage Name: {STAGE_NAME})
-Email: {EMAIL}
-Address: {ADDRESS}
-
+Label: [LABEL / COMPANY NAME], located at [LABEL ADDRESS] ("Label")
 and
+Artist: [ARTIST LEGAL NAME / STAGE NAME], located at [ARTIST ADDRESS] ("Artist").
 
-Label: __________________________
-Address: __________________________
+1. GRANT OF RIGHTS
+Artist hereby exclusively licenses to Label, throughout the Territory and during the Term, all rights in and to the sound recordings embodying Artist's performances (the "Masters") delivered under this Agreement, including the right to exploit the Masters by any and all means now known or hereafter devised, including streaming, downloads, physical sales, synchronization, and neighboring rights.
 
-1. SERVICES
-Artist agrees to record master recordings ("Masters") for Label.
+2. TERM & OPTIONS
+(a) Initial Period: The Term shall commence on the Effective Date and continue until delivery and commercial release of the Masters for [NUMBER] Album(s) / EP(s) / Single(s).
+(b) Options: Label shall have [NUMBER] additional option periods, each exercisable at Label's sole discretion by written notice to Artist prior to the expiration of the then‑current period.
 
-2. OWNERSHIP
-Unless otherwise stated, Label shall own all right, title, and interest in the Masters.
+3. DELIVERY
+Artist shall deliver to Label commercially satisfactory, mixed and mastered Masters, including all necessary metadata, credits, stems, and instrumental versions, in broadcast‑quality format (e.g. 24‑bit WAV, 44.1kHz or higher).
 
-3. ADVANCE & RECOUPMENT
-Label will pay Artist an advance of $__________, recoupable from Artist's royalties.
+4. ADVANCE & RECOUPMENT
+(a) Advance: Label shall pay Artist a recoupable advance of $[AMOUNT] upon execution of this Agreement.
+(b) Recoupment: All Advances, recording costs, approved marketing expenses, video production costs, and third‑party fees paid by Label in connection with the Masters shall be recoupable from Artist's royalties.
+(c) Cross‑Collateralization: Unless otherwise stated, all Advances and recoupable costs shall be cross‑collateralized across all Masters delivered under this Agreement.
 
-4. ROYALTIES
-Artist shall receive _______% of Net Receipts from exploitation of the Masters.
+5. ROYALTIES
+(a) Artist Royalty: Label shall pay Artist a royalty of [X]% of Label's Net Receipts from exploitation of the Masters.
+(b) Net Receipts: "Net Receipts" means gross income actually received by Label from exploitation of the Masters, less only bona fide third‑party fees, distributor fees, transaction fees, and taxes.
+(c) Streaming: For interactive streaming, royalties shall be calculated on Label's Net Receipts from DSPs (e.g. Spotify, Apple Music, Tidal, etc.).
+(d) Neighboring Rights: Where Label collects neighboring rights income as master owner, Artist shall receive [X]% of Label's Net Receipts from such income, unless collected directly by Artist via a neighboring rights society.
 
-5. TERM & OPTIONS
-Initial term of _______ years, with _______ option periods at Label's election.
+6. CREDITS
+Artist shall be credited in a form substantially as: "[ARTIST NAME]" on all metadata, artwork, and digital listings where reasonably practicable. Producer, featured artists, and songwriters shall be credited in accordance with industry practice.
 
-6. DELIVERY
-Artist shall deliver at least _______ commercially releasable Masters during the Term.
+7. OWNERSHIP OF MASTERS
+Subject to Artist's right to receive royalties hereunder, Label shall be deemed the owner of the Masters and all copyrights therein, including the right to register such copyrights in Label's name, unless otherwise negotiated (e.g. license deal / reversion clause).
 
-7. TERRITORY
-Worldwide unless otherwise specified.
+8. REVERSION / LICENSE DEAL (OPTIONAL)
+If this is structured as a license deal, ownership of the Masters shall revert to Artist after the expiration of the License Term, subject to Label's right to recoup all unrecouped costs from ongoing exploitation.
 
-8. MISCELLANEOUS
-This Agreement constitutes the entire understanding between the parties.
+9. WARRANTIES & INDEMNITY
+Artist represents and warrants that:
+(a) The Masters are original and do not infringe any third‑party rights;
+(b) All samples are properly cleared or licensed;
+(c) Artist has the full right and authority to enter into this Agreement.
+Artist shall indemnify Label against any claims arising from breach of these warranties.
 
-Artist: {LEGAL_NAME}
-Label: __________________________
-`);
+10. MISCELLANEOUS
+This Agreement constitutes the entire understanding between the parties and may only be modified in a signed writing. This Agreement shall be governed by the laws of [STATE / COUNTRY]. Any disputes shall be resolved in the courts of [JURISDICTION].
 
-  document.getElementById("template-producer-box").textContent = fill(`
+IN WITNESS WHEREOF, the parties have executed this Agreement as of the Effective Date.
+
+______________________________        ______________________________
+Artist                                Label
+
+Name: ________________________        Name: ________________________
+Date: ________________________        Date: ________________________
+`.trim(),
+
+    producer: `
 PRODUCER AGREEMENT
-Date: {DATE}
 
-Artist: {LEGAL_NAME} (Stage Name: {STAGE_NAME})
-Producer: __________________________
+This PRODUCER AGREEMENT (the "Agreement") is made as of [DATE] by and between:
 
-1. SERVICES
-Producer will produce master recordings for Artist.
+Artist / Label: [ARTIST OR LABEL NAME] ("Company")
+and
+Producer: [PRODUCER NAME] ("Producer").
 
-2. COMPENSATION
-Producer shall receive either:
-(a) A flat fee of $__________, OR
-(b) _______% of Artist's royalty rate on the Masters.
+1. ENGAGEMENT
+Company engages Producer to produce the master recording(s) listed below (the "Masters") for the Artist known as [ARTIST NAME].
 
-3. POINTS
-If royalty-based, Producer shall receive _______ producer points on the Masters.
+2. SCOPE OF WORK
+Producer shall:
+(a) Compose, arrange, and produce instrumental and/or vocal production;
+(b) Deliver session files, stems, and final mixed Masters in broadcast‑quality format;
+(c) Attend mix and/or mastering sessions as reasonably requested.
+
+3. FEE & POINTS
+(a) Producer Fee: Company shall pay Producer a fee of $[AMOUNT], recoupable / non‑recoupable (circle one).
+(b) Producer Points: Producer shall receive [X]% "producer points" on the Net Receipts of the Masters, payable from Company’s share of master royalties.
+(c) Accounting: Producer royalties shall be accounted to Producer on the same schedule as Company receives statements from its distributor / label.
 
 4. OWNERSHIP
-Masters shall be owned by Artist or Artist's label. Producer waives any ownership claims.
+Unless otherwise agreed in writing, the Masters shall be considered "works‑for‑hire" for Company, and Company shall own all right, title, and interest in and to the Masters, subject to Producer's right to receive producer royalties.
 
 5. CREDITS
-Producer shall be credited as "Producer" in all metadata and credits where feasible.
+Producer shall be credited as "Produced by [PRODUCER NAME]" in all metadata, liner notes, and digital listings where reasonably practicable.
 
-Artist: {LEGAL_NAME}
-Producer: __________________________
-`);
+6. SAMPLES
+Producer shall disclose all samples used in the Masters. Unless otherwise agreed, Company shall be responsible for clearing and paying for any third‑party samples, but Producer shall not use uncleared samples without Company’s written approval.
 
-  document.getElementById("template-split-box").textContent = fill(`
-SPLIT SHEET
-Date: {DATE}
+7. WARRANTIES
+Producer represents and warrants that:
+(a) The production elements created by Producer are original and do not infringe third‑party rights;
+(b) Producer has the right to enter into this Agreement.
 
-Song Title: __________________________
+8. MISCELLANEOUS
+This Agreement constitutes the entire understanding between the parties and may only be modified in a signed writing.
 
-Contributors and Ownership:
+______________________________        ______________________________
+Producer                              Company
 
-1. {LEGAL_NAME} – _______% (Writer/Composer)
-2. __________________________ – _______%
-3. __________________________ – _______%
-4. __________________________ – _______%
+Name: ________________________        Name: ________________________
+Date: ________________________        Date: ________________________
+`.trim(),
 
-PRO: {PRO}
-IPI/CAE: {IPI}
-Publisher: {PUBLISHER}
+    split: `
+SPLIT SHEET – SONGWRITER / COMPOSER SPLITS
 
-All contributors agree to the above ownership percentages.
+Song Title: [SONG TITLE]
+Artist / Project: [ARTIST / PROJECT NAME]
+Date of Creation: [DATE]
+PRO (ASCAP / BMI / SESAC / PRS / etc.): [PRO]
+Publisher / Admin: [PUBLISHER NAME OR "SELF‑PUBLISHED"]
 
-Signature: {LEGAL_NAME}
-Signature: __________________________
-Signature: __________________________
-Signature: __________________________
-`);
+This Split Sheet documents the ownership percentages of the underlying musical composition (songwriting and publishing) for the above‑referenced work.
 
-  document.getElementById("template-management-box").textContent = fill(`
+WRITERS & SPLITS:
+
+1. Writer Name: [WRITER 1 NAME]
+   Role: (Lyricist / Composer / Producer / Topliner)
+   PRO: [PRO]
+   IPI / CAE: [IPI]
+   Email: [EMAIL]
+   Ownership %: [__]%
+
+2. Writer Name: [WRITER 2 NAME]
+   Role:
+   PRO:
+   IPI / CAE:
+   Email:
+   Ownership %: [__]%
+
+3. Writer Name: [WRITER 3 NAME]
+   Role:
+   PRO:
+   IPI / CAE:
+   Email:
+   Ownership %: [__]%
+
+TOTAL OWNERSHIP MUST EQUAL 100%.
+
+ADMINISTRATION:
+Unless otherwise stated, each writer shall administer their own share of the composition. If a publisher or admin company is appointed, that entity may register and collect on behalf of the writers as agreed.
+
+MECHANICAL & PERFORMANCE ROYALTIES:
+Mechanical and performance royalties shall be paid to each writer (and/or their publisher) according to the above ownership percentages via their respective PROs, mechanical rights organizations, and publishers.
+
+SYNC FEES:
+Unless otherwise agreed in writing, any sync fees for use of the composition shall be split according to the above ownership percentages.
+
+SIGNATURES:
+
+By signing below, each party confirms their ownership percentage and authority to enter into this agreement.
+
+______________________________        ______________________________
+Writer 1                              Writer 2
+
+Name: ________________________        Name: ________________________
+Date: ________________________        Date: ________________________
+
+______________________________        ______________________________
+Writer 3                              Writer 4 (if any)
+
+Name: ________________________        Name: ________________________
+Date: ________________________        Date: ________________________
+`.trim(),
+
+    management: `
 MANAGEMENT AGREEMENT
-Date: {DATE}
 
-Artist: {LEGAL_NAME} (Stage Name: {STAGE_NAME})
-Manager: __________________________
+This MANAGEMENT AGREEMENT (the "Agreement") is made as of [DATE] by and between:
+
+Artist: [ARTIST NAME], located at [ARTIST ADDRESS] ("Artist")
+and
+Manager: [MANAGER NAME / COMPANY], located at [MANAGER ADDRESS] ("Manager").
 
 1. APPOINTMENT
-Artist appoints Manager as exclusive personal manager.
+Artist hereby appoints Manager as Artist's exclusive personal manager in all matters relating to Artist's career in the entertainment industry, including but not limited to music, touring, branding, and endorsements.
 
 2. TERM
-The Term shall be _______ years from the date above.
+The Term shall commence on the Effective Date and continue for [X] years, unless earlier terminated in accordance with this Agreement. Manager may have one or more option periods as negotiated.
 
 3. COMMISSION
-Manager shall receive _______% of Artist's Gross/Net Earnings (circle one) from entertainment activities.
+(a) Manager shall be entitled to a commission of [15‑20]% (typical) of Artist's Gross Earnings derived from Artist's activities in the entertainment industry during the Term.
+(b) "Gross Earnings" means all income derived from recording, publishing, touring, merch, sponsorships, sync, and other entertainment activities, excluding only pre‑approved, non‑commissionable items (e.g. tour support, recording costs).
 
-4. SERVICES
-Manager will advise Artist in career strategy, branding, touring, and business decisions.
+4. SUNSET CLAUSE
+After expiration or termination of the Term, Manager shall continue to receive a reduced commission on deals procured or substantially negotiated during the Term, according to the following schedule (example):
+Year 1 after Term: [X]%
+Year 2 after Term: [X]%
+Year 3 after Term: [X]%
+Thereafter: 0%.
 
-5. SUNSET CLAUSE
-After termination, Manager shall receive:
-_______% for _______ months,
-_______% for _______ months thereafter.
+5. SERVICES
+Manager shall:
+(a) Advise and counsel Artist in all aspects of Artist's career;
+(b) Assist in securing recording, publishing, touring, and branding opportunities;
+(c) Coordinate with Artist's attorney, accountant, and other team members.
 
-Artist: {LEGAL_NAME}
-Manager: __________________________
-`);
+6. EXPENSES
+Manager shall not incur any unusual or extraordinary expenses on Artist's behalf without Artist's prior approval. Approved expenses may be recouped from Artist's Gross Earnings before commission is calculated.
 
-  document.getElementById("template-publicist-box").textContent = fill(`
-PUBLICIST AGREEMENT
-Date: {DATE}
+7. POWER OF ATTORNEY (OPTIONAL)
+If granted, Manager may have limited power of attorney to sign routine documents on Artist's behalf, subject to Artist's prior written approval.
 
-Artist: {LEGAL_NAME} (Stage Name: {STAGE_NAME})
-Publicist: __________________________
+8. WARRANTIES & INDEPENDENT COUNSEL
+Artist acknowledges that Artist has been advised to seek independent legal counsel before signing this Agreement.
 
-1. SERVICES
-Publicist will provide PR services including press releases, media outreach, and interview coordination.
+______________________________        ______________________________
+Artist                                Manager
 
-2. TERM
-The Term shall be _______ months starting on {DATE}.
+Name: ________________________        Name: ________________________
+Date: ________________________        Date: ________________________
+`.trim(),
 
-3. COMPENSATION
-Artist shall pay Publicist $__________ per month, payable in advance.
+    workforhire: `
+WORK‑FOR‑HIRE AGREEMENT
 
-4. DELIVERABLES
-Publicist will deliver at least _______ press hits or outreach attempts per month.
+This WORK‑FOR‑HIRE AGREEMENT (the "Agreement") is made as of [DATE] by and between:
 
-Artist: {LEGAL_NAME}
-Publicist: __________________________
-`);
+Client: [CLIENT / ARTIST / COMPANY NAME] ("Client")
+and
+Contractor: [CONTRACTOR NAME] ("Contractor").
 
-  document.getElementById("template-wfh-box").textContent = fill(`
-WORK-FOR-HIRE AGREEMENT
-Date: {DATE}
+1. ENGAGEMENT
+Client engages Contractor to perform the following services (the "Services"):
+[Describe services: e.g. session vocals, guitar, beat production, mixing, artwork, etc.]
 
-Hiring Party: {LEGAL_NAME}
-Contractor: __________________________
+2. WORK‑FOR‑HIRE
+Contractor agrees that all results and proceeds of the Services, including any recordings, compositions, artwork, or other materials (the "Work"), shall be considered "works‑for‑hire" for Client. Client shall own all right, title, and interest in and to the Work, including all copyrights.
 
-1. SERVICES
-Contractor will create the following work(s): __________________________
+3. FEE
+Client shall pay Contractor a flat fee of $[AMOUNT], payable as follows:
+[Payment schedule].
 
-2. COMPENSATION
-Hiring Party shall pay Contractor $__________ upon completion.
+4. CREDITS (OPTIONAL)
+If agreed, Contractor shall be credited as [ROLE CREDIT] where reasonably practicable.
 
-3. OWNERSHIP
-The work is a "work-for-hire." All rights are owned by Hiring Party.
+5. WARRANTIES
+Contractor represents and warrants that the Work is original and does not infringe any third‑party rights.
 
-4. CREDIT
-Contractor may be credited as __________________________ where feasible.
+______________________________        ______________________________
+Contractor                            Client
 
-Hiring Party: {LEGAL_NAME}
-Contractor: __________________________
-`);
+Name: ________________________        Name: ________________________
+Date: ________________________        Date: ________________________
+`.trim(),
 
-  document.getElementById("template-feature-box").textContent = fill(`
-FEATURE VERSE AGREEMENT
-Date: {DATE}
+    sync: `
+SYNCHRONIZATION LICENSE AGREEMENT
 
-Primary Artist: __________________________
-Featured Artist: {LEGAL_NAME} (Stage Name: {STAGE_NAME})
+This SYNCHRONIZATION LICENSE AGREEMENT (the "Agreement") is made as of [DATE] by and between:
 
-1. SERVICES
-Featured Artist will record a vocal/instrumental feature for the track titled: __________________________
+Licensor (Music Owner): [LICENSOR NAME / COMPANY] ("Licensor")
+and
+Licensee (Production / Brand): [LICENSEE NAME / COMPANY] ("Licensee").
 
-2. COMPENSATION
-Featured Artist shall receive:
-(a) Flat fee of $__________, and/or
-(b) _______% of master royalties.
+1. GRANT OF RIGHTS
+Licensor hereby grants to Licensee a non‑exclusive license to synchronize the following:
+(a) Master Recording: "[MASTER TITLE]" performed by [ARTIST NAME];
+(b) Underlying Composition: "[SONG TITLE]" written by [WRITERS];
 
-3. CREDIT
-Featured Artist shall be credited as "feat. {STAGE_NAME}" wherever the track is listed.
+with the audiovisual production tentatively titled "[PRODUCTION TITLE]" (the "Production").
 
-4. OWNERSHIP
-Primary Artist/Label owns the master. This Agreement does not grant publishing ownership unless specified.
+2. MEDIA, TERRITORY, TERM
+Media: [e.g. All media now known or hereafter devised / Online only / TV / Film / Social]
+Territory: [Worldwide / Specific territories]
+Term: [Perpetuity / X years]
 
-Featured Artist: {LEGAL_NAME}
-Primary Artist: __________________________
-`);
+3. FEE
+Licensee shall pay Licensor a one‑time sync fee of $[AMOUNT], payable upon execution / delivery / first use (circle one).
 
-  document.getElementById("template-sync-box").textContent = fill(`
-SYNC LICENSE AGREEMENT
-Date: {DATE}
+4. CREDITS
+Where reasonably practicable, Licensee shall credit the music as:
+"[SONG TITLE]" performed by [ARTIST NAME].
 
-Licensor (Rights Owner): {LEGAL_NAME} (or Publisher: {PUBLISHER})
-Licensee (Production Company): __________________________
+5. CLEARANCES
+Licensor represents that it controls the necessary rights in the master and/or composition, or has authority to grant this license.
 
-1. WORK
-Song Title: __________________________
-Writers: {LEGAL_NAME}, __________________________
-Master Owner: __________________________
+______________________________        ______________________________
+Licensor                             Licensee
 
-2. USAGE
-Licensee may synchronize the Work in the production titled: __________________________
+Name: ________________________        Name: ________________________
+Date: ________________________        Date: ________________________
+`.trim(),
 
-3. TERRITORY
-Territory: __________________________ (e.g., Worldwide)
+    custom: `
+CUSTOM CONTRACT TEMPLATE
 
-4. TERM
-Term: _______ years / in perpetuity (circle one).
+TITLE: [CONTRACT TITLE]
 
-5. FEE
-License Fee: $__________ (one-time) plus any backend royalties as applicable.
+PARTIES:
+Party A: [NAME], located at [ADDRESS]
+Party B: [NAME], located at [ADDRESS]
 
-Licensor: {LEGAL_NAME}
-Licensee: __________________________
-`);
+EFFECTIVE DATE:
+[DATE]
 
-  // COPY & EMAIL
-  function copyTemplate(id) {
-    const text = document.getElementById(id).textContent;
-    navigator.clipboard.writeText(text);
-    alert("Template copied to clipboard.");
+RECITALS:
+This section explains the purpose of the agreement and the relationship between the parties.
+
+1. DEFINITIONS
+Define key terms used throughout the agreement.
+
+2. GRANT OF RIGHTS / SERVICES
+Describe what rights are being granted or what services are being provided.
+
+3. TERM
+Describe how long the agreement lasts and any renewal or option periods.
+
+4. COMPENSATION
+Describe how and when payments are made, including royalties, fees, advances, and recoupment if applicable.
+
+5. OWNERSHIP
+Describe who owns what (masters, compositions, artwork, trademarks, etc.).
+
+6. CREDITS
+Describe how each party will be credited publicly.
+
+7. WARRANTIES & REPRESENTATIONS
+Each party confirms they have the right to enter into this agreement and that their work does not infringe third‑party rights.
+
+8. INDEMNITY
+Describe how parties will protect each other from third‑party claims.
+
+9. TERMINATION
+Describe how and when the agreement can be terminated.
+
+10. MISCELLANEOUS
+Governing law, entire agreement, amendments, notices, etc.
+
+SIGNATURES:
+
+______________________________        ______________________________
+Party A                              Party B
+
+Name: ________________________        Name: ________________________
+Date: ________________________        Date: ________________________
+`.trim()
+  };
+
+  // Escape HTML
+  function escapeHtml(str) {
+    return str
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
   }
 
-  function emailTemplate(id, subject) {
-    const text = document.getElementById(id).textContent;
-    const body = encodeURIComponent(text);
-    const sub = encodeURIComponent(subject || "Contract");
-    window.location.href = `mailto:?subject=${sub}&body=${body}`;
+  // Highlight glossary terms
+  function highlightGlossary(text) {
+    let html = escapeHtml(text);
+
+    Object.keys(GLOSSARY).forEach(term => {
+      const pattern = new RegExp("\\b" + term.replace(/[-/]/g, "\\$&") + "\\b", "gi");
+      html = html.replace(pattern, match => {
+        return `<span class="glossary-term" data-term="${term.toLowerCase()}">${match}</span>`;
+      });
+    });
+
+    return html;
   }
 
-  // CONTRACT UPLOAD + ANALYSIS
-  document.getElementById("analyze-contract").addEventListener("click", () => {
-    const fileInput = document.getElementById("contract-upload");
-    const output = document.getElementById("contract-analysis");
+  // Load template into editor
+  function loadTemplate(key) {
+    const raw = TEMPLATES[key] || "";
+    const html = highlightGlossary(raw);
+    editor.innerHTML = html;
 
-    if (!fileInput.files.length) {
-      output.value = "Please upload a contract first.";
+    switch (key) {
+      case "recording":
+        typeInput.value = "Recording Agreement";
+        if (!nameInput.value) nameInput.value = "Recording Agreement – " + new Date().toLocaleDateString();
+        break;
+      case "producer":
+        typeInput.value = "Producer Agreement";
+        if (!nameInput.value) nameInput.value = "Producer Agreement – " + new Date().toLocaleDateString();
+        break;
+      case "split":
+        typeInput.value = "Split Sheet";
+        if (!nameInput.value) nameInput.value = "Split Sheet – " + new Date().toLocaleDateString();
+        break;
+      case "management":
+        typeInput.value = "Management Agreement";
+        if (!nameInput.value) nameInput.value = "Management Agreement – " + new Date().toLocaleDateString();
+        break;
+      case "workforhire":
+        typeInput.value = "Work‑for‑Hire";
+        if (!nameInput.value) nameInput.value = "Work‑for‑Hire – " + new Date().toLocaleDateString();
+        break;
+      case "sync":
+        typeInput.value = "Sync License";
+        if (!nameInput.value) nameInput.value = "Sync License – " + new Date().toLocaleDateString();
+        break;
+      case "custom":
+        typeInput.value = "Custom Contract";
+        if (!nameInput.value) nameInput.value = "Custom Contract – " + new Date().toLocaleDateString();
+        break;
+    }
+  }
+
+  // Template buttons
+  document.querySelectorAll("[data-template]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const key = btn.getAttribute("data-template");
+      loadTemplate(key);
+    });
+  });
+
+  // Glossary popup logic
+  const popup = document.getElementById("glossary-popup");
+  const popupTitle = document.getElementById("glossary-popup-title");
+  const popupBody = document.getElementById("glossary-popup-body");
+  const popupClose = document.getElementById("glossary-popup-close");
+
+  popupClose.addEventListener("click", () => {
+    popup.style.display = "none";
+  });
+
+  editor.addEventListener("click", (e) => {
+    const target = e.target;
+    if (target.classList.contains("glossary-term")) {
+      const termKey = target.getAttribute("data-term");
+      const def = GLOSSARY[termKey];
+      if (def) {
+        popupTitle.textContent = target.textContent;
+        popupBody.textContent = def;
+        popup.style.display = "block";
+      }
+    }
+  });
+
+  // Save to Documents (postMessage)
+  document.getElementById("btn-save-doc").addEventListener("click", () => {
+    const text = editor.innerText.trim();
+    if (!text) {
+      alert("Nothing to save. Load or write a contract first.");
       return;
     }
 
-    const file = fileInput.files[0];
-    const reader = new FileReader();
+    const name = nameInput.value || "Contract Draft – " + new Date().toLocaleDateString();
+    const type = typeInput.value || "Contract";
 
-    reader.onload = () => {
-      const text = String(reader.result || "");
-      let analysis = "CONTRACT BREAKDOWN (keyword scan):\n\n";
+    window.postMessage({
+      name,
+      type,
+      contractText: text
+    }, "*");
 
-      const keywords = {
-        "royalty": "Royalty terms found — check rate, recoupment, and payment schedule.",
-        "exclusive": "Exclusive clause — check how long and how broad the exclusivity is.",
-        "perpetuity": "Perpetuity clause — may last forever. Consider if this is acceptable.",
-        "master": "Master ownership mentioned — verify who owns the recordings.",
-        "publishing": "Publishing clause — check splits and admin rights.",
-        "advance": "Advance mentioned — ensure recoupment terms are clear.",
-        "recoup": "Recoupment — understand what expenses are recoupable.",
-        "termination": "Termination clause — understand how to exit the agreement.",
-        "deliverable": "Deliverables — check deadlines and requirements.",
-        "work for hire": "Work-for-hire — you may be giving up ownership.",
-        "non-compete": "Non-compete — ensure it is not overly broad.",
-        "assignment": "Assignment — check if they can transfer your deal to someone else."
-      };
-
-      let found = false;
-      for (const key in keywords) {
-        if (text.toLowerCase().includes(key)) {
-          analysis += `• ${keywords[key]}\n`;
-          found = true;
-        }
-      }
-
-      if (!found) {
-        analysis += "No major keywords detected. Review manually or with a lawyer.\n";
-      }
-
-      output.value = analysis;
-    };
-
-    reader.readAsText(file);
+    alert("Contract sent to Documents Vault.");
   });
 
-  // SIGNATURE PAD
-  const canvas = document.getElementById("signature-pad");
-  const ctx = canvas.getContext("2d");
-  let drawing = false;
-  let rect = canvas.getBoundingClientRect();
+  // Email contract
+  document.getElementById("btn-email").addEventListener("click", () => {
+    const text = editor.innerText.trim();
+    if (!text) {
+      alert("Nothing to email. Load or write a contract first.");
+      return;
+    }
 
-  function resizeCanvas() {
-    const prev = canvas.toDataURL();
-    canvas.width = canvas.clientWidth;
-    canvas.height = canvas.clientHeight;
-    const img = new Image();
-    img.onload = () => ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-    img.src = prev;
-    rect = canvas.getBoundingClientRect();
-  }
+    const subject = encodeURIComponent(nameInput.value || "Contract Draft");
+    const body    = encodeURIComponent(text);
 
-  window.addEventListener("resize", resizeCanvas);
-  resizeCanvas();
+    window.location.href = `mailto:?subject=${subject}&body=${body}`;
+  });
 
-  function getPos(e) {
-    const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
-    const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
-    return { x, y };
-  }
+  // Print clean contract
+  document.getElementById("btn-print").addEventListener("click", () => {
+    const text = editor.innerText.trim();
+    if (!text) {
+      alert("Nothing to print. Load or write a contract first.");
+      return;
+    }
 
-  function startDraw(e) {
-    drawing = true;
-    const { x, y } = getPos(e);
-    ctx.beginPath();
-    ctx.moveTo(x, y);
-  }
+    const title = nameInput.value || "Contract";
 
-  function draw(e) {
-    if (!drawing) return;
-    const { x, y } = getPos(e);
-    ctx.lineTo(x, y);
-    ctx.strokeStyle = "#b87333";
-    ctx.lineWidth = 2;
-    ctx.lineCap = "round";
-    ctx.stroke();
-  }
-
-  function endDraw() {
-    drawing = false;
-  }
-
-  canvas.addEventListener("mousedown", startDraw);
-  canvas.addEventListener("mousemove", draw);
-  canvas.addEventListener("mouseup", endDraw);
-  canvas.addEventListener("mouseleave", endDraw);
-
-  canvas.addEventListener("touchstart", (e) => { e.preventDefault(); startDraw(e); });
-  canvas.addEventListener("touchmove", (e) => { e.preventDefault(); draw(e); });
-  canvas.addEventListener("touchend", (e) => { e.preventDefault(); endDraw(e); });
-
-  document.getElementById("clear-signature").addEventListener("click", () => {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const printWindow = window.open("", "_blank");
+    printWindow.document.write(`
+      <html>
+      <head>
+        <title>${title}</title>
+        <style>
+          body {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            white-space: pre-wrap;
+            padding: 2rem;
+          }
+          h1 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+          }
+        </style>
+      </head>
+      <body>
+        <h1>${title}</h1>
+        <pre>${text.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</pre>
+      </body>
+      </html>
+    `);
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
   });
 </script>
 
