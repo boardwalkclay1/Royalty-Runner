@@ -1,4 +1,4 @@
-// ROYALTY RUNNER — PROFILE PAGE LOGIC (RRDB VERSION + PHOTO + AKA)
+// ROYALTY RUNNER — PROFILE PAGE LOGIC (RRDB VERSION + PHOTO + AKA + SHARE)
 
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("profile-form");
@@ -9,13 +9,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const photoInput = document.getElementById("photo-input");
   const photoPreview = document.getElementById("profile-photo-preview");
+  const shareBtn = document.getElementById("share-profile");
 
   loadProfile();
 
   form.addEventListener("submit", saveProfile);
   deleteBtn.addEventListener("click", deleteProfile);
+  shareBtn.addEventListener("click", shareProfile);
 
-  // Live preview
   photoInput.addEventListener("change", () => {
     const file = photoInput.files[0];
     if (file) {
@@ -23,7 +24,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // LOAD PROFILE FROM RRDB
   async function loadProfile() {
     const data = await RRDB.getProfile();
 
@@ -34,7 +34,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
 
-      // Load photo
       if (data.photo) {
         photoPreview.src = data.photo;
       }
@@ -44,19 +43,16 @@ document.addEventListener("DOMContentLoaded", () => {
     updateFlash(data || {});
   }
 
-  // SAVE PROFILE TO RRDB
   async function saveProfile(e) {
     e.preventDefault();
 
     const data = {};
     new FormData(form).forEach((v, k) => (data[k] = v));
 
-    // Handle photo file → base64
     const file = photoInput.files[0];
     if (file) {
       data.photo = await fileToBase64(file);
     } else {
-      // Keep existing photo if present
       const existing = await RRDB.getProfile();
       if (existing && existing.photo) {
         data.photo = existing.photo;
@@ -68,80 +64,132 @@ document.addEventListener("DOMContentLoaded", () => {
     updateStrength(data);
     updateFlash(data);
 
-    alert("Profile saved.");
+    showFlashMessage("Profile updated", "Your profile is now powering auto‑fill across Royalty Runner.");
   }
 
-  // DELETE PROFILE
   async function deleteProfile() {
-    if (!confirm("Delete your profile from this browser?")) return;
+    if (!confirm("Clear your profile from this device? This does not affect any other devices.")) return;
 
     await RRDB.deleteProfile();
     form.reset();
-
-    // Reset preview to default avatar
     photoPreview.src = "assets/img/default-avatar.png";
 
     updateStrength({});
     updateFlash({});
+
+    showFlashMessage("Profile cleared", "Your profile data has been removed from this browser’s RRDB.");
   }
 
-  // PROFILE STRENGTH
-  function updateStrength(data = {}) {
-    const fields = [
-      "legalName",
-      "aka",
-      "stageName",
-      "email",
-      "pro",
-      "ipi",
-      "publisher",
-      "country",
-      "address",
-      "socials",
-      "photo"
-    ];
+  function updateStrength(data) {
+    let score = 0;
+    const fields = ["legalName", "stageName", "email", "pro", "ipi", "publisher", "country"];
 
-    let filled = fields.filter(f => data[f] && data[f].toString().trim() !== "").length;
-    let pct = Math.round((filled / fields.length) * 100);
+    fields.forEach((f) => {
+      if (data[f] && String(data[f]).trim() !== "") score++;
+    });
 
-    strengthFill.style.width = pct + "%";
-    strengthLabel.textContent = pct + "% complete";
+    const percent = Math.round((score / fields.length) * 100);
+    strengthFill.style.width = percent + "%";
+
+    if (percent === 0) {
+      strengthLabel.textContent = "Profile not started yet.";
+    } else if (percent < 40) {
+      strengthLabel.textContent = "Profile is in progress — fill in your PRO, IPI, and publisher next.";
+    } else if (percent < 80) {
+      strengthLabel.textContent = "Profile is strong — finish remaining fields for full auto‑fill power.";
+    } else {
+      strengthLabel.textContent = "Profile is complete — Royalty Runner can auto‑fill almost everything.";
+    }
   }
 
-  // FLASH RECOMMENDATIONS
-  function updateFlash(data = {}) {
+  function updateFlash(data) {
     flashContainer.innerHTML = "";
 
-    const missing = [];
+    if (!data.legalName) {
+      addFlash("Add your legal name", "Contracts and registrations require your legal name.");
+    }
 
-    if (!data.photo) missing.push("Upload a profile photo");
-    if (!data.legalName) missing.push("Add your legal name");
-    if (!data.aka) missing.push("Add your AKA");
-    if (!data.stageName) missing.push("Add your stage name");
-    if (!data.pro) missing.push("Add your PRO affiliation");
-    if (!data.ipi) missing.push("Add your IPI/CAE number");
-    if (!data.publisher) missing.push("Add your publishing entity");
-    if (!data.socials) missing.push("Add your social links");
+    if (!data.pro) {
+      addFlash("Choose your PRO", "Select ASCAP, BMI, SESAC, PRS, etc. so performance royalties can find you.");
+    }
 
-    if (missing.length === 0) {
-      flashContainer.innerHTML =
-        `<p style="color:var(--copper-light);">Your profile is complete.</p>`;
+    if (!data.ipi) {
+      addFlash("Add your IPI / CAE number", "Your IPI links your songs to you in global royalty systems.");
+    }
+
+    if (!data.publisher) {
+      addFlash("Set your publishing entity", "If you’re self‑published, enter your own name or company.");
+    }
+
+    if (!data.email) {
+      addFlash("Add your email", "Used for contracts, splits, and contact fields.");
+    }
+
+    if (!data.country) {
+      addFlash("Add your country", "Territory affects PROs, royalties, and legal language.");
+    }
+
+    if (!flashContainer.innerHTML.trim()) {
+      addFlash("You’re in good shape", "Your profile is strong. You can still refine details anytime.");
+    }
+  }
+
+  function addFlash(title, body) {
+    const div = document.createElement("div");
+    div.className = "flash-item";
+    div.innerHTML = `<strong>${title}</strong><br>${body}`;
+    flashContainer.appendChild(div);
+  }
+
+  function showFlashMessage(title, body) {
+    addFlash(title, body);
+  }
+
+  async function shareProfile() {
+    const data = await RRDB.getProfile();
+    if (!data) {
+      alert("No profile data to share yet. Save your profile first.");
       return;
     }
 
-    missing.forEach(msg => {
-      const box = document.createElement("div");
-      box.className = "flash-box";
-      box.textContent = msg;
-      flashContainer.appendChild(box);
-    });
+    const summary = buildProfileSummary(data);
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: "Royalty Runner Profile",
+          text: summary
+        });
+      } catch (err) {
+        // user cancelled or share failed silently
+      }
+    } else {
+      await navigator.clipboard.writeText(summary);
+      alert("Profile summary copied to clipboard. You can paste it into messages or email.");
+    }
   }
 
-  // Convert file → base64
+  function buildProfileSummary(data) {
+    return [
+      "Royalty Runner – Artist Profile",
+      "",
+      `Legal Name: ${data.legalName || ""}`,
+      `AKA: ${data.aka || ""}`,
+      `Stage Name: ${data.stageName || ""}`,
+      `Email: ${data.email || ""}`,
+      `PRO: ${data.pro || ""}`,
+      `IPI / CAE: ${data.ipi || ""}`,
+      `Publishing Entity: ${data.publisher || ""}`,
+      `Country: ${data.country || ""}`,
+      `Socials: ${data.socials || ""}`
+    ].join("\n");
+  }
+
   function fileToBase64(file) {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
       reader.readAsDataURL(file);
     });
   }
