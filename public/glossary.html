@@ -4,7 +4,12 @@
   <meta charset="UTF-8" />
   <title>Royalty Runner – Glossary</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="manifest" href="manifest.json" />
+
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+
+  <!-- Styles -->
   <link rel="stylesheet" href="assets/css/style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600&display=swap" rel="stylesheet">
 
@@ -14,11 +19,13 @@
       background-size: cover;
       background-color: #000;
     }
+
     .overlay {
       background: rgba(0,0,0,0.78);
       min-height: 100vh;
       padding-bottom: 4rem;
     }
+
     .section-card {
       background: rgba(0,0,0,0.65);
       border: 1px solid var(--copper);
@@ -27,6 +34,7 @@
       margin-bottom: 2rem;
       backdrop-filter: blur(4px);
     }
+
     #glossary-search {
       width: 100%;
       padding: 0.7rem;
@@ -36,9 +44,37 @@
       color: #fff;
       margin-bottom: 1rem;
     }
-    .dropdown {
+
+    /* Alphabet bar */
+    #glossary-letters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
       margin-bottom: 1rem;
     }
+
+    .letter-btn {
+      padding: 0.3rem 0.6rem;
+      border-radius: 6px;
+      border: 1px solid var(--copper);
+      color: var(--copper-light);
+      cursor: pointer;
+      font-size: 0.9rem;
+      background: rgba(0,0,0,0.4);
+    }
+
+    .letter-btn.active {
+      background: var(--copper);
+      color: #000;
+    }
+
+    /* Dropdowns */
+    .dropdown {
+      margin-bottom: 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      padding-bottom: 0.5rem;
+    }
+
     .dropdown-header {
       cursor: pointer;
       font-family: 'Dancing Script', cursive;
@@ -48,19 +84,22 @@
       justify-content: space-between;
       align-items: center;
     }
+
     .dropdown-content {
       display: none;
       padding-left: 1rem;
       border-left: 2px solid var(--copper);
-      margin-bottom: 0.5rem;
+      margin-top: 0.4rem;
       color: #ddd;
       font-size: 0.95rem;
     }
+
     .tag-row {
       margin-top: 0.4rem;
       font-size: 0.8rem;
       color: #bbb;
     }
+
     .tag {
       display: inline-block;
       padding: 0.1rem 0.5rem;
@@ -68,6 +107,46 @@
       border: 1px solid var(--copper);
       margin-right: 0.3rem;
       margin-top: 0.2rem;
+    }
+
+    /* Burger menu */
+    .rr-menu-btn {
+      position: absolute;
+      right: 1rem;
+      top: 1rem;
+      font-size: 2rem;
+      background: none;
+      border: none;
+      color: var(--copper);
+      cursor: pointer;
+      z-index: 9999;
+    }
+
+    .rr-menu-panel {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 260px;
+      height: 100vh;
+      background: rgba(0,0,0,0.92);
+      border-left: 2px solid var(--copper);
+      padding: 2rem 1rem;
+      transition: transform 0.3s ease;
+      transform: translateX(100%);
+      z-index: 9998;
+    }
+
+    .rr-menu-panel.show {
+      transform: translateX(0);
+    }
+
+    .rr-menu-panel a {
+      display: block;
+      margin-bottom: 1.2rem;
+      color: var(--copper-light);
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.5rem;
+      text-decoration: none;
     }
   </style>
 </head>
@@ -82,16 +161,21 @@
 
   <main class="rr-main">
 
+    <!-- SEARCH -->
     <section class="section-card">
       <h2 class="cursive" style="font-size:2rem;">Search the Glossary</h2>
       <input type="search" id="glossary-search" placeholder="Search terms...">
+
+      <div id="glossary-letters"></div>
     </section>
 
+    <!-- LIST -->
     <section class="section-card" id="glossary-list"></section>
 
   </main>
 </div>
 
+<!-- BURGER MENU -->
 <div id="rr-menu-panel" class="rr-menu-panel">
   <a href="index.html">Home</a>
   <a href="profile.html">Profile</a>
@@ -101,23 +185,42 @@
   <a href="documents.html">Documents</a>
   <a href="protection.html">Protection</a>
   <a href="glossary.html">Glossary</a>
+  <a href="manage.html">Manage</a>
+  <a href="export.html">Export</a>
 </div>
 
+<!-- Glossary Data -->
 <script src="assets/js/glossary-words.js"></script>
 <script src="assets/js/glossary-music.js"></script>
 
 <script>
   const list = document.getElementById("glossary-list");
   const search = document.getElementById("glossary-search");
+  const letters = document.getElementById("glossary-letters");
 
   const ALL = [...WORD_GLOSSARY, ...MUSIC_GLOSSARY];
+
+  // A–Z buttons
+  const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+  alphabet.forEach(letter => {
+    const btn = document.createElement("button");
+    btn.className = "letter-btn";
+    btn.textContent = letter;
+    btn.onclick = () => filterByLetter(letter);
+    letters.appendChild(btn);
+  });
+
+  function filterByLetter(letter) {
+    document.querySelectorAll(".letter-btn").forEach(b => b.classList.remove("active"));
+    event.target.classList.add("active");
+    render(ALL.filter(i => i.term.toUpperCase().startsWith(letter)));
+  }
 
   function render(items) {
     list.innerHTML = "";
     items.forEach(i => {
       const block = document.createElement("div");
       block.className = "dropdown";
-      block.dataset.tags = i.tags.join(" ");
 
       block.innerHTML = `
         <div class="dropdown-header">${i.term}</div>
@@ -138,6 +241,7 @@
 
   search.oninput = () => {
     const q = search.value.toLowerCase();
+    document.querySelectorAll(".letter-btn").forEach(b => b.classList.remove("active"));
     render(ALL.filter(i =>
       i.term.toLowerCase().includes(q) ||
       i.definition.toLowerCase().includes(q)
@@ -145,6 +249,17 @@
   };
 
   render(ALL);
+
+  // Burger menu
+  document.getElementById("rr-menu-btn").addEventListener("click", () => {
+    document.getElementById("rr-menu-panel").classList.toggle("show");
+  });
+
+  document.querySelectorAll("#rr-menu-panel a").forEach(link => {
+    link.addEventListener("click", () => {
+      document.getElementById("rr-menu-panel").classList.remove("show");
+    });
+  });
 </script>
 
 </body>
