@@ -2,7 +2,7 @@
 <html lang="en" data-page="protection">
 <head>
   <meta charset="UTF-8" />
-  <title>Royalty Runner – Protect Your Work</title>
+  <title>Royalty Runner – Protection Command Center</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="manifest" href="manifest.json" />
   <link rel="stylesheet" href="assets/css/style.css" />
@@ -18,7 +18,7 @@
     }
 
     .overlay {
-      background: rgba(0, 0, 0, 0.82);
+      background: rgba(0, 0, 0, 0.84);
       min-height: 100vh;
       width: 100%;
       padding-bottom: 4rem;
@@ -51,6 +51,7 @@
       text-decoration: none;
       border-bottom: 1px dotted var(--copper);
       padding-bottom: 1px;
+      cursor: pointer;
     }
 
     .royal-link:hover {
@@ -71,12 +72,13 @@
       color: var(--copper-light);
       padding: 0.4rem 0.8rem;
       border-radius: 999px;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       cursor: pointer;
       text-decoration: none;
       display: inline-flex;
       align-items: center;
       gap: 0.3rem;
+      font-family: 'Dancing Script', cursive;
     }
 
     .quick-button:hover {
@@ -141,6 +143,87 @@
     .checklist-item label {
       cursor: pointer;
     }
+
+    .sub-note {
+      font-size: 0.9rem;
+      color: #bbb;
+      margin-top: 0.4rem;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 1.2rem;
+    }
+
+    @media (max-width: 900px) {
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .mini-card {
+      background: rgba(0,0,0,0.6);
+      border: 1px solid rgba(184,115,51,0.6);
+      border-radius: 8px;
+      padding: 0.8rem 1rem;
+      margin-bottom: 0.7rem;
+    }
+
+    .mini-card h4 {
+      margin: 0 0 0.3rem 0;
+      font-size: 1.05rem;
+      color: var(--copper-light);
+    }
+
+    .glossary-term {
+      color: var(--copper-light);
+      border-bottom: 1px dotted var(--copper);
+      cursor: pointer;
+    }
+
+    /* Glossary popup */
+    #glossary-popup {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      max-width: 320px;
+      background: rgba(0,0,0,0.96);
+      border: 1px solid var(--copper);
+      border-radius: 10px;
+      padding: 1rem;
+      color: var(--copper-light);
+      display: none;
+      z-index: 99999;
+    }
+
+    #glossary-popup h4 {
+      margin: 0 0 0.5rem 0;
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.4rem;
+      color: var(--copper);
+    }
+
+    #glossary-popup-close {
+      position: absolute;
+      top: 0.3rem;
+      right: 0.6rem;
+      cursor: pointer;
+      font-size: 1.4rem;
+      color: var(--copper);
+    }
+
+    #glossary-popup .popup-link {
+      display: inline-block;
+      margin-top: 0.5rem;
+      padding: 0.2rem 0.7rem;
+      border-radius: 999px;
+      background: var(--copper);
+      color: #000;
+      font-family: 'Dancing Script', cursive;
+      font-size: 1rem;
+      text-decoration: none;
+    }
   </style>
 </head>
 
@@ -148,7 +231,7 @@
 <div class="overlay">
 
   <header class="rr-header">
-    <h1 class="cursive" style="font-size:2.6rem;">Protect Your Work</h1>
+    <h1 class="cursive" style="font-size:2.6rem;">Protection Command Center</h1>
 
     <button id="rr-menu-btn" class="rr-menu-btn">☰</button>
 
@@ -156,7 +239,7 @@
       <a href="index.html">Home</a>
       <a href="profile.html">Profile</a>
       <a href="works.html">Works</a>
-      <a href="catalog.html">Catalog</a>
+      <a href="royalties.html">Royalties</a>
       <a href="contracts.html">Contracts</a>
       <a href="documents.html">Documents</a>
       <a href="protection.html">Protection</a>
@@ -169,38 +252,322 @@
     <!-- INTRO -->
     <section class="catalog-card">
       <div class="section-tag">Royalty Runner • Protection Hub</div>
-      <h2 class="cursive" style="font-size:2rem;">Start Here</h2>
+      <h2 class="cursive" style="font-size:2rem;">Lock In Your Rights Before the World Finds You</h2>
       <p>
-        This is your command center for locking in your music, your name, and your brand.
-        Move section by section. Each block explains why it matters and gives you
-        a quick action so you’re never stuck wondering what to do next.
+        This page is the armor around your catalog. It connects your
+        <span class="glossary-term" data-term="masters">masters</span>,
+        <span class="glossary-term" data-term="publishing">publishing</span>,
+        name, and brand into one protection system.
       </p>
       <p>
-        When you see a term you don’t know, the
-        <a class="royal-link" href="glossary.html">Royalty Runner Glossary</a>
-        breaks it down in plain language.
+        Every section below explains what to do, why it matters, and how it ties back to your
+        <a class="royal-link" href="profile.html">Profile</a>,
+        <a class="royal-link" href="works.html">Works</a>,
+        <a class="royal-link" href="contracts.html">Contracts</a>,
+        and <a class="royal-link" href="documents.html">Documents Vault</a>.
+      </p>
+      <p class="sub-note">
+        Any highlighted word is tappable — click it to see a plain‑language definition from the
+        Protection Glossary overlay, then dive deeper in the full
+        <a class="royal-link" href="glossary.html">Royalty Runner Glossary</a>.
       </p>
 
       <div class="quick-actions">
-        <a href="#publishing-pros" class="quick-button">1. PRO & Publishing</a>
-        <a href="#mechanical-digital" class="quick-button">2. Mechanical</a>
-        <a href="#copyright" class="quick-button">3. Copyright</a>
-        <a href="#trademarks" class="quick-button">4. Trademarks</a>
-        <a href="#neighboring-rights" class="quick-button">5. Neighboring Rights</a>
-        <a href="#business" class="quick-button">6. Business</a>
-        <a href="#protection-checklist" class="quick-button">Checklist</a>
+        <a href="#publishing-pros" class="quick-button">PRO & Publishing</a>
+        <a href="#mechanical-digital" class="quick-button">Mechanical & Digital</a>
+        <a href="#copyright" class="quick-button">Copyright & Proof</a>
+        <a href="#trademarks" class="quick-button">Name & Brand</a>
+        <a href="#neighboring-rights" class="quick-button">Neighboring Rights</a>
+        <a href="#business" class="quick-button">Business & Entities</a>
+        <a href="#protection-checklist" class="quick-button">Protection Checklist</a>
       </div>
     </section>
 
-    <!-- SECTIONS (unchanged content, omitted here for brevity) -->
-    <!-- KEEP ALL YOUR EXISTING SECTIONS EXACTLY AS THEY WERE -->
-    <!-- ONLY THE CHECKLIST IS REBUILT -->
+    <!-- PRO & PUBLISHING -->
+    <section class="catalog-card" id="publishing-pros">
+      <div class="section-tag">Step 1 • Performance & Publishing</div>
+      <h3 class="cursive" style="font-size:1.8rem;">PROs, Publishing, and Your Songwriting Money</h3>
+
+      <div class="two-col">
+        <div>
+          <p>
+            Your songs generate two main streams: the
+            <span class="glossary-term" data-term="composition">composition</span>
+            (songwriting) and the
+            <span class="glossary-term" data-term="master">master</span>
+            (recording). This section is about the composition side — the part that
+            <span class="glossary-term" data-term="pro">PROs</span> and
+            <span class="glossary-term" data-term="publisher">publishers</span> handle.
+          </p>
+          <p>
+            A <span class="glossary-term" data-term="pro">Performing Rights Organization</span> tracks
+            <span class="glossary-term" data-term="performance royalties">performance royalties</span>:
+            radio, live shows, TV, streaming performances, and more. Your publisher or admin partner
+            helps you collect worldwide and chase down money you’d never see on your own.
+          </p>
+          <p>
+            Royalty Runner uses your
+            <a class="royal-link" href="profile.html">Profile</a> (legal name, stage name,
+            PRO, IPI, publisher) and your
+            <a class="royal-link" href="works.html">Works</a> (titles, writers, splits)
+            to auto‑fill registration forms and contract templates.
+          </p>
+        </div>
+
+        <div>
+          <div class="mini-card">
+            <h4 class="cursive">Your PRO Game Plan</h4>
+            <ul>
+              <li>Pick one PRO in your country (ASCAP, BMI, SESAC, PRS, SOCAN, etc.).</li>
+              <li>Register as a writer and, if needed, as a publisher entity.</li>
+              <li>Register every released song with correct splits and titles.</li>
+            </ul>
+          </div>
+
+          <div class="mini-card">
+            <h4 class="cursive">Quick Actions</h4>
+            <p class="sub-note">Use these after your Profile and Works are filled out.</p>
+            <div class="quick-actions">
+              <a href="rights-and-registration.html" class="quick-button">Rights Directory</a>
+              <a href="contracts.html" class="quick-button">Publishing Contracts</a>
+              <a href="documents.html" class="quick-button">Save PRO Confirmations</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MECHANICAL & DIGITAL -->
+    <section class="catalog-card" id="mechanical-digital">
+      <div class="section-tag">Step 2 • Mechanical & Digital Royalties</div>
+      <h3 class="cursive" style="font-size:1.8rem;">Streams, Downloads, and Mechanical Money</h3>
+
+      <div class="two-col">
+        <div>
+          <p>
+            Every time your song is streamed or downloaded, it generates
+            <span class="glossary-term" data-term="mechanical royalties">mechanical royalties</span>
+            on the composition side. In the U.S., a big piece of this is handled by
+            digital mechanical agencies like The MLC for eligible services.
+          </p>
+          <p>
+            Your distributor collects money for the
+            <span class="glossary-term" data-term="masters">masters</span>, but mechanicals for the
+            composition often flow through different pipes. If you don’t register properly, that money
+            can sit in “black box” pools and eventually get paid out to the wrong people.
+          </p>
+          <p>
+            Royalty Runner’s
+            <a class="royal-link" href="royalties.html">Royalties</a> and
+            <a class="royal-link" href="rights-and-registration.html">Rights Directory</a>
+            pages show you which organizations handle which royalties and how to line them up with your catalog.
+          </p>
+        </div>
+
+        <div>
+          <div class="mini-card">
+            <h4 class="cursive">Mechanical Checklist</h4>
+            <ul>
+              <li>Confirm your distributor is delivering correct metadata to DSPs.</li>
+              <li>Register compositions with mechanical agencies where required.</li>
+              <li>Match ISRCs and ISWCs in your Works page for clean tracking.</li>
+            </ul>
+          </div>
+
+          <div class="mini-card">
+            <h4 class="cursive">Quick Actions</h4>
+            <div class="quick-actions">
+              <a href="works.html" class="quick-button">Tighten Metadata</a>
+              <a href="royalties.html" class="quick-button">Royalty Types</a>
+              <a href="documents.html" class="quick-button">Store Statements</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- COPYRIGHT & PROOF -->
+    <section class="catalog-card" id="copyright">
+      <div class="section-tag">Step 3 • Copyright & Proof</div>
+      <h3 class="cursive" style="font-size:1.8rem;">Owning the Work on Paper</h3>
+
+      <div class="two-col">
+        <div>
+          <p>
+            Copyright exists the moment you create an original work, but formal registration gives you
+            legal teeth: statutory damages, attorney’s fees, and a clear public record of ownership.
+          </p>
+          <p>
+            For key releases, you should consider registering both the
+            <span class="glossary-term" data-term="sound recording">sound recording</span> and the
+            <span class="glossary-term" data-term="composition">composition</span> where available.
+            Royalty Runner doesn’t file for you, but it prepares everything:
+            titles, release dates, splits, and contributor info.
+          </p>
+          <p>
+            Your <a class="royal-link" href="documents.html">Documents Vault</a> is where you keep:
+            registration confirmations, dated exports of your catalog, split sheets, and contracts.
+            Together, they form a timeline of proof if anyone ever challenges your ownership.
+          </p>
+        </div>
+
+        <div>
+          <div class="mini-card">
+            <h4 class="cursive">Proof Package Ideas</h4>
+            <ul>
+              <li>Export of your Works catalog with timestamps.</li>
+              <li>Signed split sheets and producer agreements.</li>
+              <li>Copyright registration receipts.</li>
+              <li>Emails confirming splits or approvals.</li>
+            </ul>
+          </div>
+
+          <div class="mini-card">
+            <h4 class="cursive">Quick Actions</h4>
+            <div class="quick-actions">
+              <a href="contracts.html" class="quick-button">Use Templates</a>
+              <a href="documents.html" class="quick-button">File Proof</a>
+              <a href="export.html" class="quick-button">Export Catalog</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TRADEMARKS & BRAND -->
+    <section class="catalog-card" id="trademarks">
+      <div class="section-tag">Step 4 • Name, Logo, and Brand</div>
+      <h3 class="cursive" style="font-size:1.8rem;">Protecting Your Artist Identity</h3>
+
+      <div class="two-col">
+        <div>
+          <p>
+            Your artist name, logo, and brand visuals can be protected through
+            <span class="glossary-term" data-term="trademark">trademark</span> and related rights.
+            Before you invest in merch, branding, and marketing, you want to know that your name is
+            clear — and ideally, that you can lock it down.
+          </p>
+          <p>
+            Royalty Runner doesn’t file trademarks, but it helps you track searches, screenshots,
+            and legal opinions in your <a class="royal-link" href="documents.html">Documents Vault</a>.
+            That way, you have a record of when you started using the name and what you checked.
+          </p>
+        </div>
+
+        <div>
+          <div class="mini-card">
+            <h4 class="cursive">Name Safety Steps</h4>
+            <ul>
+              <li>Search streaming platforms for your artist name.</li>
+              <li>Search social media handles and domains.</li>
+              <li>Search official trademark databases in your country.</li>
+              <li>Save screenshots and search results to your Vault.</li>
+            </ul>
+          </div>
+
+          <div class="mini-card">
+            <h4 class="cursive">Quick Actions</h4>
+            <div class="quick-actions">
+              <a href="profile.html" class="quick-button">Lock Profile Name</a>
+              <a href="documents.html" class="quick-button">Store Searches</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- NEIGHBORING RIGHTS -->
+    <section class="catalog-card" id="neighboring-rights">
+      <div class="section-tag">Step 5 • Neighboring Rights & Performers</div>
+      <h3 class="cursive" style="font-size:1.8rem;">Money from Broadcasts and Public Play</h3>
+
+      <div class="two-col">
+        <div>
+          <p>
+            <span class="glossary-term" data-term="neighboring rights">Neighboring rights</span>
+            are royalties paid to performers and master owners when recordings are played publicly
+            (radio, TV, some streaming, venues), especially outside the U.S.
+          </p>
+          <p>
+            If you’re a featured performer or own your masters, you may be entitled to this money
+            through organizations like SoundExchange and international neighboring rights societies.
+          </p>
+          <p>
+            Royalty Runner helps by keeping your performer credits, ISRCs, and release data clean in
+            <a class="royal-link" href="works.html">Works</a>, and by giving you a place to store
+            your registrations and statements in the
+            <a class="royal-link" href="documents.html">Documents Vault</a>.
+          </p>
+        </div>
+
+        <div>
+          <div class="mini-card">
+            <h4 class="cursive">Neighboring Rights Checklist</h4>
+            <ul>
+              <li>Register as a featured performer where available.</li>
+              <li>Register as a rights owner if you own the masters.</li>
+              <li>Keep ISRCs and performer credits accurate in your catalog.</li>
+            </ul>
+          </div>
+
+          <div class="mini-card">
+            <h4 class="cursive">Quick Actions</h4>
+            <div class="quick-actions">
+              <a href="rights-and-registration.html" class="quick-button">Rights Directory</a>
+              <a href="works.html" class="quick-button">Check Credits</a>
+              <a href="documents.html" class="quick-button">Save Registrations</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BUSINESS & ENTITIES -->
+    <section class="catalog-card" id="business">
+      <div class="section-tag">Step 6 • Business Structure</div>
+      <h3 class="cursive" style="font-size:1.8rem;">Turning Your Art into a Business</h3>
+
+      <div class="two-col">
+        <div>
+          <p>
+            At some point, you stop being “just an artist” and become a business. That might mean
+            forming an <span class="glossary-term" data-term="llc">LLC</span>, opening a business bank
+            account, and separating personal and music finances.
+          </p>
+          <p>
+            A basic entity can help with taxes, liability, and clarity when you sign deals, hire people,
+            or bring in partners. Royalty Runner doesn’t replace an accountant or lawyer, but it gives
+            you a place to track every agreement and document that touches your business.
+          </p>
+        </div>
+
+        <div>
+          <div class="mini-card">
+            <h4 class="cursive">Business Moves</h4>
+            <ul>
+              <li>Decide on a simple entity structure (LLC, etc.).</li>
+              <li>Open a dedicated business bank account.</li>
+              <li>Route contracts and payments through the entity.</li>
+              <li>Store all formation documents in your Vault.</li>
+            </ul>
+          </div>
+
+          <div class="mini-card">
+            <h4 class="cursive">Quick Actions</h4>
+            <div class="quick-actions">
+              <a href="contracts.html" class="quick-button">Business Contracts</a>
+              <a href="documents.html" class="quick-button">Store Entity Docs</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <!-- CHECKLIST -->
     <section class="catalog-card" id="protection-checklist">
       <div class="section-tag">Scoreboard</div>
       <h3 class="cursive" style="font-size:1.7rem;">Your Protection Checklist</h3>
-      <p>Click to mark items complete. Your progress will save automatically.</p>
+      <p>Click to mark items complete. Your progress stays on this device.</p>
 
       <div id="checklist">
 
@@ -211,37 +578,37 @@
 
         <div class="checklist-item">
           <input type="checkbox" id="pro_songs">
-          <label for="pro_songs">I registered my songs with my PRO.</label>
+          <label for="pro_songs">I registered my songs with my PRO with correct splits.</label>
         </div>
 
         <div class="checklist-item">
           <input type="checkbox" id="mechanical">
-          <label for="mechanical">My songs are registered with the mechanical agency (like The MLC).</label>
+          <label for="mechanical">My songs are registered with the mechanical / digital agency where needed.</label>
         </div>
 
         <div class="checklist-item">
           <input type="checkbox" id="copyright_reg">
-          <label for="copyright_reg">I registered key works with the copyright office.</label>
+          <label for="copyright_reg">I registered key works with the copyright office and saved proof.</label>
         </div>
 
         <div class="checklist-item">
           <input type="checkbox" id="trademark">
-          <label for="trademark">I searched my artist name and considered a trademark.</label>
+          <label for="trademark">I searched my artist name and considered a trademark strategy.</label>
         </div>
 
         <div class="checklist-item">
           <input type="checkbox" id="neighboring">
-          <label for="neighboring">I registered with SoundExchange / neighboring rights orgs.</label>
+          <label for="neighboring">I registered with neighboring rights / performer royalty organizations.</label>
         </div>
 
         <div class="checklist-item">
           <input type="checkbox" id="splits">
-          <label for="splits">I use split sheets and keep copies.</label>
+          <label for="splits">I use split sheets and keep signed copies in my Documents Vault.</label>
         </div>
 
         <div class="checklist-item">
           <input type="checkbox" id="llc">
-          <label for="llc">I have a basic business structure (like an LLC).</label>
+          <label for="llc">I have a basic business structure (like an LLC) and store those docs safely.</label>
         </div>
 
       </div>
@@ -260,13 +627,25 @@
 <div id="rr-menu-panel" class="rr-menu-panel">
   <a href="index.html">Home</a>
   <a href="profile.html">Profile</a>
+  <a href="my-catalog.html">My Catalog</a>
   <a href="works.html">Works</a>
-  <a href="catalog.html">Catalog</a>
+  <a href="royalties.html">Royalties</a>
+  <a href="rights-and-registration.html">Rights & Registration</a>
+  <a href="manage.html">Manage</a>
+  <a href="law.html">Law</a>
   <a href="contracts.html">Contracts</a>
   <a href="documents.html">Documents</a>
   <a href="protection.html">Protection</a>
   <a href="glossary.html">Glossary</a>
   <a href="export.html">Export</a>
+</div>
+
+<!-- GLOSSARY POPUP -->
+<div id="glossary-popup">
+  <span id="glossary-popup-close">×</span>
+  <h4 id="glossary-popup-title" class="cursive"></h4>
+  <p id="glossary-popup-body"></p>
+  <a href="glossary.html" class="popup-link">Open full Glossary</a>
 </div>
 
 <script>
@@ -275,18 +654,53 @@
     document.getElementById("rr-menu-panel").classList.toggle("show");
   });
 
-  // Checklist logic (RRDB wiring comes next)
+  // Checklist persistence
   const checklist = document.querySelectorAll("#checklist input[type='checkbox']");
-
   checklist.forEach(box => {
-    box.addEventListener("change", () => {
-      // TEMPORARY: save to localStorage until RRDB version is added
-      localStorage.setItem("rr_check_" + box.id, box.checked ? "1" : "0");
-    });
-
-    // Load saved state
-    const saved = localStorage.getItem("rr_check_" + box.id);
+    const saved = localStorage.getItem("rr_protect_" + box.id);
     if (saved === "1") box.checked = true;
+
+    box.addEventListener("change", () => {
+      localStorage.setItem("rr_protect_" + box.id, box.checked ? "1" : "0");
+    });
+  });
+
+  // Mini glossary dictionary for this page
+  const PROTECT_GLOSSARY = {
+    "masters": "The final sound recordings that are commercially released. Whoever owns the masters controls the recording.",
+    "master": "A single sound recording that is commercially released.",
+    "publishing": "The rights and income related to the underlying composition (songwriting), not the recording.",
+    "publisher": "The person or company that administers and collects publishing income for a songwriter.",
+    "pro": "Performing Rights Organization (ASCAP, BMI, SESAC, PRS, etc.) that collects performance royalties.",
+    "performance royalties": "Royalties paid when music is performed publicly (radio, live, TV, streaming).",
+    "mechanical royalties": "Royalties paid for the reproduction of a composition (streams, downloads, physical copies).",
+    "composition": "The underlying song: melody, lyrics, and structure, separate from any specific recording.",
+    "sound recording": "The actual recorded performance of a composition, often called the master.",
+    "neighboring rights": "Royalties paid to performers and master owners when recordings are played publicly, especially outside the U.S.",
+    "trademark": "A legal protection for names, logos, and brand identifiers used in commerce.",
+    "llc": "Limited Liability Company; a business structure that can separate personal and business liability."
+  };
+
+  const popup = document.getElementById("glossary-popup");
+  const popupTitle = document.getElementById("glossary-popup-title");
+  const popupBody = document.getElementById("glossary-popup-body");
+  const popupClose = document.getElementById("glossary-popup-close");
+
+  popupClose.addEventListener("click", () => {
+    popup.style.display = "none";
+  });
+
+  document.addEventListener("click", (e) => {
+    const target = e.target;
+    if (target.classList.contains("glossary-term")) {
+      const key = target.getAttribute("data-term");
+      const def = PROTECT_GLOSSARY[key];
+      if (def) {
+        popupTitle.textContent = target.textContent;
+        popupBody.textContent = def;
+        popup.style.display = "block";
+      }
+    }
   });
 </script>
 
