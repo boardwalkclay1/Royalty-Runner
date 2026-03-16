@@ -1,4 +1,5 @@
-// ROYALTY RUNNER — PROFILE PAGE LOGIC (RRDB VERSION + PHOTO + AKA + SHARE)
+// ROYALTY RUNNER — PROFILE PAGE LOGIC
+// RRDB VERSION + PHOTO + AKA + SHARE + WEIGHTED RECOMMENDED ACTIONS
 
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("profile-form");
@@ -24,6 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  // LOAD PROFILE FROM RRDB AND HYDRATE FORM
   async function loadProfile() {
     const data = await RRDB.getProfile();
 
@@ -43,6 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
     updateFlash(data || {});
   }
 
+  // SAVE PROFILE TO RRDB
   async function saveProfile(e) {
     e.preventDefault();
 
@@ -64,9 +67,13 @@ document.addEventListener("DOMContentLoaded", () => {
     updateStrength(data);
     updateFlash(data);
 
-    showFlashMessage("Profile updated", "Your profile is now powering auto‑fill across Royalty Runner.");
+    showFlashMessage(
+      "Profile updated",
+      "Your profile is now powering auto‑fill across Royalty Runner."
+    );
   }
 
+  // DELETE PROFILE FROM RRDB
   async function deleteProfile() {
     if (!confirm("Clear your profile from this device? This does not affect any other devices.")) return;
 
@@ -77,9 +84,13 @@ document.addEventListener("DOMContentLoaded", () => {
     updateStrength({});
     updateFlash({});
 
-    showFlashMessage("Profile cleared", "Your profile data has been removed from this browser’s RRDB.");
+    showFlashMessage(
+      "Profile cleared",
+      "Your profile data has been removed from this browser’s RRDB."
+    );
   }
 
+  // PROFILE STRENGTH METER
   function updateStrength(data) {
     let score = 0;
     const fields = ["legalName", "stageName", "email", "pro", "ipi", "publisher", "country"];
@@ -102,36 +113,114 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // WEIGHTED, ROTATING RECOMMENDED ACTIONS
   function updateFlash(data) {
     flashContainer.innerHTML = "";
 
-    if (!data.legalName) {
-      addFlash("Add your legal name", "Contracts and registrations require your legal name.");
+    const actions = [
+      {
+        key: "legalName",
+        weight: 10,
+        title: "Add your legal name",
+        body: "Every contract, split sheet, and registration needs your legal name. It’s the anchor of your identity in the industry."
+      },
+      {
+        key: "pro",
+        weight: 10,
+        title: "Choose your PRO",
+        body: "ASCAP, BMI, SESAC, PRS, SOCAN — your PRO collects performance royalties worldwide."
+      },
+      {
+        key: "ipi",
+        weight: 10,
+        title: "Add your IPI / CAE number",
+        body: "Your IPI is your global writer ID. Without it, royalties can’t find you."
+      },
+      {
+        key: "publisher",
+        weight: 9,
+        title: "Set your publishing entity",
+        body: "If you’re self‑published, enter your own name or company. This unlocks publishing royalties."
+      },
+      {
+        key: "email",
+        weight: 8,
+        title: "Add your email",
+        body: "Your email is used for contracts, splits, and communication with PROs and distributors."
+      },
+      {
+        key: "country",
+        weight: 7,
+        title: "Add your country",
+        body: "Your territory determines which PROs, laws, and royalty systems apply to you."
+      },
+      {
+        key: "stageName",
+        weight: 6,
+        title: "Add your stage name",
+        body: "Your stage name is your brand. It appears on releases, credits, and public-facing documents."
+      },
+      {
+        key: "aka",
+        weight: 5,
+        title: "Add your AKA / alternate names",
+        body: "If you use multiple aliases, list them. It helps PROs and distributors match your works correctly."
+      },
+      {
+        key: "photo",
+        weight: 4,
+        title: "Upload a profile photo",
+        body: "Your photo personalizes your EPK, contracts, and auto‑filled documents."
+      },
+      {
+        key: "socials",
+        weight: 4,
+        title: "Add your social links",
+        body: "Managers, collaborators, and platforms often require your socials for verification and metadata."
+      },
+      {
+        key: "bio",
+        weight: 3,
+        title: "Write a short artist bio",
+        body: "A strong bio helps with press kits, bookings, and metadata across platforms."
+      },
+      {
+        key: "genre",
+        weight: 2,
+        title: "Add your primary genre",
+        body: "Genre helps with playlisting, metadata, and industry classification."
+      },
+      {
+        key: "links",
+        weight: 2,
+        title: "Add your music links",
+        body: "Spotify, Apple, YouTube — these help with verification and EPK building."
+      }
+    ];
+
+    const incomplete = actions.filter(a => !data[a.key] || String(data[a.key]).trim() === "");
+
+    if (incomplete.length === 0) {
+      addFlash("You’re in great shape", "Your profile is strong and ready for auto‑fill across Royalty Runner.");
+      return;
     }
 
-    if (!data.pro) {
-      addFlash("Choose your PRO", "Select ASCAP, BMI, SESAC, PRS, etc. so performance royalties can find you.");
+    const weightedPool = [];
+    incomplete.forEach(a => {
+      for (let i = 0; i < a.weight; i++) {
+        weightedPool.push(a);
+      }
+    });
+
+    const selected = [];
+    while (selected.length < 4 && weightedPool.length > 0) {
+      const index = Math.floor(Math.random() * weightedPool.length);
+      const choice = weightedPool[index];
+      if (!selected.includes(choice)) selected.push(choice);
+      weightedPool.splice(index, 1);
     }
 
-    if (!data.ipi) {
-      addFlash("Add your IPI / CAE number", "Your IPI links your songs to you in global royalty systems.");
-    }
-
-    if (!data.publisher) {
-      addFlash("Set your publishing entity", "If you’re self‑published, enter your own name or company.");
-    }
-
-    if (!data.email) {
-      addFlash("Add your email", "Used for contracts, splits, and contact fields.");
-    }
-
-    if (!data.country) {
-      addFlash("Add your country", "Territory affects PROs, royalties, and legal language.");
-    }
-
-    if (!flashContainer.innerHTML.trim()) {
-      addFlash("You’re in good shape", "Your profile is strong. You can still refine details anytime.");
-    }
+    selected.forEach(a => addFlash(a.title, a.body));
   }
 
   function addFlash(title, body) {
@@ -145,6 +234,7 @@ document.addEventListener("DOMContentLoaded", () => {
     addFlash(title, body);
   }
 
+  // SHARE PROFILE SUMMARY
   async function shareProfile() {
     const data = await RRDB.getProfile();
     if (!data) {
@@ -169,6 +259,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // PROFILE SUMMARY TEXT (USED FOR SHARE + CONTRACTS IF NEEDED)
   function buildProfileSummary(data) {
     return [
       "Royalty Runner – Artist Profile",
@@ -185,6 +276,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ].join("\n");
   }
 
+  // FILE → BASE64 (FOR PHOTO STORAGE IN RRDB)
   function fileToBase64(file) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
