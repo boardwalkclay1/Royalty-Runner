@@ -1,34 +1,54 @@
 const CACHE_NAME = "royalty-runner-v2";
 
-const ASSETS = [
+const STATIC_ASSETS = [
+  "/",
+  "/index.html",
+  "/profile.html",
+  "/my-catalog.html",
+  "/works.html",
+  "/royalties.html",
+  "/rights-and-registration.html",
+  "/manage.html",
+  "/contracts.html",
+  "/documents.html",
+  "/protection.html",
+  "/glossary.html",
+  "/export.html",
+
+  "/manifest.json",
+  "/favicon.ico",
+
   "/assets/css/style.css",
   "/assets/js/app.js",
   "/assets/js/catalog.js",
   "/assets/js/db.js",
   "/assets/js/works.js",
+  "/assets/js/glossary-words.js",
+  "/assets/js/glossary-music.js",
+
   "/assets/img/royal-catalog.jpg",
   "/assets/img/royal-profile.jpg",
+  "/assets/img/royal-manage.jpg",
   "/assets/img/royal-randr.jpg",
+
   "/assets/icons/royal-192.png",
-  "/assets/icons/royal-512.png",
-  "/manifest.json",
-  "/favicon.ico"
+  "/assets/icons/royal-512.png"
 ];
 
-// INSTALL — cache static assets only
-self.addEventListener("install", (event) => {
+// INSTALL
+self.addEventListener("install", event => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
+    caches.open(CACHE_NAME).then(cache => cache.addAll(STATIC_ASSETS))
   );
   self.skipWaiting();
 });
 
-// ACTIVATE — clean old caches
-self.addEventListener("activate", (event) => {
+// ACTIVATE
+self.addEventListener("activate", event => {
   event.waitUntil(
-    caches.keys().then((keys) =>
+    caches.keys().then(keys =>
       Promise.all(
-        keys.map((key) => {
+        keys.map(key => {
           if (key !== CACHE_NAME) return caches.delete(key);
         })
       )
@@ -37,22 +57,35 @@ self.addEventListener("activate", (event) => {
   self.clients.claim();
 });
 
-// FETCH — network first for HTML, cache first for assets
-self.addEventListener("fetch", (event) => {
+// FETCH
+self.addEventListener("fetch", event => {
   const req = event.request;
 
-  // HTML pages → network first
+  // Network-first for HTML pages
   if (req.mode === "navigate") {
     event.respondWith(
-      fetch(req).catch(() => caches.match("/index.html"))
+      fetch(req)
+        .then(res => {
+          const clone = res.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(req, clone));
+          return res;
+        })
+        .catch(() => caches.match(req))
     );
     return;
   }
 
-  // Static assets → cache first
+  // Cache-first for static assets
   event.respondWith(
-    caches.match(req).then((cached) => {
-      return cached || fetch(req);
+    caches.match(req).then(cached => {
+      return (
+        cached ||
+        fetch(req).then(res => {
+          const clone = res.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(req, clone));
+          return res;
+        })
+      );
     })
   );
 });
