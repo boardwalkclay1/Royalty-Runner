@@ -32,12 +32,47 @@
       text-shadow: 0 0 10px rgba(184, 115, 51, 0.4);
     }
 
-    .law-list ul {
-      padding-left: 1.2rem;
+    .guild-link {
+      display: block;
+      background: rgba(0,0,0,0.55);
+      border: 1px solid var(--copper);
+      padding: 1rem;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.5rem;
+      color: var(--copper-light);
+      text-decoration: none;
+      transition: 0.2s ease;
     }
 
-    .lawyer-directory li {
-      margin-bottom: 0.5rem;
+    .guild-link:hover {
+      background: rgba(184,115,51,0.25);
+      transform: translateX(4px);
+    }
+
+    /* POPUP DEFINITIONS */
+    .define {
+      color: var(--copper-light);
+      font-weight: bold;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .define:hover::after {
+      content: attr(data-definition);
+      position: absolute;
+      left: 0;
+      top: 1.6rem;
+      background: rgba(0,0,0,0.9);
+      border: 1px solid var(--copper);
+      padding: 0.7rem 1rem;
+      border-radius: 8px;
+      width: 260px;
+      font-size: 0.9rem;
+      color: #fff;
+      z-index: 9999;
+      white-space: normal;
     }
   </style>
 </head>
@@ -105,7 +140,6 @@
     <li>Explains contract terms you must understand before signing anything</li>
     <li>Provides tools to help you evaluate deals and agreements</li>
     <li>Links you to official legal resources and government sites</li>
-    <li>Gives you a directory of real music lawyers you can contact</li>
     <li>Helps you protect your rights, royalties, and long-term ownership</li>
   </ul>
 </section>
@@ -116,98 +150,86 @@
   <p>Before you sign anything, you must understand these core concepts:</p>
 
   <h3>1. Ownership</h3>
-  <p>Who owns the master? Who owns the publishing? Who controls the release?</p>
+  <p>
+    Who owns the <span class="define" data-definition="The actual audio recording — the final mixed and mastered file.">master</span>?  
+    Who owns the <span class="define" data-definition="The composition — lyrics + melody. Publishing controls songwriting royalties.">publishing</span>?  
+    Who controls the release?
+  </p>
 
   <h3>2. Royalties</h3>
-  <p>How much do you get paid? When? From where? Who collects?</p>
+  <p>
+    How much do you get paid? When? From where? Who collects?
+  </p>
 
   <h3>3. Term</h3>
-  <p>How long does the contract last? Is it one album? Five years? Forever?</p>
+  <p>
+    How long does the contract last? One album? Five years?  
+    Watch for <span class="define" data-definition="A contract that lasts forever with no end date.">perpetuity</span>.
+  </p>
 
   <h3>4. Exclusivity</h3>
-  <p>Are you locked into one label, one manager, one producer?</p>
+  <p>
+    Are you locked into one label, one manager, one producer?
+  </p>
 
   <h3>5. Advances</h3>
-  <p>Advances are loans. You must recoup before you get paid.</p>
+  <p>
+    Advances are loans. You must <span class="define" data-definition="You must pay back the label's investment before you earn royalties.">recoup</span> before you get paid.
+  </p>
 
   <h3>6. Deliverables</h3>
-  <p>What are you required to create? How many songs? How often?</p>
+  <p>
+    What are you required to create? How many songs? How often?
+  </p>
 
   <h3>7. Rights Granted</h3>
-  <p>Are you giving away your likeness, your name, your future catalog?</p>
+  <p>
+    Are you giving away your likeness, your name, your future catalog?
+  </p>
 
   <h3>8. Exit Clauses</h3>
-  <p>How do you get out of the deal if things go wrong?</p>
+  <p>
+    How do you get out of the deal if things go wrong?
+  </p>
 </section>
 
 <!-- IMPORTANT TERMS -->
 <section class="section-card">
   <h2>Important Legal Terms Every Artist Must Know</h2>
   <ul>
-    <li><strong>Master Rights</strong> – Ownership of the actual recording.</li>
-    <li><strong>Publishing</strong> – Ownership of the composition (lyrics + melody).</li>
-    <li><strong>Recoupment</strong> – Paying back the label before earning royalties.</li>
-    <li><strong>360 Deal</strong> – Label takes a cut of everything: shows, merch, brand deals.</li>
-    <li><strong>Work for Hire</strong> – You may lose ownership permanently.</li>
-    <li><strong>Indemnification</strong> – You take the blame if something goes wrong.</li>
-    <li><strong>Perpetuity</strong> – Forever. No end date.</li>
-    <li><strong>Territory</strong> – Where the contract applies (US, worldwide, etc.).</li>
-    <li><strong>Royalty Points</strong> – Your percentage of earnings.</li>
-    <li><strong>Mechanical Royalties</strong> – Paid for reproductions of your music.</li>
+    <li><strong class="define" data-definition="Ownership of the actual audio recording.">Master Rights</strong></li>
+    <li><strong class="define" data-definition="Ownership of the composition — lyrics + melody.">Publishing</strong></li>
+    <li><strong class="define" data-definition="You must pay back the label before earning royalties.">Recoupment</strong></li>
+    <li><strong class="define" data-definition="Label takes a cut of everything: shows, merch, brand deals, etc.">360 Deal</strong></li>
+    <li><strong class="define" data-definition="If you sign this, the company owns the work forever.">Work for Hire</strong></li>
+    <li><strong class="define" data-definition="You take responsibility if something goes wrong legally.">Indemnification</strong></li>
+    <li><strong class="define" data-definition="Forever. No end date.">Perpetuity</strong></li>
+    <li><strong class="define" data-definition="Where the contract applies — US, Europe, worldwide.">Territory</strong></li>
+    <li><strong class="define" data-definition="Your percentage of earnings from sales/streams.">Royalty Points</strong></li>
+    <li><strong class="define" data-definition="Paid when your music is reproduced — streaming, downloads, CDs.">Mechanical Royalties</strong></li>
   </ul>
 </section>
 
 <!-- TOOLS -->
 <section class="section-card">
   <h2>Tools to Help You Understand Contracts</h2>
-  <ul>
-    <li><a href="contracts.html">Contract Templates & Red Flag Checker</a></li>
-    <li><a href="glossary.html">Glossary of Legal & Music Industry Terms</a></li>
-    <li><a href="protection.html">Artist Protection Checklist</a></li>
-    <li><a href="documents.html">Document Storage Vault</a></li>
-    <li><a href="rights-and-registration.html">Rights & Registration Directory</a></li>
-  </ul>
+
+  <a class="guild-link" href="contracts.html">Contract Templates & Red Flag Checker</a>
+  <a class="guild-link" href="glossary.html">Glossary of Legal & Music Industry Terms</a>
+  <a class="guild-link" href="protection.html">Artist Protection Checklist</a>
+  <a class="guild-link" href="documents.html">Document Storage Vault</a>
+  <a class="guild-link" href="rights-and-registration.html">Rights & Registration Directory</a>
 </section>
 
 <!-- OFFICIAL LINKS -->
 <section class="section-card">
   <h2>Official Legal Resources</h2>
-  <ul>
-    <li><a href="https://www.copyright.gov" target="_blank">U.S. Copyright Office</a></li>
-    <li><a href="https://www.uspto.gov" target="_blank">U.S. Patent & Trademark Office</a></li>
-    <li><a href="https://www.irs.gov" target="_blank">IRS – Tax Information for Artists</a></li>
-    <li><a href="https://mlc.com" target="_blank">The MLC – Mechanical Licensing Collective</a></li>
-    <li><a href="https://www.soundexchange.com" target="_blank">SoundExchange</a></li>
-  </ul>
-</section>
 
-<!-- LAWYER DIRECTORY -->
-<section class="section-card lawyer-directory">
-  <h2>Music Lawyer Directory</h2>
-  <p>Here is a curated list of respected music lawyers and entertainment law firms:</p>
-
-  <ul>
-    <li>Donald Passman – Los Angeles</li>
-    <li>Joel Katz – Atlanta</li>
-    <li>Lisa Alter – New York</li>
-    <li>John Branca – Los Angeles</li>
-    <li>Allen Grubman – New York</li>
-    <li>King, Holmes, Paterno & Soriano – LA</li>
-    <li>Greenberg Traurig – Entertainment Division</li>
-    <li>Loeb & Loeb LLP – Music & Entertainment</li>
-    <li>Manatt, Phelps & Phillips – Entertainment Law</li>
-    <li>Fox Rothschild LLP – Entertainment Practice</li>
-    <li>Sheppard Mullin – Entertainment & Digital Media</li>
-    <li>Ritholz Levy Fields LLP – Music & Branding</li>
-    <li>The Davis Firm – Music Law</li>
-    <li>Reed Smith LLP – Entertainment & Media</li>
-    <li>Mitchell Silberberg & Knupp – Entertainment Law</li>
-  </ul>
-
-  <p>
-    These firms and attorneys specialize in contracts, negotiations, publishing, royalties,
-    copyright, trademarks, and artist protection.
-  </p>
+  <a class="guild-link" href="https://www.copyright.gov" target="_blank">U.S. Copyright Office</a>
+  <a class="guild-link" href="https://www.uspto.gov" target="_blank">U.S. Patent & Trademark Office</a>
+  <a class="guild-link" href="https://www.irs.gov" target="_blank">IRS – Tax Information for Artists</a>
+  <a class="guild-link" href="https://mlc.com" target="_blank">The MLC – Mechanical Licensing Collective</a>
+  <a class="guild-link" href="https://www.soundexchange.com" target="_blank">SoundExchange</a>
 </section>
 
 </main>
