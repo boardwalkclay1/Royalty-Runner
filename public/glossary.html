@@ -31,6 +31,28 @@
       backdrop-filter: blur(4px);
     }
 
+    .glossary-tabs {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .glossary-tab {
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--copper);
+      background: rgba(0,0,0,0.7);
+      color: var(--copper-light);
+      cursor: pointer;
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.3rem;
+    }
+
+    .glossary-tab.active {
+      background: var(--copper);
+      color: #000;
+    }
+
     .glossary-controls {
       display: flex;
       flex-wrap: wrap;
@@ -103,45 +125,6 @@
       font-size: 0.7rem;
       margin-right: 0.25rem;
     }
-
-    .rr-menu-btn {
-      position: absolute;
-      right: 1rem;
-      top: 1rem;
-      font-size: 2rem;
-      background: none;
-      border: none;
-      color: var(--copper);
-      cursor: pointer;
-      z-index: 9999;
-    }
-
-    .rr-menu-panel {
-      position: fixed;
-      top: 0;
-      right: 0;
-      width: 260px;
-      height: 100vh;
-      background: rgba(0,0,0,0.92);
-      border-left: 2px solid var(--copper);
-      padding: 2rem 1rem;
-      transition: transform 0.3s ease;
-      transform: translateX(100%);
-      z-index: 9998;
-    }
-
-    .rr-menu-panel.show {
-      transform: translateX(0);
-    }
-
-    .rr-menu-panel a {
-      display: block;
-      margin-bottom: 1.2rem;
-      color: var(--copper-light);
-      font-family: 'Dancing Script', cursive;
-      font-size: 1.5rem;
-      text-decoration: none;
-    }
   </style>
 </head>
 
@@ -150,7 +133,7 @@
 
   <header class="rr-header">
     <h1 class="cursive" style="font-size:3rem;">Royalty Runner Glossary</h1>
-    <p class="tagline cursive" style="font-size:1.3rem;">Every contract word, decoded in plain language.</p>
+    <p class="tagline cursive" style="font-size:1.3rem;">Every term in the music world — decoded.</p>
 
     <button id="rr-menu-btn" class="rr-menu-btn">☰</button>
 
@@ -166,11 +149,13 @@
   <main class="rr-main">
 
     <section class="section-card">
-      <h2 class="cursive" style="font-size:2rem;">How to Use This Glossary</h2>
-      <p>
-        Every term you see in contracts, rights, and royalties is defined here in plain language.
-        Use search, categories, or the A–Z bar to jump straight to what you need.
-      </p>
+      <h2 class="cursive" style="font-size:2rem;">Choose Your Glossary</h2>
+
+      <div class="glossary-tabs">
+        <button class="glossary-tab active" data-tab="business">Business</button>
+        <button class="glossary-tab" data-tab="creative">Creative</button>
+        <button class="glossary-tab" data-tab="industry">Industry</button>
+      </div>
     </section>
 
     <section class="section-card">
@@ -193,21 +178,10 @@
   </main>
 </div>
 
-<div id="rr-menu-panel" class="rr-menu-panel">
-  <a href="index.html">Home</a>
-  <a href="manage.html">Manage</a>
-  <a href="rights-and-registration.html">Rights</a>
-  <a href="documents.html">Documents</a>
-  <a href="glossary.html">Glossary</a>
-</div>
+<script src="assets/js/glossary/glossary-business-db.js"></script>
+<script src="assets/js/glossary/glossary-creative-db.js"></script>
+<script src="assets/js/glossary/glossary-industry-db.js"></script>
 
-<script>
-  document.getElementById("rr-menu-btn").addEventListener("click", () => {
-    document.getElementById("rr-menu-panel").classList.toggle("show");
-  });
-</script>
-
-<script src="assets/js/glossary/glossary-db.js"></script>
 <script src="assets/js/glossary/glossary-utils.js"></script>
 <script src="assets/js/glossary/glossary-render.js"></script>
 <script src="assets/js/glossary/glossary-search.js"></script>
