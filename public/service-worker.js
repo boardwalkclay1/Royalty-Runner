@@ -1,4 +1,4 @@
-const CACHE_NAME = "royalty-runner-v2";
+const CACHE_NAME = "royalty-runner-v3";
 
 const STATIC_ASSETS = [
   "/",
@@ -35,7 +35,7 @@ const STATIC_ASSETS = [
   "/assets/icons/royal-512.png"
 ];
 
-// INSTALL
+// INSTALL — cache static assets
 self.addEventListener("install", event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => cache.addAll(STATIC_ASSETS))
@@ -43,7 +43,7 @@ self.addEventListener("install", event => {
   self.skipWaiting();
 });
 
-// ACTIVATE
+// ACTIVATE — delete old caches
 self.addEventListener("activate", event => {
   event.waitUntil(
     caches.keys().then(keys =>
@@ -57,11 +57,11 @@ self.addEventListener("activate", event => {
   self.clients.claim();
 });
 
-// FETCH
+// FETCH — safe strategy for multi‑page apps
 self.addEventListener("fetch", event => {
   const req = event.request;
 
-  // Network-first for HTML pages
+  // Always network-first for HTML navigation
   if (req.mode === "navigate") {
     event.respondWith(
       fetch(req)
@@ -78,14 +78,20 @@ self.addEventListener("fetch", event => {
   // Cache-first for static assets
   event.respondWith(
     caches.match(req).then(cached => {
-      return (
-        cached ||
-        fetch(req).then(res => {
+      if (cached) return cached;
+
+      return fetch(req)
+        .then(res => {
           const clone = res.clone();
           caches.open(CACHE_NAME).then(cache => cache.put(req, clone));
           return res;
         })
-      );
+        .catch(() => {
+          // fallback only for images
+          if (req.destination === "image") {
+            return caches.match("/assets/img/royal-profile.jpg");
+          }
+        });
     })
   );
 });
