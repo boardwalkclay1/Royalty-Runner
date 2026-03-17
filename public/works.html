@@ -32,21 +32,6 @@
       box-shadow: 0 0 10px rgba(184,115,51,0.7);
       z-index: 9999;
     }
-    .record-btn {
-      width: 80px; height: 80px; border-radius: 50%;
-      border: 3px solid var(--copper);
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer; margin-bottom: 1rem;
-      font-size: 2rem;
-    }
-    .recording { background: var(--copper); color: #000; }
-    textarea {
-      width: 100%; min-height: 200px;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid var(--copper);
-      border-radius: 8px;
-      padding: 1rem; color: #fff;
-    }
   </style>
 </head>
 
@@ -60,35 +45,13 @@
 
   <main>
 
-    <!-- 🎤 VOICE RECORDER MODULE -->
-    <section class="section-card">
-      <h2 class="cursive" style="font-size:1.8rem;">Voice Recorder</h2>
+    <!-- 🎤 Voice Recorder injected here -->
+    <section id="voice-module" class="section-card"></section>
 
-      <div id="record-btn" class="record-btn">●</div>
-      <div id="voice-status" style="color:var(--copper-light);">Ready</div>
-      <div id="voice-timer" style="color:var(--copper-light); margin-bottom:1rem;">00:00</div>
+    <!-- 📝 Journal injected here -->
+    <section id="journal-module" class="section-card"></section>
 
-      <input id="voice-title" placeholder="Title" style="width:100%; margin-bottom:1rem;" />
-
-      <audio id="voice-playback" controls style="display:none; margin-top:1rem;"></audio>
-
-      <button id="voice-save" disabled style="margin-top:1rem;">Save to Catalog</button>
-    </section>
-
-    <!-- 📝 JOURNAL MODULE -->
-    <section class="section-card">
-      <h2 class="cursive" style="font-size:1.8rem;">Journal / Lyrics Pad</h2>
-
-      <input id="journal-title" placeholder="Title" style="width:100%; margin-bottom:1rem;" />
-
-      <textarea id="journal-content" placeholder="Start writing..."></textarea>
-
-      <div id="journal-status" style="margin-top:0.5rem; color:var(--copper-light);">Not saved</div>
-
-      <button id="journal-save" style="margin-top:1rem;">Save to Catalog</button>
-    </section>
-
-    <!-- 🎥 VIDEO LINK -->
+    <!-- 🎥 Video Recorder -->
     <section class="section-card">
       <h2 class="cursive" style="font-size:1.8rem;">Video Recorder</h2>
       <a href="works-video.html" style="color:var(--copper); text-decoration:underline;">Open Video Recorder</a>
@@ -99,118 +62,10 @@
 
 <a href="my-catalog.html" class="floating-catalog">My Catalog</a>
 
-<script>
-/* -------------------------
-   SHARED STORAGE
---------------------------*/
-const KEY = "rr_works";
-function loadWorks(){ return JSON.parse(localStorage.getItem(KEY) || "[]"); }
-function saveWorks(list){ localStorage.setItem(KEY, JSON.stringify(list)); }
-function addWork(item){ let list = loadWorks(); list.push(item); saveWorks(list); }
-
-/* -------------------------
-   🎤 VOICE RECORDER
---------------------------*/
-let rec = false, chunks = [], recObj = null, start = 0, timer = null, blob = null;
-
-function fmt(s){
-  let m = Math.floor(s/60), sec = Math.floor(s%60);
-  return `${m.toString().padStart(2,"0")}:${sec.toString().padStart(2,"0")}`;
-}
-
-document.getElementById("record-btn").onclick = async () => {
-  if(!rec){
-    const stream = await navigator.mediaDevices.getUserMedia({audio:true});
-    recObj = new MediaRecorder(stream);
-    chunks = [];
-    recObj.ondataavailable = e => chunks.push(e.data);
-    recObj.onstop = () => {
-      blob = new Blob(chunks, {type:"audio/webm"});
-      const url = URL.createObjectURL(blob);
-      voice_playback.src = url;
-      voice_playback.style.display = "block";
-      voice_save.disabled = false;
-    };
-    recObj.start();
-    rec = true;
-    start = Date.now();
-    timer = setInterval(()=>{
-      voice_timer.textContent = fmt((Date.now()-start)/1000);
-    },500);
-    record_btn.classList.add("recording");
-    voice_status.textContent = "Recording...";
-  } else {
-    recObj.stop();
-    rec = false;
-    clearInterval(timer);
-    record_btn.classList.remove("recording");
-    voice_status.textContent = "Stopped";
-  }
-};
-
-voice_save.onclick = () => {
-  const reader = new FileReader();
-  reader.onloadend = () => {
-    const item = {
-      id: "work_"+Date.now(),
-      type: "audio",
-      title: voice_title.value || "Untitled",
-      createdAt: Date.now(),
-      audioBase64: reader.result,
-      duration: voice_timer.textContent
-    };
-    addWork(item);
-    voice_status.textContent = "Saved to Catalog";
-  };
-  reader.readAsDataURL(blob);
-};
-
-/* -------------------------
-   📝 JOURNAL MODULE
---------------------------*/
-let journalTimer = null;
-
-journal_title.oninput = autosaveJournal;
-journal_content.oninput = autosaveJournal;
-
-function autosaveJournal(){
-  clearTimeout(journalTimer);
-  journalTimer = setTimeout(()=>{
-    localStorage.setItem("rr_journal_draft", JSON.stringify({
-      title: journal_title.value,
-      content: journal_content.value
-    }));
-    journal_status.textContent = "Draft saved";
-  }, 1200);
-}
-
-(function loadDraft(){
-  const raw = localStorage.getItem("rr_journal_draft");
-  if(!raw) return;
-  const d = JSON.parse(raw);
-  journal_title.value = d.title || "";
-  journal_content.value = d.content || "";
-  journal_status.textContent = "Draft loaded";
-})();
-
-journal_save.onclick = () => {
-  const text = journal_content.value.trim();
-  if(!text){
-    journal_status.textContent = "Nothing to save";
-    return;
-  }
-  const item = {
-    id: "work_"+Date.now(),
-    type: "lyrics",
-    title: journal_title.value || "Untitled",
-    createdAt: Date.now(),
-    content: text,
-    wordCount: text.split(/\s+/).filter(Boolean).length
-  };
-  addWork(item);
-  journal_status.textContent = "Saved to Catalog";
-};
-</script>
+<!-- Injected JS modules -->
+<script src="assets/js/works-shared.js"></script>
+<script src="assets/js/works-voice.js"></script>
+<script src="assets/js/works-journal.js"></script>
 
 </body>
 </html>
