@@ -124,59 +124,7 @@
       color: #ccc;
     }
 
-    .audio-controls {
-      display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-      margin-top: 0.5rem;
-      align-items: center;
-    }
-
-    .audio-status {
-      font-size: 0.9rem;
-      color: var(--copper-light);
-      margin-top: 0.3rem;
-    }
-
-    .journal-layout {
-      display: grid;
-      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
-      gap: 1rem;
-    }
-
-    @media (max-width: 900px) {
-      .journal-layout {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    #journal-body {
-      width: 100%;
-      min-height: 220px;
-      resize: vertical;
-    }
-
-    #journal-title {
-      width: 100%;
-    }
-
-    .journal-entry {
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-      padding: 0.5rem 0;
-      cursor: pointer;
-    }
-
-    .journal-entry-title {
-      color: var(--copper);
-      font-size: 1rem;
-    }
-
-    .journal-entry-meta {
-      font-size: 0.8rem;
-      color: #aaa;
-    }
-
-    audio {
+    audio, video {
       width: 100%;
       margin-top: 0.4rem;
     }
@@ -207,8 +155,7 @@
       <h2 class="cursive" style="font-size:2rem;">Lock Your Songs into Your Catalog</h2>
       <p>
         This is your song vault and writing room.  
-        Save finished songs, capture quick voice notes, and write lyrics or ideas in a real journal
-        that lives inside Royalty Runner on this device.
+        Save finished songs, capture quick voice notes, record video memos, and write lyrics or ideas in your Jam Pad.
       </p>
       <p class="small-note">
         Everything here is local‑only and offline‑ready. No cloud, no accounts, just your browser.
@@ -244,20 +191,14 @@
 
         <label style="margin-top:0.75rem;">
           Upload finished audio (WAV, MP3, FLAC, OGG, M4A, etc.)
-          <input
-            type="file"
-            id="song-files"
-            accept="audio/*"
-            multiple
-          />
+          <input type="file" id="song-files" accept="audio/*" multiple />
         </label>
 
         <button type="submit" class="bubble-btn">Save Songs to Works</button>
       </form>
 
       <p class="small-note" style="margin-top:0.75rem;">
-        Each file becomes a Work entry with filename, size, type, and timestamp.  
-        Audio is stored in your browser’s IndexedDB so you can play it back later.
+        Each file becomes a Work entry with filename, size, type, and timestamp.
       </p>
 
       <div id="works-list" style="margin-top:1rem;"></div>
@@ -267,8 +208,7 @@
     <section class="section-card">
       <h3 class="cursive" style="font-size:1.8rem;">Quick Audio Memo Recorder</h3>
       <p>
-        Capture melodies, hooks, or spoken notes the moment they hit you.  
-        Name each memo, record, save, and play it back later — all inside your Works Studio.
+        Capture melodies, hooks, or spoken notes the moment they hit you.
       </p>
 
       <div class="work-card">
@@ -293,77 +233,62 @@
       <div id="memo-list"></div>
     </section>
 
-    <!-- WRITER'S JOURNAL -->
-   <section class="section-card jam-pad-card">
-  <h3 class="cursive jam-pad-heading">Jam Pad</h3>
+    <!-- VIDEO MEMO RECORDER -->
+    <section class="section-card">
+      <h3 class="cursive" style="font-size:1.8rem;">Video Memo Recorder</h3>
+      <p>
+        Capture visual ideas, performance notes, or quick video thoughts.
+      </p>
 
-  <p class="jam-pad-subtext">
-    Your creative notepad for lyrics, concepts, scenes, and ideas.  
-    Everything auto‑saves as you type, and you can save snapshots as entries.
-  </p>
-
-  <div class="jam-pad-paper">
-    <div class="jam-pad-lines"></div>
-
-    <div class="jam-pad-content">
-      <input id="journal-title" class="jam-pad-title-input" placeholder="Title…" />
-
-      <textarea id="journal-body" class="jam-pad-body-input" placeholder="Start writing…"></textarea>
-
-      <div id="journal-status" class="jam-pad-status">Draft saved.</div>
-
-      <div class="jam-pad-actions">
-        <button id="journal-save-entry" class="primary-btn">Save Entry</button>
-        <button id="journal-clear-draft" class="secondary-btn">Clear Draft</button>
-      </div>
-    </div>
-  </div>
-
-  <h4 class="jam-pad-entries-heading">Saved Entries</h4>
-  <div id="journal-entries" class="jam-pad-entries"></div>
-</section>
-
-
-      <div class="journal-layout">
-        <!-- Editor -->
-        <div>
+      <div class="work-card">
+        <div class="field-row">
           <label>
-            Entry Title
-            <input
-              type="text"
-              id="journal-title"
-              placeholder="Song title, concept, or session name"
-              autocomplete="off"
-            />
+            Video Title
+            <input type="text" id="video-title" placeholder="Concept, performance idea, etc." />
           </label>
+        </div>
 
-          <label style="margin-top:0.75rem; display:block;">
-            Journal Body
-            <textarea
-              id="journal-body"
-              rows="10"
-              spellcheck="true"
-              placeholder="Write lyrics, structure ideas, to‑do lists, or session notes here..."
-            ></textarea>
-          </label>
+        <div class="audio-controls">
+          <button id="video-record-btn" type="button" class="bubble-btn">Start Video</button>
+          <button id="video-stop-btn" type="button" class="bubble-btn secondary" disabled>Stop</button>
+          <button id="video-save-btn" type="button" class="bubble-btn secondary" disabled>Save Video</button>
+        </div>
 
-          <div class="audio-status" id="journal-status">Draft auto‑saving…</div>
+        <div class="audio-status" id="video-status">Idle.</div>
+        <video id="video-preview" controls style="display:none;"></video>
+      </div>
 
-          <div style="margin-top:0.75rem;">
-            <button id="journal-save-entry" type="button" class="bubble-btn">Save as New Entry</button>
-            <button id="journal-clear-draft" type="button" class="bubble-btn secondary">Clear Draft</button>
+      <h4 class="cursive" style="font-size:1.4rem;margin-top:1rem;">Saved Video Memos</h4>
+      <div id="video-list"></div>
+    </section>
+
+    <!-- JAM PAD -->
+    <section class="section-card jam-pad-card">
+      <h3 class="cursive jam-pad-heading">Jam Pad</h3>
+
+      <p class="jam-pad-subtext">
+        Your creative notepad for lyrics, concepts, scenes, and ideas.
+      </p>
+
+      <div class="jam-pad-paper">
+        <div class="jam-pad-lines"></div>
+
+        <div class="jam-pad-content">
+          <input id="journal-title" class="jam-pad-title-input" placeholder="Title…" />
+
+          <textarea id="journal-body" class="jam-pad-body-input" placeholder="Start writing…"></textarea>
+
+          <div id="journal-status" class="jam-pad-status">Draft saved.</div>
+
+          <div class="jam-pad-actions">
+            <button id="journal-save-entry" class="bubble-btn">Save Entry</button>
+            <button id="journal-clear-draft" class="bubble-btn secondary">Clear Draft</button>
           </div>
         </div>
-
-        <!-- Saved entries -->
-        <div>
-          <h4 class="cursive" style="font-size:1.4rem;">Saved Journal Entries</h4>
-          <p class="small-note">
-            Click an entry to load it into the editor. You can edit and save again as a new entry.
-          </p>
-          <div id="journal-entries"></div>
-        </div>
       </div>
+
+      <h4 class="jam-pad-entries-heading">Saved Entries</h4>
+      <div id="journal-entries" class="jam-pad-entries"></div>
     </section>
 
   </main>
