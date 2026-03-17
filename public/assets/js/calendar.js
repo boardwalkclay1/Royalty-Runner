@@ -1,35 +1,31 @@
-// Royalty Runner – Unified Calendar Engine
-// Powers: manage.html (mini weekly + reminders) and calendar.html (full month/week + drag/drop)
+// Royalty Runner – Unified Calendar Engine (Rebuilt Clean + Correct)
+// Powers: manage.html (mini weekly + reminders) and calendar.html (full month/week)
 
-(function() {
+(function () {
   const DB_NAME = "RoyaltyRunnerDB";
   const DB_VERSION = 5;
   const EVENTS_STORE = "events";
 
   let db;
-  let currentView = "month"; // or "week"
+  let currentView = "month";
   let currentDate = new Date();
   let dragEventId = null;
 
   const page = document.documentElement.getAttribute("data-page");
 
-  // ---------- IndexedDB Setup ----------
+  // ---------------- IndexedDB Setup ----------------
   const request = indexedDB.open(DB_NAME, DB_VERSION);
 
   request.onupgradeneeded = (e) => {
     db = e.target.result;
+
     if (!db.objectStoreNames.contains(EVENTS_STORE)) {
-      const store = db.createObjectStore(EVENTS_STORE, { keyPath: "id", autoIncrement: true });
+      const store = db.createObjectStore(EVENTS_STORE, {
+        keyPath: "id",
+        autoIncrement: true
+      });
       store.createIndex("date", "date", { unique: false });
       store.createIndex("reminder", "reminder", { unique: false });
-    } else {
-      const store = e.target.result.transaction.objectStore(EVENTS_STORE);
-      if (!store.indexNames.contains("date")) {
-        store.createIndex("date", "date", { unique: false });
-      }
-      if (!store.indexNames.contains("reminder")) {
-        store.createIndex("reminder", "reminder", { unique: false });
-      }
     }
   };
 
@@ -38,189 +34,153 @@
     initPage();
   };
 
-  request.onerror = () => {
-    console.error("Calendar IndexedDB failed.");
-  };
+  request.onerror = () => console.error("Calendar DB failed.");
 
-  // ---------- Helpers ----------
-  function ymd(date) {
-    return date.toISOString().slice(0, 10);
-  }
+  // ---------------- Helpers ----------------
+  const ymd = (d) => d.toISOString().slice(0, 10);
 
-  function parseYMD(str) {
+  const parseYMD = (str) => {
     const [y, m, d] = str.split("-").map(Number);
     return new Date(y, m - 1, d);
-  }
+  };
 
-  function sameDay(a, b) {
-    return a.getFullYear() === b.getFullYear() &&
-           a.getMonth() === b.getMonth() &&
-           a.getDate() === b.getDate();
-  }
+  const sameDay = (a, b) =>
+    a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate();
 
-  function addDays(date, days) {
-    const d = new Date(date);
-    d.setDate(d.getDate() + days);
-    return d;
-  }
+  const addDays = (d, n) => {
+    const x = new Date(d);
+    x.setDate(x.getDate() + n);
+    return x;
+  };
 
-  function startOfWeek(date) {
-    const d = new Date(date);
-    const day = d.getDay(); // 0-6
-    const diff = d.getDate() - day; // Sunday as start
-    return new Date(d.getFullYear(), d.getMonth(), diff);
-  }
+  const startOfWeek = (d) => {
+    const x = new Date(d);
+    const day = x.getDay();
+    x.setDate(x.getDate() - day);
+    return x;
+  };
 
-  function formatHumanDate(date) {
-    return date.toLocaleDateString(undefined, {
-      weekday: "short",
-      month: "short",
-      day: "numeric"
-    });
-  }
-
-  function formatTimeRange(start, end) {
-    if (!start && !end) return "";
-    const opts = { hour: "numeric", minute: "2-digit" };
-    const s = start ? start : "";
-    const e = end ? end : "";
-    if (s && e) {
-      return `${s} – ${e}`;
-    }
+  const formatTimeRange = (s, e) => {
+    if (!s && !e) return "";
+    if (s && e) return `${s} – ${e}`;
     return s || e;
-  }
+  };
 
-  function openTx(storeName, mode = "readonly") {
-    return db.transaction(storeName, mode).objectStore(storeName);
-  }
+  const openTx = (store, mode = "readonly") =>
+    db.transaction(store, mode).objectStore(store);
 
-  // ---------- Events CRUD ----------
-  function getAllEvents(callback) {
-    const store = openTx(EVENTS_STORE, "readonly");
-    const events = [];
+  // ---------------- CRUD ----------------
+  function getAllEvents(cb) {
+    const store = openTx(EVENTS_STORE);
+    const out = [];
     store.openCursor().onsuccess = (e) => {
-      const cursor = e.target.result;
-      if (!cursor) {
-        callback(events);
-        return;
-      }
-      events.push(cursor.value);
-      cursor.continue();
+      const c = e.target.result;
+      if (!c) return cb(out);
+      out.push(c.value);
+      c.continue();
     };
   }
 
-  function getEventsByDate(dateStr, callback) {
-    const store = openTx(EVENTS_STORE, "readonly");
-    const index = store.index("date");
-    const range = IDBKeyRange.only(dateStr);
-    const events = [];
-    index.openCursor(range).onsuccess = (e) => {
-      const cursor = e.target.result;
-      if (!cursor) {
-        callback(events);
-        return;
-      }
-      events.push(cursor.value);
-      cursor.continue();
-    };
-  }
-
-  function saveEvent(event, callback) {
+  function saveEvent(ev, cb) {
     const store = openTx(EVENTS_STORE, "readwrite");
-    const req = store.put(event);
-    req.onsuccess = () => callback && callback();
+    store.put(ev).onsuccess = () => cb && cb();
   }
 
-  function deleteEvent(id, callback) {
+  function deleteEvent(id, cb) {
     const store = openTx(EVENTS_STORE, "readwrite");
-    const req = store.delete(id);
-    req.onsuccess = () => callback && callback();
+    store.delete(id).onsuccess = () => cb && cb();
   }
 
-  // ---------- Page Init ----------
+  // ---------------- Page Init ----------------
   function initPage() {
     if (page === "manage") {
       initManageMiniCalendar();
       initManageReminders();
-    } else if (page === "calendar") {
+    }
+    if (page === "calendar") {
       initFullCalendar();
     }
   }
 
-  // ---------- Manage Page: Reminders ----------
+  // ---------------- Manage Page: Reminders ----------------
   function initManageReminders() {
     const container = document.getElementById("reminders-list");
     if (!container) return;
 
     getAllEvents((events) => {
-      const now = new Date();
+      const today = ymd(new Date());
+
       const upcoming = events
-        .filter(ev => ev.reminder)
-        .filter(ev => {
-          const d = parseYMD(ev.date);
-          return d >= new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        })
+        .filter((ev) => ev.reminder && ev.date >= today)
         .sort((a, b) => a.date.localeCompare(b.date))
         .slice(0, 10);
 
       container.innerHTML = "";
 
       if (!upcoming.length) {
-        container.innerHTML = `<p style="opacity:0.7;">No reminders yet. Mark events with “Reminder” in the calendar.</p>`;
+        container.innerHTML = `<p style="opacity:0.7;">No reminders yet.</p>`;
         return;
       }
 
-      upcoming.forEach(ev => {
+      upcoming.forEach((ev) => {
         const d = parseYMD(ev.date);
         const item = document.createElement("div");
         item.className = "reminder-item";
+
         item.innerHTML = `
           <div class="reminder-date">${d.toLocaleDateString()}</div>
           <div>${ev.title || "(Untitled Event)"}</div>
-          <div style="font-size:0.8rem;opacity:0.8;">${formatTimeRange(ev.startTime, ev.endTime)}</div>
+          <div style="font-size:0.8rem;opacity:0.8;">
+            ${formatTimeRange(ev.startTime, ev.endTime)}
+          </div>
         `;
+
         container.appendChild(item);
       });
     });
   }
 
-  // ---------- Manage Page: Mini Weekly Calendar ----------
+  // ---------------- Manage Page: Mini Calendar (FIXED) ----------------
   function initManageMiniCalendar() {
-    const mini = document.getElementById("mini-calendar");
-    if (!mini) return;
+    const daysContainer = document.getElementById("mini-calendar-days");
+    if (!daysContainer) return;
 
     const prevBtn = document.getElementById("mini-prev-week");
     const nextBtn = document.getElementById("mini-next-week");
     const label = document.getElementById("mini-week-label");
-    const daysContainer = document.getElementById("mini-calendar-days");
 
     let weekStart = startOfWeek(new Date());
 
-    function renderMiniWeek() {
+    function renderMini() {
       daysContainer.innerHTML = "";
+
       const weekEnd = addDays(weekStart, 6);
-      label.textContent = `${weekStart.toLocaleDateString(undefined, { month: "short", day: "numeric" })} – ${weekEnd.toLocaleDateString(undefined, { month: "short", day: "numeric" })}`;
+      label.textContent =
+        `${weekStart.toLocaleDateString(undefined, { month: "short", day: "numeric" })} – ` +
+        `${weekEnd.toLocaleDateString(undefined, { month: "short", day: "numeric" })}`;
 
       getAllEvents((events) => {
         for (let i = 0; i < 7; i++) {
-          const dayDate = addDays(weekStart, i);
-          const dayStr = ymd(dayDate);
-          const dayEvents = events.filter(ev => ev.date === dayStr);
+          const d = addDays(weekStart, i);
+          const ds = ymd(d);
+          const evs = events.filter((ev) => ev.date === ds);
 
           const div = document.createElement("div");
           div.className = "mini-day";
-          if (sameDay(dayDate, new Date())) div.classList.add("today");
-          if (dayEvents.length) div.classList.add("has-events");
+
+          if (sameDay(d, new Date())) div.classList.add("today");
+          if (evs.length) div.classList.add("has-events");
 
           div.innerHTML = `
-            <span class="mini-date">${dayDate.getDate()}</span>
-            <span class="mini-label">${dayEvents.length ? dayEvents.length + " event(s)" : "No events"}</span>
+            <div class="mini-date">${d.getDate()}</div>
+            <div class="mini-count">${evs.length ? evs.length + " evt" : ""}</div>
           `;
 
           div.addEventListener("click", () => {
-            // Jump to calendar page anchored on this date
             const url = new URL(window.location.origin + "/calendar.html");
-            url.searchParams.set("date", dayStr);
+            url.searchParams.set("date", ds);
             window.location.href = url.toString();
           });
 
@@ -231,30 +191,30 @@
 
     prevBtn.addEventListener("click", () => {
       weekStart = addDays(weekStart, -7);
-      renderMiniWeek();
+      renderMini();
     });
 
     nextBtn.addEventListener("click", () => {
       weekStart = addDays(weekStart, 7);
-      renderMiniWeek();
+      renderMini();
     });
 
-    renderMiniWeek();
+    renderMini();
   }
 
-  // ---------- Full Calendar Page ----------
+  // ---------------- Full Calendar Page ----------------
   function initFullCalendar() {
     const grid = document.getElementById("calendar-grid");
-    if (!grid) return;
-
     const weekdayLabels = document.getElementById("calendar-weekday-labels");
     const label = document.getElementById("calendar-current-label");
+
     const btnToday = document.getElementById("cal-today");
     const btnPrev = document.getElementById("cal-prev");
     const btnNext = document.getElementById("cal-next");
     const btnMonth = document.getElementById("cal-view-month");
     const btnWeek = document.getElementById("cal-view-week");
     const btnNew = document.getElementById("cal-new-event");
+
     const agenda = document.getElementById("agenda-list");
 
     const modal = document.getElementById("event-modal");
@@ -273,31 +233,25 @@
 
     // Weekday labels
     const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-    weekdayLabels.innerHTML = weekdays.map(d => `<div>${d}</div>`).join("");
+    weekdayLabels.innerHTML = weekdays.map((d) => `<div>${d}</div>`).join("");
 
-    // If URL has ?date=YYYY-MM-DD, jump there
+    // URL ?date=YYYY-MM-DD
     const params = new URLSearchParams(window.location.search);
-    if (params.has("date")) {
-      currentDate = parseYMD(params.get("date"));
-    }
+    if (params.has("date")) currentDate = parseYMD(params.get("date"));
 
+    // ---------- Render ----------
     function renderCalendar() {
       grid.innerHTML = "";
-
-      if (currentView === "month") {
-        renderMonthView();
-      } else {
-        renderWeekView();
-      }
-
+      if (currentView === "month") renderMonth();
+      else renderWeek();
       renderAgenda();
     }
 
-    function renderMonthView() {
-      const year = currentDate.getFullYear();
-      const month = currentDate.getMonth();
-      const firstOfMonth = new Date(year, month, 1);
-      const start = startOfWeek(firstOfMonth);
+    function renderMonth() {
+      const y = currentDate.getFullYear();
+      const m = currentDate.getMonth();
+      const first = new Date(y, m, 1);
+      const start = startOfWeek(first);
 
       label.textContent = currentDate.toLocaleDateString(undefined, {
         month: "long",
@@ -306,31 +260,27 @@
 
       getAllEvents((events) => {
         for (let i = 0; i < 42; i++) {
-          const dayDate = addDays(start, i);
-          const dayStr = ymd(dayDate);
-          const dayEvents = events.filter(ev => ev.date === dayStr);
+          const d = addDays(start, i);
+          const ds = ymd(d);
+          const evs = events.filter((ev) => ev.date === ds);
 
           const cell = document.createElement("div");
           cell.className = "calendar-cell";
-          if (sameDay(dayDate, new Date())) cell.classList.add("today");
+          if (sameDay(d, new Date())) cell.classList.add("today");
+          if (d.getMonth() !== m) cell.style.opacity = 0.4;
 
-          const inMonth = dayDate.getMonth() === month;
-          if (!inMonth) {
-            cell.style.opacity = 0.4;
-          }
-
-          cell.dataset.date = dayStr;
+          cell.dataset.date = ds;
 
           cell.innerHTML = `
             <div class="calendar-cell-header">
-              <span class="date-number">${dayDate.getDate()}</span>
+              <span class="date-number">${d.getDate()}</span>
             </div>
             <div class="calendar-events"></div>
           `;
 
-          const eventsContainer = cell.querySelector(".calendar-events");
+          const container = cell.querySelector(".calendar-events");
 
-          dayEvents.forEach(ev => {
+          evs.forEach((ev) => {
             const pill = document.createElement("div");
             pill.className = "calendar-event-pill";
             pill.draggable = true;
@@ -339,7 +289,6 @@
 
             pill.addEventListener("dragstart", (e) => {
               dragEventId = ev.id;
-              e.dataTransfer.effectAllowed = "move";
             });
 
             pill.addEventListener("click", (e) => {
@@ -347,68 +296,64 @@
               openEventModal(ev);
             });
 
-            eventsContainer.appendChild(pill);
+            container.appendChild(pill);
           });
 
-          cell.addEventListener("dragover", (e) => {
-            e.preventDefault();
-          });
-
-          cell.addEventListener("drop", (e) => {
-            e.preventDefault();
+          cell.addEventListener("dragover", (e) => e.preventDefault());
+          cell.addEventListener("drop", () => {
             if (!dragEventId) return;
-            moveEventToDate(dragEventId, dayStr);
+            moveEventToDate(dragEventId, ds);
           });
 
-          cell.addEventListener("click", () => {
-            openEventModal({ date: dayStr });
-          });
+          cell.addEventListener("click", () => openEventModal({ date: ds }));
 
           grid.appendChild(cell);
         }
       });
     }
 
-    function renderWeekView() {
-      const weekStart = startOfWeek(currentDate);
-      const weekEnd = addDays(weekStart, 6);
+    function renderWeek() {
+      const start = startOfWeek(currentDate);
+      const end = addDays(start, 6);
 
-      label.textContent = `${weekStart.toLocaleDateString(undefined, { month: "short", day: "numeric" })} – ${weekEnd.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}`;
+      label.textContent =
+        `${start.toLocaleDateString(undefined, { month: "short", day: "numeric" })} – ` +
+        `${end.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}`;
 
       getAllEvents((events) => {
         for (let i = 0; i < 7; i++) {
-          const dayDate = addDays(weekStart, i);
-          const dayStr = ymd(dayDate);
-          const dayEvents = events.filter(ev => ev.date === dayStr);
+          const d = addDays(start, i);
+          const ds = ymd(d);
+          const evs = events.filter((ev) => ev.date === ds);
 
           const cell = document.createElement("div");
           cell.className = "calendar-cell";
-          if (sameDay(dayDate, new Date())) cell.classList.add("today");
-          cell.dataset.date = dayStr;
+          if (sameDay(d, new Date())) cell.classList.add("today");
+          cell.dataset.date = ds;
 
           cell.innerHTML = `
             <div class="calendar-cell-header">
-              <span class="date-number">${dayDate.getDate()}</span>
-              <span>${weekdays[dayDate.getDay()]}</span>
+              <span class="date-number">${d.getDate()}</span>
+              <span>${weekdays[d.getDay()]}</span>
             </div>
             <div class="calendar-events"></div>
           `;
 
-          const eventsContainer = cell.querySelector(".calendar-events");
+          const container = cell.querySelector(".calendar-events");
 
-          dayEvents
+          evs
             .sort((a, b) => (a.startTime || "").localeCompare(b.startTime || ""))
-            .forEach(ev => {
+            .forEach((ev) => {
               const pill = document.createElement("div");
               pill.className = "calendar-event-pill";
               pill.draggable = true;
               pill.dataset.id = ev.id;
-              const timeLabel = formatTimeRange(ev.startTime, ev.endTime);
-              pill.textContent = timeLabel ? `${timeLabel} – ${ev.title || "(Untitled)"}` : (ev.title || "(Untitled)");
 
-              pill.addEventListener("dragstart", (e) => {
+              const time = formatTimeRange(ev.startTime, ev.endTime);
+              pill.textContent = time ? `${time} – ${ev.title}` : ev.title;
+
+              pill.addEventListener("dragstart", () => {
                 dragEventId = ev.id;
-                e.dataTransfer.effectAllowed = "move";
               });
 
               pill.addEventListener("click", (e) => {
@@ -416,35 +361,29 @@
                 openEventModal(ev);
               });
 
-              eventsContainer.appendChild(pill);
+              container.appendChild(pill);
             });
 
-          cell.addEventListener("dragover", (e) => {
-            e.preventDefault();
-          });
-
-          cell.addEventListener("drop", (e) => {
-            e.preventDefault();
+          cell.addEventListener("dragover", (e) => e.preventDefault());
+          cell.addEventListener("drop", () => {
             if (!dragEventId) return;
-            moveEventToDate(dragEventId, dayStr);
+            moveEventToDate(dragEventId, ds);
           });
 
-          cell.addEventListener("click", () => {
-            openEventModal({ date: dayStr });
-          });
+          cell.addEventListener("click", () => openEventModal({ date: ds }));
 
           grid.appendChild(cell);
         }
       });
     }
 
-    function moveEventToDate(id, newDateStr) {
+    function moveEventToDate(id, newDate) {
       const store = openTx(EVENTS_STORE, "readwrite");
       const req = store.get(id);
       req.onsuccess = (e) => {
         const ev = e.target.result;
         if (!ev) return;
-        ev.date = newDateStr;
+        ev.date = newDate;
         saveEvent(ev, () => {
           dragEventId = null;
           renderCalendar();
@@ -452,63 +391,63 @@
       };
     }
 
+    // ---------- Agenda ----------
     function renderAgenda() {
       if (!agenda) return;
 
       getAllEvents((events) => {
-        const now = new Date();
-        const todayStr = ymd(now);
+        const today = ymd(new Date());
 
         const upcoming = events
-          .filter(ev => ev.date >= todayStr)
-          .sort((a, b) => a.date.localeCompare(b.date) || (a.startTime || "").localeCompare(b.startTime || ""));
+          .filter((ev) => ev.date >= today)
+          .sort(
+            (a, b) =>
+              a.date.localeCompare(b.date) ||
+              (a.startTime || "").localeCompare(b.startTime || "")
+          );
 
         agenda.innerHTML = "";
 
         if (!upcoming.length) {
-          agenda.innerHTML = `<p style="opacity:0.7;">No events yet. Add one from the calendar above.</p>`;
+          agenda.innerHTML = `<p style="opacity:0.7;">No events yet.</p>`;
           return;
         }
 
-        upcoming.forEach(ev => {
+        upcoming.forEach((ev) => {
           const d = parseYMD(ev.date);
           const item = document.createElement("div");
           item.className = "agenda-item";
 
           item.innerHTML = `
             <div class="agenda-main">
-              <div class="agenda-title">${ev.title || "(Untitled Event)"}</div>
+              <div class="agenda-title">${ev.title}</div>
               <div class="agenda-meta">
-                ${d.toLocaleDateString()} • ${formatTimeRange(ev.startTime, ev.endTime) || "All day"} • ${ev.type || "general"}
+                ${d.toLocaleDateString()} • ${formatTimeRange(ev.startTime, ev.endTime) || "All day"} • ${ev.type}
               </div>
             </div>
             <div class="agenda-actions">
-              <button data-id="${ev.id}" class="agenda-edit">Edit</button>
-              <button data-id="${ev.id}" class="agenda-delete">Delete</button>
+              <button class="agenda-edit" data-id="${ev.id}">Edit</button>
+              <button class="agenda-delete" data-id="${ev.id}">Delete</button>
             </div>
           `;
 
           agenda.appendChild(item);
         });
 
-        agenda.querySelectorAll(".agenda-edit").forEach(btn => {
-          btn.addEventListener("click", () => {
-            const id = Number(btn.dataset.id);
-            openEventById(id);
-          });
+        agenda.querySelectorAll(".agenda-edit").forEach((btn) => {
+          btn.addEventListener("click", () => openEventById(Number(btn.dataset.id)));
         });
 
-        agenda.querySelectorAll(".agenda-delete").forEach(btn => {
+        agenda.querySelectorAll(".agenda-delete").forEach((btn) => {
           btn.addEventListener("click", () => {
-            const id = Number(btn.dataset.id);
-            deleteEvent(id, renderCalendar);
+            deleteEvent(Number(btn.dataset.id), renderCalendar);
           });
         });
       });
     }
 
     function openEventById(id) {
-      const store = openTx(EVENTS_STORE, "readonly");
+      const store = openTx(EVENTS_STORE);
       const req = store.get(id);
       req.onsuccess = (e) => {
         const ev = e.target.result;
@@ -516,6 +455,7 @@
       };
     }
 
+    // ---------- Modal ----------
     function openEventModal(ev) {
       editingEventId = ev.id || null;
 
@@ -528,12 +468,7 @@
       modalReminder.checked = !!ev.reminder;
 
       modal.style.display = "flex";
-
-      if (!editingEventId) {
-        modalDelete.style.display = "none";
-      } else {
-        modalDelete.style.display = "inline-block";
-      }
+      modalDelete.style.display = editingEventId ? "inline-block" : "none";
     }
 
     function closeEventModal() {
@@ -544,10 +479,7 @@
     modalCancel.addEventListener("click", closeEventModal);
 
     modalDelete.addEventListener("click", () => {
-      if (!editingEventId) {
-        closeEventModal();
-        return;
-      }
+      if (!editingEventId) return closeEventModal();
       deleteEvent(editingEventId, () => {
         closeEventModal();
         renderCalendar();
@@ -555,17 +487,10 @@
     });
 
     modalSave.addEventListener("click", () => {
-      const title = modalTitle.value.trim();
-      const dateStr = modalDate.value;
-      if (!dateStr) {
-        alert("Date is required.");
-        return;
-      }
-
-      const eventObj = {
+      const ev = {
         id: editingEventId || undefined,
-        title: title || "(Untitled Event)",
-        date: dateStr,
+        title: modalTitle.value.trim() || "(Untitled Event)",
+        date: modalDate.value,
         startTime: modalStart.value || "",
         endTime: modalEnd.value || "",
         type: modalType.value || "general",
@@ -573,56 +498,15 @@
         reminder: modalReminder.checked
       };
 
-      saveEvent(eventObj, () => {
+      saveEvent(ev, () => {
         closeEventModal();
         renderCalendar();
       });
     });
 
-    // Header controls
-    btnToday.addEventListener("click", () => {
-      currentDate = new Date();
-      renderCalendar();
-    });
-
-    btnPrev.addEventListener("click", () => {
-      if (currentView === "month") {
-        currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
-      } else {
-        currentDate = addDays(currentDate, -7);
-      }
-      renderCalendar();
-    });
-
-    btnNext.addEventListener("click", () => {
-      if (currentView === "month") {
-        currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
-      } else {
-        currentDate = addDays(currentDate, 7);
-      }
-      renderCalendar();
-    });
-
-    btnMonth.addEventListener("click", () => {
-      currentView = "month";
-      renderCalendar();
-    });
-
-    btnWeek.addEventListener("click", () => {
-      currentView = "week";
-      renderCalendar();
-    });
-
-    btnNew.addEventListener("click", () => {
-      openEventModal({ date: ymd(currentDate) });
-    });
-
-    // Close modal on background click
     modal.addEventListener("click", (e) => {
       if (e.target === modal) closeEventModal();
     });
 
-    // Initial render
-    renderCalendar();
-  }
-})();
+    // ---------- Header Controls ----------
+    btnToday.addEventListener
