@@ -294,13 +294,35 @@
     </section>
 
     <!-- WRITER'S JOURNAL -->
-    <section class="section-card">
-      <h3 class="cursive" style="font-size:1.8rem;">Writer’s Journal</h3>
-      <p>
-        A real journal for lyrics, concepts, and planning.  
-        Your current page auto‑saves as you type. You can also save snapshots as separate entries
-        and revisit them later.
-      </p>
+   <section class="section-card jam-pad-card">
+  <h3 class="cursive jam-pad-heading">Jam Pad</h3>
+
+  <p class="jam-pad-subtext">
+    Your creative notepad for lyrics, concepts, scenes, and ideas.  
+    Everything auto‑saves as you type, and you can save snapshots as entries.
+  </p>
+
+  <div class="jam-pad-paper">
+    <div class="jam-pad-lines"></div>
+
+    <div class="jam-pad-content">
+      <input id="journal-title" class="jam-pad-title-input" placeholder="Title…" />
+
+      <textarea id="journal-body" class="jam-pad-body-input" placeholder="Start writing…"></textarea>
+
+      <div id="journal-status" class="jam-pad-status">Draft saved.</div>
+
+      <div class="jam-pad-actions">
+        <button id="journal-save-entry" class="primary-btn">Save Entry</button>
+        <button id="journal-clear-draft" class="secondary-btn">Clear Draft</button>
+      </div>
+    </div>
+  </div>
+
+  <h4 class="jam-pad-entries-heading">Saved Entries</h4>
+  <div id="journal-entries" class="jam-pad-entries"></div>
+</section>
+
 
       <div class="journal-layout">
         <!-- Editor -->
