@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en" data-page="my-catalog">
+<head>
+  <meta charset="UTF-8" />
+  <title>Royalty Runner – My Catalog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: url("assets/img/royal-catalog.jpg") no-repeat center center fixed;
+      background-size: cover;
+      background-color: #000;
+    }
+    .overlay { background:rgba(0,0,0,0.82); min-height:100vh; padding-bottom:4rem; }
+    .cursive { font-family:'Dancing Script',cursive; letter-spacing:1px; }
+    .section-card {
+      background:rgba(0,0,0,0.7); border:1px solid var(--copper); border-radius:10px;
+      padding:1.5rem; margin-bottom:2rem; backdrop-filter:blur(4px);
+    }
+    h1,h2,h3 { text-shadow:0 0 10px rgba(184,115,51,0.4); }
+    .tagline { color:var(--copper-light); margin-top:0.3rem; margin-bottom:1rem; }
+    .rr-menu-btn {
+      position:absolute; right:1rem; top:1rem; font-size:2rem;
+      background:none; border:none; color:var(--copper); cursor:pointer; z-index:9999;
+    }
+    .rr-nav { display:flex; flex-wrap:wrap; gap:0.8rem; margin-top:0.8rem; }
+    .rr-nav a { text-decoration:none; }
+    .rr-nav a:hover { color:var(--copper); }
+    .rr-menu-panel {
+      position:fixed; top:0; right:0; width:260px; height:100vh;
+      background:rgba(0,0,0,0.95); border-left:2px solid var(--copper);
+      padding:2rem 1rem; transition:transform 0.3s ease; transform:translateX(100%);
+      z-index:9998;
+    }
+    .rr-menu-panel.show { transform:translateX(0); }
+    .rr-menu-panel a {
+      display:block; margin-bottom:1.2rem; color:var(--copper);
+      font-family:'Dancing Script',cursive; font-size:1.5rem; text-decoration:none;
+    }
+    .catalog-section h3 { margin-top:0; }
+    .catalog-item {
+      border:1px solid rgba(255,255,255,0.2); border-radius:8px;
+      padding:0.6rem 0.8rem; margin-bottom:0.5rem;
+      display:flex; justify-content:space-between; align-items:center; gap:0.5rem;
+      font-size:0.9rem;
+    }
+    .catalog-main { display:flex; flex-direction:column; gap:0.1rem; }
+    .catalog-meta { font-size:0.8rem; color:var(--copper-light); }
+    .tag {
+      display:inline-block; padding:0.1rem 0.4rem; border-radius:999px;
+      border:1px solid var(--copper); font-size:0.75rem; margin-right:0.3rem;
+    }
+    .catalog-actions button {
+      border-radius:999px; border:1px solid var(--copper);
+      background:rgba(0,0,0,0.8); color:var(--copper-light);
+      padding:0.2rem 0.6rem; cursor:pointer; font-size:0.8rem;
+    }
+    .catalog-actions button:hover { background:var(--copper); color:#000; }
+    audio, video { max-width:220px; }
+  </style>
+</head>
+<body>
+<div class="overlay">
+  <header class="rr-header">
+    <h1 class="cursive">My Catalog</h1>
+    <p class="tagline">Every idea you capture, organized by type and time.</p>
+    <button id="rr-menu-btn" class="rr-menu-btn">☰</button>
+    <nav class="rr-nav cursive">
+      <a href="index.html">Home</a>
+      <a href="profile.html">Profile</a>
+      <a href="works.html">Works</a>
+      <a href="documents.html">Documents</a>
+      <a href="contracts.html">Contracts</a>
+      <a href="rights-and-registration.html">Rights</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="section-card">
+      <h2 class="cursive" style="font-size:1.8rem;">Overview</h2>
+      <p>
+        This is your creative catalog — audio ideas, video drafts, and lyric notes.
+        Use this as the foundation for registrations, releases, and deals.
+      </p>
+    </section>
+
+    <section class="section-card catalog-section">
+      <h3 class="cursive" style="font-size:1.5rem;">Audio</h3>
+      <div id="catalog-audio"></div>
+    </section>
+
+    <section class="section-card catalog-section">
+      <h3 class="cursive" style="font-size:1.5rem;">Video</h3>
+      <div id="catalog-video"></div>
+    </section>
+
+    <section class="section-card catalog-section">
+      <h3 class="cursive" style="font-size:1.5rem;">Lyrics</h3>
+      <div id="catalog-lyrics"></div>
+    </section>
+  </main>
+</div>
+
+<div id="rr-menu-panel" class="rr-menu-panel">
+  <a href="index.html">Home</a>
+  <a href="profile.html">Profile</a>
+  <a href="works.html">Works</a>
+  <a href="documents.html">Documents</a>
+  <a href="contracts.html">Contracts</a>
+  <a href="rights-and-registration.html">Rights</a>
+  <a href="my-catalog.html">My Catalog</a>
+  <a href="protection.html">Protection</a>
+  <a href="law.html">Law</a>
+  <a href="publicist.html">Publicist</a>
+  <a href="manage.html">Management</a>
+  <a href="glossary.html">Glossary</a>
+  <a href="export.html">Export</a>
+</div>
+
+<script>
+  const WORKS_KEY = "rr_works";
+  function loadWorks() {
+    try { return JSON.parse(localStorage.getItem(WORKS_KEY)) || []; }
+    catch { return []; }
+  }
+  function saveWorks(list) {
+    localStorage.setItem(WORKS_KEY, JSON.stringify(list));
+  }
+
+  document.getElementById("rr-menu-btn").addEventListener("click", () => {
+    document.getElementById("rr-menu-panel").classList.toggle("show");
+  });
+
+  const audioContainer = document.getElementById("catalog-audio");
+  const videoContainer = document.getElementById("catalog-video");
+  const lyricsContainer = document.getElementById("catalog-lyrics");
+
+  function formatDate(ts) {
+    const d = new Date(ts);
+    return d.toLocaleString();
+  }
+
+  function renderCatalog() {
+    const works = loadWorks().sort((a,b) => b.createdAt - a.createdAt);
+    audioContainer.innerHTML = "";
+    videoContainer.innerHTML = "";
+    lyricsContainer.innerHTML = "";
+
+    works.forEach((item, index) => {
+      const wrapper = document.createElement("div");
+      wrapper.className = "catalog-item";
+
+      const main = document.createElement("div");
+      main.className = "catalog-main";
+
+      const title = document.createElement("div");
+      title.textContent = item.title || "Untitled";
+      main.appendChild(title);
+
+      const meta = document.createElement("div");
+      meta.className = "catalog-meta";
+      const tag = document.createElement("span");
+      tag.className = "tag";
+      tag.textContent = item.type.toUpperCase();
+      meta.appendChild(tag);
+      meta.appendChild(document.createTextNode(" " + formatDate(item.createdAt)));
+      if (item.type === "lyrics" && item.wordCount) {
+        meta.appendChild(document.createTextNode(" • " + item.wordCount + " words"));
+      }
+      if (item.type === "audio" && item.duration) {
+        meta.appendChild(document.createTextNode(" • " + item.duration));
+      }
+      main.appendChild(meta);
+
+      const actions = document.createElement("div");
+      actions.className = "catalog-actions";
+
+      const deleteBtn = document.createElement("button");
+      deleteBtn.textContent = "Delete";
+      deleteBtn.addEventListener("click", () => {
+        const list = loadWorks();
+        list.splice(index, 1);
+        saveWorks(list);
+        renderCatalog();
+      });
+      actions.appendChild(deleteBtn);
+
+      // Media / content
+      if (item.type === "audio" && item.audioBase64) {
+        const audio = document.createElement("audio");
+        audio.controls = true;
+        audio.src = item.audioBase64;
+        actions.appendChild(audio);
+      } else if (item.type === "video" && item.videoBase64) {
+        const video = document.createElement("video");
+        video.controls = true;
+        video.src = item.videoBase64;
+        actions.appendChild(video);
+      } else if (item.type === "lyrics" && item.content) {
+        const viewBtn = document.createElement("button");
+        viewBtn.textContent = "View";
+        viewBtn.addEventListener("click", () => {
+          alert(item.content);
+        });
+        actions.appendChild(viewBtn);
+      }
+
+      wrapper.appendChild(main);
+      wrapper.appendChild(actions);
+
+      if (item.type === "audio") audioContainer.appendChild(wrapper);
+      else if (item.type === "video") videoContainer.appendChild(wrapper);
+      else if (item.type === "lyrics") lyricsContainer.appendChild(wrapper);
+    });
+
+    if (!audioContainer.children.length) audioContainer.textContent = "No audio works yet.";
+    if (!videoContainer.children.length) videoContainer.textContent = "No video works yet.";
+    if (!lyricsContainer.children.length) lyricsContainer.textContent = "No lyrics saved yet.";
+  }
+
+  renderCatalog();
+</script>
+</body>
+</html>
