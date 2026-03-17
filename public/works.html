@@ -4,323 +4,322 @@
   <meta charset="UTF-8" />
   <title>Royalty Runner – Works Studio</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="manifest" href="manifest.json" />
   <link rel="stylesheet" href="assets/css/style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600&display=swap" rel="stylesheet">
-
   <style>
     body {
-      background: url("assets/img/royal-works.jpg") no-repeat center center fixed;
+      background: url("assets/img/royal-randr.jpg") no-repeat center center fixed;
       background-size: cover;
       background-color: #000;
     }
-
-    .overlay {
-      background: rgba(0, 0, 0, 0.78);
-      min-height: 100vh;
-      padding-bottom: 4rem;
-    }
-
-    .cursive {
-      font-family: 'Dancing Script', cursive;
-      letter-spacing: 1px;
-    }
-
+    .overlay { background: rgba(0,0,0,0.82); min-height: 100vh; padding-bottom: 4rem; }
+    .cursive { font-family: 'Dancing Script', cursive; letter-spacing: 1px; }
     .section-card {
-      background: rgba(0, 0, 0, 0.65);
+      background: rgba(0,0,0,0.7);
       border: 1px solid var(--copper);
-      border-radius: 12px;
+      border-radius: 10px;
       padding: 1.5rem;
       margin-bottom: 2rem;
       backdrop-filter: blur(4px);
     }
-
+    h1,h2,h3 { text-shadow: 0 0 10px rgba(184,115,51,0.4); }
+    .tagline { color: var(--copper-light); margin-top:0.3rem; margin-bottom:1rem; }
     .rr-menu-btn {
-      position: absolute;
-      right: 1rem;
-      top: 1rem;
-      font-size: 2rem;
-      background: none;
-      border: none;
-      color: var(--copper);
-      cursor: pointer;
-      z-index: 9999;
+      position:absolute; right:1rem; top:1rem; font-size:2rem;
+      background:none; border:none; color:var(--copper); cursor:pointer; z-index:9999;
     }
-
+    .rr-nav { display:flex; flex-wrap:wrap; gap:0.8rem; margin-top:0.8rem; }
+    .rr-nav a { text-decoration:none; }
+    .rr-nav a:hover { color:var(--copper); }
     .rr-menu-panel {
-      position: fixed;
-      top: 0;
-      right: 0;
-      width: 260px;
-      height: 100vh;
-      background: rgba(0,0,0,0.92);
-      border-left: 2px solid var(--copper);
-      padding: 2rem 1rem;
-      transition: transform 0.3s ease;
-      transform: translateX(100%);
-      z-index: 9998;
+      position:fixed; top:0; right:0; width:260px; height:100vh;
+      background:rgba(0,0,0,0.95); border-left:2px solid var(--copper);
+      padding:2rem 1rem; transition:transform 0.3s ease; transform:translateX(100%);
+      z-index:9998;
     }
-
-    .rr-menu-panel.show {
-      transform: translateX(0);
-    }
-
+    .rr-menu-panel.show { transform:translateX(0); }
     .rr-menu-panel a {
-      display: block;
-      margin-bottom: 1.2rem;
-      color: var(--copper);
-      font-family: 'Dancing Script', cursive;
-      font-size: 1.5rem;
-      text-decoration: none;
+      display:block; margin-bottom:1.2rem; color:var(--copper);
+      font-family:'Dancing Script',cursive; font-size:1.5rem; text-decoration:none;
     }
-
-    .bubble-btn {
-      display: inline-block;
-      padding: 0.4rem 1rem;
-      background: var(--copper);
-      color: #000;
-      border-radius: 999px;
-      font-family: 'Dancing Script', cursive;
-      font-size: 1.1rem;
-      text-decoration: none;
-      margin-top: 0.5rem;
-      border: none;
-      cursor: pointer;
+    .quick-actions { margin-top:1rem; display:flex; flex-wrap:wrap; gap:0.5rem; }
+    .quick-button {
+      border:1px solid var(--copper); background:rgba(0,0,0,0.8); color:var(--copper-light);
+      padding:0.4rem 0.8rem; border-radius:999px; font-size:0.85rem; cursor:pointer;
+      text-decoration:none; display:inline-flex; align-items:center; gap:0.3rem;
     }
-
-    .bubble-btn.secondary {
-      background: transparent;
-      color: var(--copper);
-      border: 1px solid var(--copper);
+    .quick-button:hover { background:var(--copper); color:#000; }
+    .record-circle {
+      width:70px; height:70px; border-radius:50%; border:3px solid var(--copper);
+      display:flex; align-items:center; justify-content:center; cursor:pointer;
+      margin-bottom:0.5rem;
     }
-
-    .work-card {
-      background: rgba(0,0,0,0.55);
-      border: 1px solid var(--copper);
-      padding: 1rem;
-      border-radius: 10px;
-      margin-bottom: 1rem;
+    .record-circle.recording { background:var(--copper); color:#000; box-shadow:0 0 12px rgba(184,115,51,0.8); }
+    .status-text { font-size:0.9rem; color:var(--copper-light); margin-top:0.3rem; }
+    .lyrics-area {
+      width:100%; min-height:180px; background:rgba(0,0,0,0.6); border:1px solid rgba(255,255,255,0.2);
+      border-radius:8px; color:#fff; padding:0.6rem; resize:vertical;
     }
-
-    .field-row {
-      display: flex;
-      gap: 0.75rem;
-      flex-wrap: wrap;
-      margin-bottom: 0.75rem;
-    }
-
-    .field-row label {
-      flex: 1 1 160px;
-    }
-
-    .field-row input,
-    .field-row textarea,
-    .field-row select {
-      width: 100%;
-    }
-
-    .small-note {
-      font-size: 0.9rem;
-      color: #ccc;
-    }
-
-    audio, video {
-      width: 100%;
-      margin-top: 0.4rem;
-    }
+    .small-note { font-size:0.85rem; color:var(--copper-light); margin-top:0.3rem; }
+    .saved-indicator { font-size:0.85rem; color:var(--copper-light); margin-left:0.5rem; }
+    audio { width:100%; margin-top:0.5rem; }
   </style>
 </head>
-
 <body>
 <div class="overlay">
-
   <header class="rr-header">
-    <h1 class="cursive" style="font-size:3rem;">Works Studio</h1>
-
+    <h1 class="cursive">Works Studio</h1>
+    <p class="tagline">Capture ideas the moment they arrive.</p>
     <button id="rr-menu-btn" class="rr-menu-btn">☰</button>
-
     <nav class="rr-nav cursive">
       <a href="index.html">Home</a>
       <a href="profile.html">Profile</a>
-      <a href="manage.html">Manage</a>
+      <a href="works.html">Works</a>
+      <a href="documents.html">Documents</a>
+      <a href="contracts.html">Contracts</a>
       <a href="rights-and-registration.html">Rights</a>
-      <a href="glossary.html">Glossary</a>
     </nav>
   </header>
 
-  <main class="rr-main">
-
-    <!-- INTRO -->
+  <main>
+    <!-- Voice Recorder -->
     <section class="section-card">
-      <h2 class="cursive" style="font-size:2rem;">Lock Your Songs into Your Catalog</h2>
-      <p>
-        This is your song vault and writing room.  
-        Save finished songs, capture quick voice notes, record video memos, and write lyrics or ideas in your Jam Pad.
-      </p>
-      <p class="small-note">
-        Everything here is local‑only and offline‑ready. No cloud, no accounts, just your browser.
-      </p>
-    </section>
+      <h2 class="cursive" style="font-size:1.8rem;">Voice Recorder</h2>
+      <p>Record melodies, hooks, and ideas. Everything you save here also appears in <strong>My Catalog</strong> under <em>Audio</em>.</p>
 
-    <!-- SONG LIBRARY -->
-    <section class="section-card">
-      <h3 class="cursive" style="font-size:1.8rem;">Save Finished Songs to Your Works Catalog</h3>
-
-      <form id="song-upload-form" class="rr-form">
-        <div class="field-row">
-          <label>
-            Default Role
-            <select name="role" id="song-default-role">
-              <option value="Artist">Artist</option>
-              <option value="Writer">Writer</option>
-              <option value="Producer">Producer</option>
-              <option value="Composer">Composer</option>
-            </select>
-          </label>
-
-          <label>
-            Default Project / Album
-            <input type="text" id="song-default-project" placeholder="Album, EP, or project name" />
-          </label>
+      <div id="voice-recorder">
+        <div id="record-btn" class="record-circle">
+          <span id="record-icon">●</span>
         </div>
+        <div class="status-text" id="record-status">Ready to record.</div>
+        <div class="status-text" id="record-timer">00:00</div>
 
-        <label>
-          Notes (applied to all uploaded files)
-          <textarea id="song-default-notes" rows="2" placeholder="Session notes, collaborators, mix version, etc."></textarea>
+        <label style="display:block; margin-top:0.8rem;">
+          Title
+          <input type="text" id="audio-title" placeholder="Untitled idea" />
         </label>
 
-        <label style="margin-top:0.75rem;">
-          Upload finished audio (WAV, MP3, FLAC, OGG, M4A, etc.)
-          <input type="file" id="song-files" accept="audio/*" multiple />
-        </label>
+        <audio id="audio-playback" controls style="display:none;"></audio>
 
-        <button type="submit" class="bubble-btn">Save Songs to Works</button>
-      </form>
-
-      <p class="small-note" style="margin-top:0.75rem;">
-        Each file becomes a Work entry with filename, size, type, and timestamp.
-      </p>
-
-      <div id="works-list" style="margin-top:1rem;"></div>
+        <div class="quick-actions" style="margin-top:0.8rem;">
+          <button id="save-audio" class="quick-button" disabled>Save to Catalog</button>
+        </div>
+      </div>
     </section>
 
-    <!-- AUDIO MEMO RECORDER -->
+    <!-- Lyrics Pad -->
     <section class="section-card">
-      <h3 class="cursive" style="font-size:1.8rem;">Quick Audio Memo Recorder</h3>
-      <p>
-        Capture melodies, hooks, or spoken notes the moment they hit you.
-      </p>
+      <h2 class="cursive" style="font-size:1.8rem;">Lyrics Pad</h2>
+      <p>Write lyrics, concepts, or notes. Everything you save here also appears in <strong>My Catalog</strong> under <em>Lyrics</em>.</p>
 
-      <div class="work-card">
-        <div class="field-row">
-          <label>
-            Memo Title
-            <input type="text" id="memo-title" placeholder="Verse idea, hook, riff, etc." />
-          </label>
-        </div>
+      <label style="display:block; margin-bottom:0.4rem;">
+        Title
+        <input type="text" id="lyrics-title" placeholder="Untitled lyrics" />
+      </label>
 
-        <div class="audio-controls">
-          <button id="memo-record-btn" type="button" class="bubble-btn">Start Recording</button>
-          <button id="memo-stop-btn" type="button" class="bubble-btn secondary" disabled>Stop</button>
-          <button id="memo-save-btn" type="button" class="bubble-btn secondary" disabled>Save Memo</button>
-        </div>
-
-        <div class="audio-status" id="memo-status">Idle.</div>
-        <audio id="memo-preview" controls style="display:none;"></audio>
+      <textarea id="lyrics-content" class="lyrics-area" placeholder="Start writing..."></textarea>
+      <div class="small-note">
+        Autosaves every few seconds in this browser.
+        <span id="lyrics-saved" class="saved-indicator">Not saved yet.</span>
       </div>
 
-      <h4 class="cursive" style="font-size:1.4rem;margin-top:1rem;">Saved Memos</h4>
-      <div id="memo-list"></div>
+      <div class="quick-actions" style="margin-top:0.8rem;">
+        <button id="save-lyrics" class="quick-button">Save to Catalog</button>
+      </div>
     </section>
 
-    <!-- VIDEO MEMO RECORDER -->
+    <!-- Quick Links -->
     <section class="section-card">
-      <h3 class="cursive" style="font-size:1.8rem;">Video Memo Recorder</h3>
-      <p>
-        Capture visual ideas, performance notes, or quick video thoughts.
-      </p>
-
-      <div class="work-card">
-        <div class="field-row">
-          <label>
-            Video Title
-            <input type="text" id="video-title" placeholder="Concept, performance idea, etc." />
-          </label>
-        </div>
-
-        <div class="audio-controls">
-          <button id="video-record-btn" type="button" class="bubble-btn">Start Video</button>
-          <button id="video-stop-btn" type="button" class="bubble-btn secondary" disabled>Stop</button>
-          <button id="video-save-btn" type="button" class="bubble-btn secondary" disabled>Save Video</button>
-        </div>
-
-        <div class="audio-status" id="video-status">Idle.</div>
-        <video id="video-preview" controls style="display:none;"></video>
+      <h2 class="cursive" style="font-size:1.8rem;">More Tools</h2>
+      <div class="quick-actions">
+        <a href="works-video.html" class="quick-button">Record Video</a>
+        <a href="my-catalog.html" class="quick-button">Open My Catalog</a>
       </div>
-
-      <h4 class="cursive" style="font-size:1.4rem;margin-top:1rem;">Saved Video Memos</h4>
-      <div id="video-list"></div>
     </section>
-
-    <!-- JAM PAD -->
-    <section class="section-card jam-pad-card">
-      <h3 class="cursive jam-pad-heading">Jam Pad</h3>
-
-      <p class="jam-pad-subtext">
-        Your creative notepad for lyrics, concepts, scenes, and ideas.
-      </p>
-
-      <div class="jam-pad-paper">
-        <div class="jam-pad-lines"></div>
-
-        <div class="jam-pad-content">
-          <input id="journal-title" class="jam-pad-title-input" placeholder="Title…" />
-
-          <textarea id="journal-body" class="jam-pad-body-input" placeholder="Start writing…"></textarea>
-
-          <div id="journal-status" class="jam-pad-status">Draft saved.</div>
-
-          <div class="jam-pad-actions">
-            <button id="journal-save-entry" class="bubble-btn">Save Entry</button>
-            <button id="journal-clear-draft" class="bubble-btn secondary">Clear Draft</button>
-          </div>
-        </div>
-      </div>
-
-      <h4 class="jam-pad-entries-heading">Saved Entries</h4>
-      <div id="journal-entries" class="jam-pad-entries"></div>
-    </section>
-
   </main>
 </div>
 
-<!-- BURGER MENU PANEL -->
+<!-- Burger menu -->
 <div id="rr-menu-panel" class="rr-menu-panel">
   <a href="index.html">Home</a>
   <a href="profile.html">Profile</a>
-  <a href="my-catalog.html">My Catalog</a>
   <a href="works.html">Works</a>
-  <a href="rights-and-registration.html">Rights</a>
-  <a href="royalties.html">Royalties</a>
-  <a href="manage.html">Manage</a>
-  <a href="law.html">Law</a>
-  <a href="contracts.html">Contracts</a>
   <a href="documents.html">Documents</a>
+  <a href="contracts.html">Contracts</a>
+  <a href="rights-and-registration.html">Rights</a>
+  <a href="my-catalog.html">My Catalog</a>
   <a href="protection.html">Protection</a>
+  <a href="law.html">Law</a>
+  <a href="publicist.html">Publicist</a>
+  <a href="manage.html">Management</a>
   <a href="glossary.html">Glossary</a>
-  <a href="the-game.html">The Game</a>
-  <a href="about-me.html">About Me</a>
   <a href="export.html">Export</a>
 </div>
 
-<!-- IndexedDB + Works logic -->
-<script type="module" src="assets/js/works.js"></script>
-
 <script>
+  // Shared storage
+  const WORKS_KEY = "rr_works";
+  function loadWorks() {
+    try { return JSON.parse(localStorage.getItem(WORKS_KEY)) || []; }
+    catch { return []; }
+  }
+  function saveWorks(list) {
+    localStorage.setItem(WORKS_KEY, JSON.stringify(list));
+  }
+  function addWork(item) {
+    const list = loadWorks();
+    list.push(item);
+    saveWorks(list);
+  }
+
+  // Burger
   document.getElementById("rr-menu-btn").addEventListener("click", () => {
     document.getElementById("rr-menu-panel").classList.toggle("show");
   });
-</script>
 
+  // Voice recorder
+  let mediaRecorder = null;
+  let audioChunks = [];
+  let recording = false;
+  let recordStartTime = null;
+  let timerInterval = null;
+  let lastAudioBlob = null;
+  const recordBtn = document.getElementById("record-btn");
+  const recordStatus = document.getElementById("record-status");
+  const recordTimer = document.getElementById("record-timer");
+  const audioPlayback = document.getElementById("audio-playback");
+  const saveAudioBtn = document.getElementById("save-audio");
+  const audioTitleInput = document.getElementById("audio-title");
+
+  function formatTime(sec) {
+    const m = String(Math.floor(sec / 60)).padStart(2,"0");
+    const s = String(Math.floor(sec % 60)).padStart(2,"0");
+    return `${m}:${s}`;
+  }
+
+  function startTimer() {
+    recordStartTime = Date.now();
+    timerInterval = setInterval(() => {
+      const diff = (Date.now() - recordStartTime) / 1000;
+      recordTimer.textContent = formatTime(diff);
+    }, 500);
+  }
+
+  function stopTimer() {
+    clearInterval(timerInterval);
+    timerInterval = null;
+  }
+
+  recordBtn.addEventListener("click", async () => {
+    if (!recording) {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        audioChunks = [];
+        mediaRecorder.ondataavailable = (e) => audioChunks.push(e.data);
+        mediaRecorder.onstop = () => {
+          const blob = new Blob(audioChunks, { type: "audio/webm" });
+          lastAudioBlob = blob;
+          const url = URL.createObjectURL(blob);
+          audioPlayback.src = url;
+          audioPlayback.style.display = "block";
+          saveAudioBtn.disabled = false;
+        };
+        mediaRecorder.start();
+        recording = true;
+        recordBtn.classList.add("recording");
+        recordStatus.textContent = "Recording...";
+        startTimer();
+      } catch (e) {
+        recordStatus.textContent = "Microphone access denied.";
+      }
+    } else {
+      mediaRecorder.stop();
+      recording = false;
+      recordBtn.classList.remove("recording");
+      recordStatus.textContent = "Recording stopped.";
+      stopTimer();
+    }
+  });
+
+  saveAudioBtn.addEventListener("click", () => {
+    if (!lastAudioBlob) return;
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64 = reader.result;
+      const title = audioTitleInput.value.trim() || "Untitled idea";
+      const createdAt = Date.now();
+      const item = {
+        id: "work_" + createdAt,
+        type: "audio",
+        title,
+        createdAt,
+        audioBase64: base64,
+        duration: recordTimer.textContent
+      };
+      addWork(item);
+      recordStatus.textContent = "Saved to My Catalog.";
+      saveAudioBtn.disabled = true;
+    };
+    reader.readAsDataURL(lastAudioBlob);
+  });
+
+  // Lyrics pad
+  const lyricsTitle = document.getElementById("lyrics-title");
+  const lyricsContent = document.getElementById("lyrics-content");
+  const lyricsSaved = document.getElementById("lyrics-saved");
+  const saveLyricsBtn = document.getElementById("save-lyrics");
+
+  let lyricsAutosaveTimer = null;
+  function markLyricsDirty() {
+    lyricsSaved.textContent = "Editing...";
+  }
+  function autosaveLyrics() {
+    if (lyricsAutosaveTimer) clearTimeout(lyricsAutosaveTimer);
+    lyricsAutosaveTimer = setTimeout(() => {
+      const draft = {
+        title: lyricsTitle.value,
+        content: lyricsContent.value
+      };
+      localStorage.setItem("rr_lyrics_draft", JSON.stringify(draft));
+      lyricsSaved.textContent = "Draft saved.";
+    }, 1500);
+  }
+
+  lyricsTitle.addEventListener("input", () => { markLyricsDirty(); autosaveLyrics(); });
+  lyricsContent.addEventListener("input", () => { markLyricsDirty(); autosaveLyrics(); });
+
+  // Load draft
+  (function loadDraft() {
+    try {
+      const raw = localStorage.getItem("rr_lyrics_draft");
+      if (!raw) return;
+      const draft = JSON.parse(raw);
+      if (draft.title) lyricsTitle.value = draft.title;
+      if (draft.content) lyricsContent.value = draft.content;
+      lyricsSaved.textContent = "Draft loaded.";
+    } catch {}
+  })();
+
+  saveLyricsBtn.addEventListener("click", () => {
+    const title = (lyricsTitle.value || "").trim() || "Untitled lyrics";
+    const content = (lyricsContent.value || "").trim();
+    if (!content) {
+      lyricsSaved.textContent = "Nothing to save.";
+      return;
+    }
+    const createdAt = Date.now();
+    const item = {
+      id: "work_" + createdAt,
+      type: "lyrics",
+      title,
+      createdAt,
+      content,
+      wordCount: content.split(/\s+/).filter(Boolean).length
+    };
+    addWork(item);
+    lyricsSaved.textContent = "Saved to My Catalog.";
+  });
+</script>
 </body>
 </html>
