@@ -178,10 +178,21 @@
   </main>
 </div>
 
+<!-- LOAD ALL THREE DB FILES -->
 <script src="assets/js/glossary/glossary-business-db.js"></script>
 <script src="assets/js/glossary/glossary-creative-db.js"></script>
 <script src="assets/js/glossary/glossary-industry-db.js"></script>
 
+<!-- MERGE THEM INTO ONE GLOSSARY -->
+<script>
+  window.GLOSSARY_DB = [
+    ...BUSINESS_GLOSSARY_DB,
+    ...CREATIVE_GLOSSARY_DB,
+    ...INDUSTRY_GLOSSARY_DB
+  ];
+</script>
+
+<!-- LOAD THE ENGINE -->
 <script src="assets/js/glossary/glossary-utils.js"></script>
 <script src="assets/js/glossary/glossary-render.js"></script>
 <script src="assets/js/glossary/glossary-search.js"></script>
