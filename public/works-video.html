@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en" data-page="works-video">
+<head>
+  <meta charset="UTF-8" />
+  <title>Royalty Runner – Video Recorder</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: url("assets/img/royal-randr.jpg") no-repeat center center fixed;
+      background-size: cover;
+      background-color: #000;
+    }
+    .overlay { background:rgba(0,0,0,0.82); min-height:100vh; padding-bottom:4rem; }
+    .cursive { font-family:'Dancing Script',cursive; letter-spacing:1px; }
+    .section-card {
+      background:rgba(0,0,0,0.7); border:1px solid var(--copper); border-radius:10px;
+      padding:1.5rem; margin-bottom:2rem; backdrop-filter:blur(4px);
+    }
+    h1,h2 { text-shadow:0 0 10px rgba(184,115,51,0.4); }
+    .tagline { color:var(--copper-light); margin-top:0.3rem; margin-bottom:1rem; }
+    .rr-menu-btn {
+      position:absolute; right:1rem; top:1rem; font-size:2rem;
+      background:none; border:none; color:var(--copper); cursor:pointer; z-index:9999;
+    }
+    .rr-nav { display:flex; flex-wrap:wrap; gap:0.8rem; margin-top:0.8rem; }
+    .rr-nav a { text-decoration:none; }
+    .rr-nav a:hover { color:var(--copper); }
+    .rr-menu-panel {
+      position:fixed; top:0; right:0; width:260px; height:100vh;
+      background:rgba(0,0,0,0.95); border-left:2px solid var(--copper);
+      padding:2rem 1rem; transition:transform 0.3s ease; transform:translateX(100%);
+      z-index:9998;
+    }
+    .rr-menu-panel.show { transform:translateX(0); }
+    .rr-menu-panel a {
+      display:block; margin-bottom:1.2rem; color:var(--copper);
+      font-family:'Dancing Script',cursive; font-size:1.5rem; text-decoration:none;
+    }
+    video { width:100%; border-radius:8px; margin-top:0.5rem; }
+    .quick-actions { margin-top:1rem; display:flex; flex-wrap:wrap; gap:0.5rem; }
+    .quick-button {
+      border:1px solid var(--copper); background:rgba(0,0,0,0.8); color:var(--copper-light);
+      padding:0.4rem 0.8rem; border-radius:999px; font-size:0.85rem; cursor:pointer;
+      text-decoration:none; display:inline-flex; align-items:center; gap:0.3rem;
+    }
+    .quick-button:hover { background:var(--copper); color:#000; }
+    .status-text { font-size:0.9rem; color:var(--copper-light); margin-top:0.3rem; }
+  </style>
+</head>
+<body>
+<div class="overlay">
+  <header class="rr-header">
+    <h1 class="cursive">Video Recorder</h1>
+    <p class="tagline">Capture performance ideas, visual notes, and content drafts.</p>
+    <button id="rr-menu-btn" class="rr-menu-btn">☰</button>
+    <nav class="rr-nav cursive">
+      <a href="index.html">Home</a>
+      <a href="profile.html">Profile</a>
+      <a href="works.html">Works</a>
+      <a href="documents.html">Documents</a>
+      <a href="contracts.html">Contracts</a>
+      <a href="rights-and-registration.html">Rights</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="section-card">
+      <h2 class="cursive" style="font-size:1.8rem;">Record Video</h2>
+      <p>Everything you save here also appears in <strong>My Catalog</strong> under <em>Video</em>.</p>
+
+      <label style="display:block; margin-bottom:0.4rem;">
+        Title
+        <input type="text" id="video-title" placeholder="Untitled video idea" />
+      </label>
+
+      <video id="video-preview" autoplay muted playsinline></video>
+      <video id="video-playback" controls style="display:none;"></video>
+
+      <div class="quick-actions">
+        <button id="start-video" class="quick-button">Start Recording</button>
+        <button id="stop-video" class="quick-button" disabled>Stop</button>
+        <button id="save-video" class="quick-button" disabled>Save to Catalog</button>
+      </div>
+
+      <div class="status-text" id="video-status">Camera not started.</div>
+    </section>
+
+    <section class="section-card">
+      <h2 class="cursive" style="font-size:1.6rem;">Back to Studio</h2>
+      <div class="quick-actions">
+        <a href="works.html" class="quick-button">Back to Works</a>
+        <a href="my-catalog.html" class="quick-button">Open My Catalog</a>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div id="rr-menu-panel" class="rr-menu-panel">
+  <a href="index.html">Home</a>
+  <a href="profile.html">Profile</a>
+  <a href="works.html">Works</a>
+  <a href="documents.html">Documents</a>
+  <a href="contracts.html">Contracts</a>
+  <a href="rights-and-registration.html">Rights</a>
+  <a href="my-catalog.html">My Catalog</a>
+  <a href="protection.html">Protection</a>
+  <a href="law.html">Law</a>
+  <a href="publicist.html">Publicist</a>
+  <a href="manage.html">Management</a>
+  <a href="glossary.html">Glossary</a>
+  <a href="export.html">Export</a>
+</div>
+
+<script>
+  const WORKS_KEY = "rr_works";
+  function loadWorks() {
+    try { return JSON.parse(localStorage.getItem(WORKS_KEY)) || []; }
+    catch { return []; }
+  }
+  function saveWorks(list) {
+    localStorage.setItem(WORKS_KEY, JSON.stringify(list));
+  }
+  function addWork(item) {
+    const list = loadWorks();
+    list.push(item);
+    saveWorks(list);
+  }
+
+  document.getElementById("rr-menu-btn").addEventListener("click", () => {
+    document.getElementById("rr-menu-panel").classList.toggle("show");
+  });
+
+  const videoPreview = document.getElementById("video-preview");
+  const videoPlayback = document.getElementById("video-playback");
+  const startBtn = document.getElementById("start-video");
+  const stopBtn = document.getElementById("stop-video");
+  const saveBtn = document.getElementById("save-video");
+  const statusEl = document.getElementById("video-status");
+  const titleInput = document.getElementById("video-title");
+
+  let mediaRecorder = null;
+  let videoChunks = [];
+  let lastVideoBlob = null;
+
+  async function initCamera() {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video:true, audio:true });
+      videoPreview.srcObject = stream;
+      statusEl.textContent = "Camera ready.";
+      return stream;
+    } catch (e) {
+      statusEl.textContent = "Camera/mic access denied.";
+      throw e;
+    }
+  }
+
+  let currentStream = null;
+
+  startBtn.addEventListener("click", async () => {
+    if (mediaRecorder && mediaRecorder.state === "recording") return;
+    try {
+      if (!currentStream) currentStream = await initCamera();
+      videoChunks = [];
+      mediaRecorder = new MediaRecorder(currentStream);
+      mediaRecorder.ondataavailable = (e) => videoChunks.push(e.data);
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(videoChunks, { type: "video/webm" });
+        lastVideoBlob = blob;
+        const url = URL.createObjectURL(blob);
+        videoPlayback.src = url;
+        videoPlayback.style.display = "block";
+        saveBtn.disabled = false;
+        statusEl.textContent = "Recording stopped. Preview ready.";
+      };
+      mediaRecorder.start();
+      statusEl.textContent = "Recording...";
+      startBtn.disabled = true;
+      stopBtn.disabled = false;
+    } catch {}
+  });
+
+  stopBtn.addEventListener("click", () => {
+    if (!mediaRecorder || mediaRecorder.state !== "recording") return;
+    mediaRecorder.stop();
+    startBtn.disabled = false;
+    stopBtn.disabled = true;
+  });
+
+  saveBtn.addEventListener("click", () => {
+    if (!lastVideoBlob) return;
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64 = reader.result;
+      const createdAt = Date.now();
+      const title = titleInput.value.trim() || "Untitled video";
+      const item = {
+        id: "work_" + createdAt,
+        type: "video",
+        title,
+        createdAt,
+        videoBase64: base64
+      };
+      addWork(item);
+      statusEl.textContent = "Saved to My Catalog.";
+      saveBtn.disabled = true;
+    };
+    reader.readAsDataURL(lastVideoBlob);
+  });
+</script>
+</body>
+</html>
