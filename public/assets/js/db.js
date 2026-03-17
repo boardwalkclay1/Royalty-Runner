@@ -2,7 +2,7 @@
 
 (function () {
   const DB_NAME = "RoyaltyRunnerDB";
-  const DB_VERSION = 2; // bumped version to add checklist store
+  const DB_VERSION = 3; // bumped version to add calendar + ui_state
 
   const STORES = {
     PROFILE: "profile",
@@ -10,7 +10,9 @@
     DOCUMENTS: "documents",
     CONTRACTS: "contracts",
     SETTINGS: "settings",
-    CHECKLIST: "checklist", // NEW STORE
+    CHECKLIST: "checklist",
+    CALENDAR: "calendar",
+    UI_STATE: "ui_state",
   };
 
   let dbInstance = null;
@@ -51,9 +53,21 @@
           db.createObjectStore(STORES.SETTINGS, { keyPath: "id" });
         }
 
-        // CHECKLIST (NEW)
+        // CHECKLIST
         if (!db.objectStoreNames.contains(STORES.CHECKLIST)) {
           db.createObjectStore(STORES.CHECKLIST, { keyPath: "id" });
+        }
+
+        // CALENDAR (NEW)
+        if (!db.objectStoreNames.contains(STORES.CALENDAR)) {
+          const store = db.createObjectStore(STORES.CALENDAR, { keyPath: "id" });
+          store.createIndex("by_date", "date", { unique: false });
+          store.createIndex("by_type", "type", { unique: false });
+        }
+
+        // UI_STATE (NEW) – for things like glossary tab, filters, last page state
+        if (!db.objectStoreNames.contains(STORES.UI_STATE)) {
+          db.createObjectStore(STORES.UI_STATE, { keyPath: "id" });
         }
       };
 
@@ -111,14 +125,11 @@
     });
   }
 
-  // PROFILE HELPERS (NOW SUPPORTS AKA + PHOTO)
+  // PROFILE HELPERS
   function saveProfile(profile) {
     profile.id = "artist_profile";
-
-    // ensure fields exist
     profile.aka = profile.aka || "";
     profile.photo = profile.photo || "";
-
     return saveToStore(STORES.PROFILE, profile);
   }
 
@@ -130,7 +141,7 @@
     return deleteFromStore(STORES.PROFILE, "artist_profile");
   }
 
-  // WORKS HELPERS (unchanged)
+  // WORKS HELPERS
   function createWorkId() {
     return "work_" + Date.now() + "_" + Math.random().toString(16).slice(2);
   }
@@ -179,7 +190,7 @@
     });
   }
 
-  // CHECKLIST HELPERS (NEW)
+  // CHECKLIST HELPERS
   function saveChecklist(checklist) {
     checklist.id = "protection_checklist";
     return saveToStore(STORES.CHECKLIST, checklist);
@@ -197,6 +208,34 @@
       data[itemId] = value;
       return saveChecklist(data);
     });
+  }
+
+  // CALENDAR HELPERS (NEW)
+  function createCalendarEventId() {
+    return "cal_" + Date.now() + "_" + Math.random().toString(16).slice(2);
+  }
+
+  function saveCalendarEvent(eventData) {
+    if (!eventData.id) eventData.id = createCalendarEventId();
+    return saveToStore(STORES.CALENDAR, eventData);
+  }
+
+  function getAllCalendarEvents() {
+    return getAllFromStore(STORES.CALENDAR);
+  }
+
+  function deleteCalendarEvent(id) {
+    return deleteFromStore(STORES.CALENDAR, id);
+  }
+
+  // UI STATE HELPERS (NEW) – e.g. glossary tab, filters, last page
+  function saveUIState(key, value) {
+    const record = { id: key, value };
+    return saveToStore(STORES.UI_STATE, record);
+  }
+
+  function getUIState(key) {
+    return getFromStore(STORES.UI_STATE, key).then((record) => record ? record.value : null);
   }
 
   // EXPOSE GLOBALS
@@ -224,5 +263,14 @@
     saveChecklist,
     getChecklist,
     updateChecklistItem,
+
+    // CALENDAR
+    saveCalendarEvent,
+    getAllCalendarEvents,
+    deleteCalendarEvent,
+
+    // UI STATE
+    saveUIState,
+    getUIState,
   };
 })();
