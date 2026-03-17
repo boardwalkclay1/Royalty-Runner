@@ -1,4 +1,4 @@
-// Royalty Runner – Unified Calendar Engine (Rebuilt Clean + Correct)
+// Royalty Runner – Unified Calendar Engine (Corrected + Stable)
 // Powers: manage.html (mini weekly + reminders) and calendar.html (full month/week)
 
 (function () {
@@ -173,6 +173,7 @@
           if (sameDay(d, new Date())) div.classList.add("today");
           if (evs.length) div.classList.add("has-events");
 
+          // SHORT CONTENT = NO OVERFLOW
           div.innerHTML = `
             <div class="mini-date">${d.getDate()}</div>
             <div class="mini-count">${evs.length ? evs.length + " evt" : ""}</div>
@@ -287,7 +288,7 @@
             pill.dataset.id = ev.id;
             pill.textContent = ev.title || "(Untitled)";
 
-            pill.addEventListener("dragstart", (e) => {
+            pill.addEventListener("dragstart", () => {
               dragEventId = ev.id;
             });
 
@@ -509,4 +510,13 @@
     });
 
     // ---------- Header Controls ----------
-    btnToday.addEventListener
+    btnToday.addEventListener("click", () => {
+      currentDate = new Date();
+      renderCalendar();
+    });
+
+    btnPrev.addEventListener("click", () => {
+      if (currentView === "month") {
+        currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
+      } else {
+        currentDate = addDays(current
