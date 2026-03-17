@@ -31,6 +31,9 @@ const STATIC_ASSETS = [
   "/assets/img/royal-manage.jpg",
   "/assets/img/royal-randr.jpg",
 
+  "/assets/img/royal-works.jpg",
+  "/assets/img/royal-documents.jpg",
+
   "/assets/icons/royal-192.png",
   "/assets/icons/royal-512.png"
 ];
@@ -87,7 +90,6 @@ self.addEventListener("fetch", event => {
           return res;
         })
         .catch(() => {
-          // fallback only for images
           if (req.destination === "image") {
             return caches.match("/assets/img/royal-profile.jpg");
           }
