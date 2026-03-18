@@ -1,522 +1,229 @@
-// Royalty Runner – Unified Calendar Engine (Corrected + Stable)
-// Powers: manage.html (mini weekly + reminders) and calendar.html (full month/week)
+/* ===== DB ===== */
+const DB_NAME = "RoyaltyRunner_CalendarDB";
+let db;
 
-(function () {
-  const DB_NAME = "RoyaltyRunnerDB";
-  const DB_VERSION = 5;
-  const EVENTS_STORE = "events";
-
-  let db;
-  let currentView = "month";
-  let currentDate = new Date();
-  let dragEventId = null;
-
-  const page = document.documentElement.getAttribute("data-page");
-
-  // ---------------- IndexedDB Setup ----------------
-  const request = indexedDB.open(DB_NAME, DB_VERSION);
-
-  request.onupgradeneeded = (e) => {
-    db = e.target.result;
-
-    if (!db.objectStoreNames.contains(EVENTS_STORE)) {
-      const store = db.createObjectStore(EVENTS_STORE, {
-        keyPath: "id",
-        autoIncrement: true
-      });
-      store.createIndex("date", "date", { unique: false });
-      store.createIndex("reminder", "reminder", { unique: false });
-    }
-  };
-
-  request.onsuccess = (e) => {
-    db = e.target.result;
-    initPage();
-  };
-
-  request.onerror = () => console.error("Calendar DB failed.");
-
-  // ---------------- Helpers ----------------
-  const ymd = (d) => d.toISOString().slice(0, 10);
-
-  const parseYMD = (str) => {
-    const [y, m, d] = str.split("-").map(Number);
-    return new Date(y, m - 1, d);
-  };
-
-  const sameDay = (a, b) =>
-    a.getFullYear() === b.getFullYear() &&
-    a.getMonth() === b.getMonth() &&
-    a.getDate() === b.getDate();
-
-  const addDays = (d, n) => {
-    const x = new Date(d);
-    x.setDate(x.getDate() + n);
-    return x;
-  };
-
-  const startOfWeek = (d) => {
-    const x = new Date(d);
-    const day = x.getDay();
-    x.setDate(x.getDate() - day);
-    return x;
-  };
-
-  const formatTimeRange = (s, e) => {
-    if (!s && !e) return "";
-    if (s && e) return `${s} – ${e}`;
-    return s || e;
-  };
-
-  const openTx = (store, mode = "readonly") =>
-    db.transaction(store, mode).objectStore(store);
-
-  // ---------------- CRUD ----------------
-  function getAllEvents(cb) {
-    const store = openTx(EVENTS_STORE);
-    const out = [];
-    store.openCursor().onsuccess = (e) => {
-      const c = e.target.result;
-      if (!c) return cb(out);
-      out.push(c.value);
-      c.continue();
-    };
-  }
-
-  function saveEvent(ev, cb) {
-    const store = openTx(EVENTS_STORE, "readwrite");
-    store.put(ev).onsuccess = () => cb && cb();
-  }
-
-  function deleteEvent(id, cb) {
-    const store = openTx(EVENTS_STORE, "readwrite");
-    store.delete(id).onsuccess = () => cb && cb();
-  }
-
-  // ---------------- Page Init ----------------
-  function initPage() {
-    if (page === "manage") {
-      initManageMiniCalendar();
-      initManageReminders();
-    }
-    if (page === "calendar") {
-      initFullCalendar();
-    }
-  }
-
-  // ---------------- Manage Page: Reminders ----------------
-  function initManageReminders() {
-    const container = document.getElementById("reminders-list");
-    if (!container) return;
-
-    getAllEvents((events) => {
-      const today = ymd(new Date());
-
-      const upcoming = events
-        .filter((ev) => ev.reminder && ev.date >= today)
-        .sort((a, b) => a.date.localeCompare(b.date))
-        .slice(0, 10);
-
-      container.innerHTML = "";
-
-      if (!upcoming.length) {
-        container.innerHTML = `<p style="opacity:0.7;">No reminders yet.</p>`;
-        return;
+function initDB() {
+  return new Promise(res => {
+    const req = indexedDB.open(DB_NAME, 1);
+    req.onupgradeneeded = e => {
+      const d = e.target.result;
+      if (!d.objectStoreNames.contains("events")) {
+        const s = d.createObjectStore("events", { keyPath: "id", autoIncrement: true });
+        s.createIndex("date", "date");
       }
+    };
+    req.onsuccess = e => { db = e.target.result; res(); };
+  });
+}
 
-      upcoming.forEach((ev) => {
-        const d = parseYMD(ev.date);
-        const item = document.createElement("div");
-        item.className = "reminder-item";
+function store(mode="readonly") {
+  return db.transaction("events", mode).objectStore("events");
+}
 
-        item.innerHTML = `
-          <div class="reminder-date">${d.toLocaleDateString()}</div>
-          <div>${ev.title || "(Untitled Event)"}</div>
-          <div style="font-size:0.8rem;opacity:0.8;">
-            ${formatTimeRange(ev.startTime, ev.endTime)}
-          </div>
-        `;
+function getEvents() {
+  return new Promise(res => {
+    const out = [];
+    const c = store().openCursor();
+    c.onsuccess = e => {
+      const cur = e.target.result;
+      if (!cur) return res(out);
+      out.push(cur.value);
+      cur.continue();
+    };
+  });
+}
 
-        container.appendChild(item);
-      });
-    });
+function saveEvent(ev) {
+  return new Promise(res => store("readwrite").put(ev).onsuccess = () => res());
+}
+
+function deleteEvent(id) {
+  return new Promise(res => store("readwrite").delete(id).onsuccess = () => res());
+}
+
+/* ===== DATE HELPERS ===== */
+const ymd = d => d.toISOString().slice(0,10);
+const parse = s => { const [y,m,d]=s.split("-").map(Number); return new Date(y,m-1,d); };
+const add = (d,n) => { const x=new Date(d); x.setDate(x.getDate()+n); return x; };
+const same = (a,b) => a.getFullYear()==b.getFullYear() && a.getMonth()==b.getMonth() && a.getDate()==b.getDate();
+
+/* ===== STATE ===== */
+let current = new Date();
+let view = "month";
+
+/* ===== RENDER MONTH ===== */
+async function renderMonth() {
+  const grid = document.getElementById("calendar-grid");
+  const label = document.getElementById("calendar-current-label");
+  const weekdays = document.getElementById("calendar-weekday-labels");
+
+  grid.innerHTML = "";
+  weekdays.innerHTML = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].map(d=>`<div>${d}</div>`).join("");
+
+  const events = await getEvents();
+  const first = new Date(current.getFullYear(), current.getMonth(), 1);
+  const start = add(first, -first.getDay());
+  label.textContent = current.toLocaleString("default",{month:"long",year:"numeric"});
+
+  for (let i=0;i<42;i++) {
+    const d = add(start,i);
+    const dayEvents = events.filter(e => e.date === ymd(d));
+
+    const cell = document.createElement("div");
+    cell.className = "calendar-cell";
+    if (same(d,new Date())) cell.classList.add("today");
+
+    cell.innerHTML = `
+      <div class="calendar-cell-header">
+        <span class="date-number">${d.getDate()}</span>
+      </div>
+      <div class="calendar-events">
+        ${dayEvents.map(ev=>`<div class="calendar-event-pill" data-id="${ev.id}">${ev.title}</div>`).join("")}
+      </div>
+    `;
+
+    cell.onclick = () => openModal({ date: ymd(d) });
+    grid.appendChild(cell);
   }
 
-  // ---------------- Manage Page: Mini Calendar (FIXED) ----------------
-  function initManageMiniCalendar() {
-    const daysContainer = document.getElementById("mini-calendar-days");
-    if (!daysContainer) return;
+  renderAgenda(events);
+}
 
-    const prevBtn = document.getElementById("mini-prev-week");
-    const nextBtn = document.getElementById("mini-next-week");
-    const label = document.getElementById("mini-week-label");
+/* ===== RENDER WEEK ===== */
+async function renderWeek() {
+  const grid = document.getElementById("calendar-grid");
+  const label = document.getElementById("calendar-current-label");
+  const weekdays = document.getElementById("calendar-weekday-labels");
 
-    let weekStart = startOfWeek(new Date());
+  grid.innerHTML = "";
+  weekdays.innerHTML = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].map(d=>`<div>${d}</div>`).join("");
 
-    function renderMini() {
-      daysContainer.innerHTML = "";
+  const events = await getEvents();
+  const start = add(current, -current.getDay());
+  label.textContent = `Week of ${start.toLocaleDateString()}`;
 
-      const weekEnd = addDays(weekStart, 6);
-      label.textContent =
-        `${weekStart.toLocaleDateString(undefined, { month: "short", day: "numeric" })} – ` +
-        `${weekEnd.toLocaleDateString(undefined, { month: "short", day: "numeric" })}`;
+  for (let i=0;i<7;i++) {
+    const d = add(start,i);
+    const dayEvents = events.filter(e => e.date === ymd(d));
 
-      getAllEvents((events) => {
-        for (let i = 0; i < 7; i++) {
-          const d = addDays(weekStart, i);
-          const ds = ymd(d);
-          const evs = events.filter((ev) => ev.date === ds);
+    const cell = document.createElement("div");
+    cell.className = "calendar-cell";
+    if (same(d,new Date())) cell.classList.add("today");
 
-          const div = document.createElement("div");
-          div.className = "mini-day";
+    cell.innerHTML = `
+      <div class="calendar-cell-header">
+        <span class="date-number">${d.getDate()}</span>
+      </div>
+      <div class="calendar-events">
+        ${dayEvents.map(ev=>`<div class="calendar-event-pill" data-id="${ev.id}">${ev.title}</div>`).join("")}
+      </div>
+    `;
 
-          if (sameDay(d, new Date())) div.classList.add("today");
-          if (evs.length) div.classList.add("has-events");
-
-          // SHORT CONTENT = NO OVERFLOW
-          div.innerHTML = `
-            <div class="mini-date">${d.getDate()}</div>
-            <div class="mini-count">${evs.length ? evs.length + " evt" : ""}</div>
-          `;
-
-          div.addEventListener("click", () => {
-            const url = new URL(window.location.origin + "/calendar.html");
-            url.searchParams.set("date", ds);
-            window.location.href = url.toString();
-          });
-
-          daysContainer.appendChild(div);
-        }
-      });
-    }
-
-    prevBtn.addEventListener("click", () => {
-      weekStart = addDays(weekStart, -7);
-      renderMini();
-    });
-
-    nextBtn.addEventListener("click", () => {
-      weekStart = addDays(weekStart, 7);
-      renderMini();
-    });
-
-    renderMini();
+    cell.onclick = () => openModal({ date: ymd(d) });
+    grid.appendChild(cell);
   }
 
-  // ---------------- Full Calendar Page ----------------
-  function initFullCalendar() {
-    const grid = document.getElementById("calendar-grid");
-    const weekdayLabels = document.getElementById("calendar-weekday-labels");
-    const label = document.getElementById("calendar-current-label");
+  renderAgenda(events);
+}
 
-    const btnToday = document.getElementById("cal-today");
-    const btnPrev = document.getElementById("cal-prev");
-    const btnNext = document.getElementById("cal-next");
-    const btnMonth = document.getElementById("cal-view-month");
-    const btnWeek = document.getElementById("cal-view-week");
-    const btnNew = document.getElementById("cal-new-event");
+/* ===== AGENDA ===== */
+function renderAgenda(events) {
+  const list = document.getElementById("agenda-list");
+  const upcoming = events
+    .filter(e => parse(e.date) >= add(new Date(), -1))
+    .sort((a,b)=>parse(a.date)-parse(b.date));
 
-    const agenda = document.getElementById("agenda-list");
+  if (!upcoming.length) {
+    list.innerHTML = `<p style="opacity:0.7;">No events yet.</p>`;
+    return;
+  }
 
-    const modal = document.getElementById("event-modal");
-    const modalTitle = document.getElementById("event-title");
-    const modalDate = document.getElementById("event-date");
-    const modalStart = document.getElementById("event-start");
-    const modalEnd = document.getElementById("event-end");
-    const modalType = document.getElementById("event-type");
-    const modalNotes = document.getElementById("event-notes");
-    const modalReminder = document.getElementById("event-reminder");
-    const modalCancel = document.getElementById("event-cancel");
-    const modalDelete = document.getElementById("event-delete");
-    const modalSave = document.getElementById("event-save");
+  list.innerHTML = upcoming.map(ev=>`
+    <div class="agenda-item">
+      <div class="agenda-main">
+        <div class="agenda-title">${ev.title}</div>
+        <div class="agenda-meta">${ev.date}</div>
+      </div>
+      <div class="agenda-actions">
+        <button onclick="openModal(${ev.id})">Edit</button>
+        <button onclick="deleteEvent(${ev.id}).then(()=>refresh())">Del</button>
+      </div>
+    </div>
+  `).join("");
+}
 
-    let editingEventId = null;
+/* ===== MODAL ===== */
+function openModal(ev) {
+  const modal = document.getElementById("event-modal");
+  const isEdit = typeof ev === "number";
 
-    // Weekday labels
-    const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-    weekdayLabels.innerHTML = weekdays.map((d) => `<div>${d}</div>`).join("");
-
-    // URL ?date=YYYY-MM-DD
-    const params = new URLSearchParams(window.location.search);
-    if (params.has("date")) currentDate = parseYMD(params.get("date"));
-
-    // ---------- Render ----------
-    function renderCalendar() {
-      grid.innerHTML = "";
-      if (currentView === "month") renderMonth();
-      else renderWeek();
-      renderAgenda();
-    }
-
-    function renderMonth() {
-      const y = currentDate.getFullYear();
-      const m = currentDate.getMonth();
-      const first = new Date(y, m, 1);
-      const start = startOfWeek(first);
-
-      label.textContent = currentDate.toLocaleDateString(undefined, {
-        month: "long",
-        year: "numeric"
-      });
-
-      getAllEvents((events) => {
-        for (let i = 0; i < 42; i++) {
-          const d = addDays(start, i);
-          const ds = ymd(d);
-          const evs = events.filter((ev) => ev.date === ds);
-
-          const cell = document.createElement("div");
-          cell.className = "calendar-cell";
-          if (sameDay(d, new Date())) cell.classList.add("today");
-          if (d.getMonth() !== m) cell.style.opacity = 0.4;
-
-          cell.dataset.date = ds;
-
-          cell.innerHTML = `
-            <div class="calendar-cell-header">
-              <span class="date-number">${d.getDate()}</span>
-            </div>
-            <div class="calendar-events"></div>
-          `;
-
-          const container = cell.querySelector(".calendar-events");
-
-          evs.forEach((ev) => {
-            const pill = document.createElement("div");
-            pill.className = "calendar-event-pill";
-            pill.draggable = true;
-            pill.dataset.id = ev.id;
-            pill.textContent = ev.title || "(Untitled)";
-
-            pill.addEventListener("dragstart", () => {
-              dragEventId = ev.id;
-            });
-
-            pill.addEventListener("click", (e) => {
-              e.stopPropagation();
-              openEventModal(ev);
-            });
-
-            container.appendChild(pill);
-          });
-
-          cell.addEventListener("dragover", (e) => e.preventDefault());
-          cell.addEventListener("drop", () => {
-            if (!dragEventId) return;
-            moveEventToDate(dragEventId, ds);
-          });
-
-          cell.addEventListener("click", () => openEventModal({ date: ds }));
-
-          grid.appendChild(cell);
-        }
-      });
-    }
-
-    function renderWeek() {
-      const start = startOfWeek(currentDate);
-      const end = addDays(start, 6);
-
-      label.textContent =
-        `${start.toLocaleDateString(undefined, { month: "short", day: "numeric" })} – ` +
-        `${end.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}`;
-
-      getAllEvents((events) => {
-        for (let i = 0; i < 7; i++) {
-          const d = addDays(start, i);
-          const ds = ymd(d);
-          const evs = events.filter((ev) => ev.date === ds);
-
-          const cell = document.createElement("div");
-          cell.className = "calendar-cell";
-          if (sameDay(d, new Date())) cell.classList.add("today");
-          cell.dataset.date = ds;
-
-          cell.innerHTML = `
-            <div class="calendar-cell-header">
-              <span class="date-number">${d.getDate()}</span>
-              <span>${weekdays[d.getDay()]}</span>
-            </div>
-            <div class="calendar-events"></div>
-          `;
-
-          const container = cell.querySelector(".calendar-events");
-
-          evs
-            .sort((a, b) => (a.startTime || "").localeCompare(b.startTime || ""))
-            .forEach((ev) => {
-              const pill = document.createElement("div");
-              pill.className = "calendar-event-pill";
-              pill.draggable = true;
-              pill.dataset.id = ev.id;
-
-              const time = formatTimeRange(ev.startTime, ev.endTime);
-              pill.textContent = time ? `${time} – ${ev.title}` : ev.title;
-
-              pill.addEventListener("dragstart", () => {
-                dragEventId = ev.id;
-              });
-
-              pill.addEventListener("click", (e) => {
-                e.stopPropagation();
-                openEventModal(ev);
-              });
-
-              container.appendChild(pill);
-            });
-
-          cell.addEventListener("dragover", (e) => e.preventDefault());
-          cell.addEventListener("drop", () => {
-            if (!dragEventId) return;
-            moveEventToDate(dragEventId, ds);
-          });
-
-          cell.addEventListener("click", () => openEventModal({ date: ds }));
-
-          grid.appendChild(cell);
-        }
-      });
-    }
-
-    function moveEventToDate(id, newDate) {
-      const store = openTx(EVENTS_STORE, "readwrite");
-      const req = store.get(id);
-      req.onsuccess = (e) => {
-        const ev = e.target.result;
-        if (!ev) return;
-        ev.date = newDate;
-        saveEvent(ev, () => {
-          dragEventId = null;
-          renderCalendar();
-        });
-      };
-    }
-
-    // ---------- Agenda ----------
-    function renderAgenda() {
-      if (!agenda) return;
-
-      getAllEvents((events) => {
-        const today = ymd(new Date());
-
-        const upcoming = events
-          .filter((ev) => ev.date >= today)
-          .sort(
-            (a, b) =>
-              a.date.localeCompare(b.date) ||
-              (a.startTime || "").localeCompare(b.startTime || "")
-          );
-
-        agenda.innerHTML = "";
-
-        if (!upcoming.length) {
-          agenda.innerHTML = `<p style="opacity:0.7;">No events yet.</p>`;
-          return;
-        }
-
-        upcoming.forEach((ev) => {
-          const d = parseYMD(ev.date);
-          const item = document.createElement("div");
-          item.className = "agenda-item";
-
-          item.innerHTML = `
-            <div class="agenda-main">
-              <div class="agenda-title">${ev.title}</div>
-              <div class="agenda-meta">
-                ${d.toLocaleDateString()} • ${formatTimeRange(ev.startTime, ev.endTime) || "All day"} • ${ev.type}
-              </div>
-            </div>
-            <div class="agenda-actions">
-              <button class="agenda-edit" data-id="${ev.id}">Edit</button>
-              <button class="agenda-delete" data-id="${ev.id}">Delete</button>
-            </div>
-          `;
-
-          agenda.appendChild(item);
-        });
-
-        agenda.querySelectorAll(".agenda-edit").forEach((btn) => {
-          btn.addEventListener("click", () => openEventById(Number(btn.dataset.id)));
-        });
-
-        agenda.querySelectorAll(".agenda-delete").forEach((btn) => {
-          btn.addEventListener("click", () => {
-            deleteEvent(Number(btn.dataset.id), renderCalendar);
-          });
-        });
-      });
-    }
-
-    function openEventById(id) {
-      const store = openTx(EVENTS_STORE);
-      const req = store.get(id);
-      req.onsuccess = (e) => {
-        const ev = e.target.result;
-        if (ev) openEventModal(ev);
-      };
-    }
-
-    // ---------- Modal ----------
-    function openEventModal(ev) {
-      editingEventId = ev.id || null;
-
-      modalTitle.value = ev.title || "";
-      modalDate.value = ev.date || ymd(currentDate);
-      modalStart.value = ev.startTime || "";
-      modalEnd.value = ev.endTime || "";
-      modalType.value = ev.type || "general";
-      modalNotes.value = ev.notes || "";
-      modalReminder.checked = !!ev.reminder;
-
-      modal.style.display = "flex";
-      modalDelete.style.display = editingEventId ? "inline-block" : "none";
-    }
-
-    function closeEventModal() {
-      modal.style.display = "none";
-      editingEventId = null;
-    }
-
-    modalCancel.addEventListener("click", closeEventModal);
-
-    modalDelete.addEventListener("click", () => {
-      if (!editingEventId) return closeEventModal();
-      deleteEvent(editingEventId, () => {
-        closeEventModal();
-        renderCalendar();
-      });
+  if (isEdit) {
+    getEvents().then(all=>{
+      const e = all.find(x=>x.id===ev);
+      fillModal(e);
     });
+  } else {
+    fillModal(ev);
+  }
 
-    modalSave.addEventListener("click", () => {
-      const ev = {
-        id: editingEventId || undefined,
-        title: modalTitle.value.trim() || "(Untitled Event)",
-        date: modalDate.value,
-        startTime: modalStart.value || "",
-        endTime: modalEnd.value || "",
-        type: modalType.value || "general",
-        notes: modalNotes.value || "",
-        reminder: modalReminder.checked
-      };
+  modal.style.display = "flex";
+}
 
-      saveEvent(ev, () => {
-        closeEventModal();
-        renderCalendar();
-      });
-    });
+function fillModal(ev) {
+  document.getElementById("event-title").value = ev.title || "";
+  document.getElementById("event-date").value = ev.date || ymd(new Date());
+  document.getElementById("event-start").value = ev.startTime || "";
+  document.getElementById("event-end").value = ev.endTime || "";
+  document.getElementById("event-type").value = ev.type || "general";
+  document.getElementById("event-notes").value = ev.notes || "";
+  document.getElementById("event-reminder").checked = !!ev.reminder;
 
-    modal.addEventListener("click", (e) => {
-      if (e.target === modal) closeEventModal();
-    });
+  document.getElementById("event-modal").dataset.id = ev.id || "";
+}
 
-    // ---------- Header Controls ----------
-    btnToday.addEventListener("click", () => {
-      currentDate = new Date();
-      renderCalendar();
-    });
+function closeModal() {
+  document.getElementById("event-modal").style.display = "none";
+}
 
-    btnPrev.addEventListener("click", () => {
-      if (currentView === "month") {
-        currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
-      } else {
-        currentDate = addDays(current
+document.getElementById("event-save").onclick = async () => {
+  const id = document.getElementById("event-modal").dataset.id;
+  const ev = {
+    id: id ? Number(id) : undefined,
+    title: document.getElementById("event-title").value,
+    date: document.getElementById("event-date").value,
+    startTime: document.getElementById("event-start").value,
+    endTime: document.getElementById("event-end").value,
+    type: document.getElementById("event-type").value,
+    notes: document.getElementById("event-notes").value,
+    reminder: document.getElementById("event-reminder").checked
+  };
+
+  await saveEvent(ev);
+  closeModal();
+  refresh();
+};
+
+document.getElementById("event-cancel").onclick = closeModal;
+
+document.getElementById("event-delete").onclick = async () => {
+  const id = document.getElementById("event-modal").dataset.id;
+  if (id) await deleteEvent(Number(id));
+  closeModal();
+  refresh();
+};
+
+/* ===== REFRESH ===== */
+function refresh() {
+  view === "month" ? renderMonth() : renderWeek();
+}
+
+/* ===== NAV ===== */
+document.getElementById("cal-prev").onclick = () => { current.setDate(current.getDate() - (view==="month"?30:7)); refresh(); };
+document.getElementById("cal-next").onclick = () => { current.setDate(current.getDate() + (view==="month"?30:7)); refresh(); };
+document.getElementById("cal-today").onclick = () => { current = new Date(); refresh(); };
+document.getElementById("cal-view-month").onclick = () => { view="month"; refresh(); };
+document.getElementById("cal-view-week").onclick = () => { view="week"; refresh(); };
+document.getElementById("cal-new-event").onclick = () => openModal({});
+
+/* ===== INIT ===== */
+initDB().then(refresh);
