@@ -1,29 +1,29 @@
 <!DOCTYPE html>
-<html lang="en" data-page="manage">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Royalty Runner – Artist Management Command Center</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="manifest" href="manifest.json" />
-  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  <title>Royalty Runner – Manage</title>
+
   <link rel="stylesheet" href="assets/css/style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="icon" href="/favicon.ico" />
 
   <style>
     body {
-      background: url("assets/img/royal-manage.jpg") no-repeat center center fixed;
+      background: url("assets/img/royal-index.jpg") no-repeat center center fixed;
       background-size: cover;
       background-color: #000;
     }
 
     .overlay {
-      background: rgba(0, 0, 0, 0.78);
+      background: rgba(0,0,0,0.72);
       min-height: 100vh;
       padding-bottom: 4rem;
     }
 
     .section-card {
-      background: rgba(0, 0, 0, 0.65);
+      background: rgba(0,0,0,0.65);
       border: 1px solid var(--copper);
       border-radius: 10px;
       padding: 1.5rem;
@@ -31,212 +31,53 @@
       backdrop-filter: blur(4px);
     }
 
-    h2, h3 {
-      text-shadow: 0 0 10px rgba(184, 115, 51, 0.4);
-    }
-
-    ul { padding-left: 1.2rem; }
-
-    .tools-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 1rem;
-      margin-top: 1rem;
-    }
-
-    .tool-card {
-      background: rgba(0,0,0,0.55);
-      border: 1px solid var(--copper);
-      border-radius: 10px;
-      padding: 1rem;
-      text-align: center;
-      backdrop-filter: blur(4px);
-    }
-
-    .tool-card h4 {
-      font-family: 'Dancing Script', cursive;
-      font-size: 1.6rem;
-      color: var(--copper);
-      margin-bottom: 0.5rem;
-    }
-
-    .tool-card p {
-      font-size: 0.9rem;
-      color: #ddd;
-      margin-bottom: 0.75rem;
-    }
-
-    .tool-card a {
-      display: inline-block;
-      padding: 0.4rem 1rem;
-      background: var(--copper);
-      color: #000;
-      border-radius: 999px;
-      font-family: 'Dancing Script', cursive;
-      font-size: 1.1rem;
-      text-decoration: none;
-    }
-
-    .tool-card a:hover {
-      background: rgba(184,115,51,0.25);
-      color: var(--copper-light);
-    }
-
-    .rr-menu-btn {
-      position: absolute;
-      right: 1rem;
-      top: 1rem;
-      font-size: 2rem;
-      background: none;
-      border: none;
-      color: var(--copper);
-      cursor: pointer;
-      z-index: 9999;
-    }
-
-    .rr-menu-panel {
-      position: fixed;
-      top: 0;
-      right: 0;
-      width: 260px;
-      height: 100vh;
-      background: rgba(0,0,0,0.92);
-      border-left: 2px solid var(--copper);
-      padding: 2rem 1rem;
-      transition: transform 0.3s ease;
-      transform: translateX(100%);
-      z-index: 9998;
-    }
-
-    .rr-menu-panel.show {
-      transform: translateX(0);
-    }
-
-    .rr-menu-panel a {
-      display: block;
-      margin-bottom: 1.2rem;
-      color: var(--copper-light);
-      font-family: 'Dancing Script', cursive;
-      font-size: 1.5rem;
-      text-decoration: none;
-    }
-
-    /* Reminders */
-    #reminders-list {
-      background: rgba(0,0,0,0.55);
-      border: 1px solid var(--copper);
-      border-radius: 10px;
-      padding: 1rem;
-      margin-top: 1rem;
-      color: var(--copper-light);
-    }
-
-    .reminder-item {
-      padding: 0.4rem 0;
-      border-bottom: 1px solid rgba(184,115,51,0.3);
-      font-size: 0.95rem;
-    }
-
-    .reminder-item:last-child {
-      border-bottom: none;
-    }
-
-    .reminder-date {
-      color: var(--copper);
-      font-weight: 600;
-    }
-
-    /* Mini weekly calendar */
-    #mini-calendar {
-      background: rgba(0,0,0,0.55);
-      border: 1px solid var(--copper);
-      border-radius: 10px;
-      padding: 1rem;
-      margin-top: 1rem;
-      color: var(--copper-light);
-      font-size: 0.9rem;
-    }
-
-    #mini-calendar-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 0.5rem;
-    }
-
-    #mini-calendar-header button {
-      background: none;
-      border: 1px solid var(--copper);
-      color: var(--copper-light);
-      border-radius: 999px;
-      padding: 0.1rem 0.6rem;
-      cursor: pointer;
-      font-size: 0.8rem;
-    }
-
+    /* MINI CALENDAR */
     #mini-calendar-days {
       display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 0.25rem;
+      grid-template-columns: repeat(6, 1fr); /* ⭐ SIX DAYS */
+      gap: 0.35rem;
     }
 
     .mini-day {
-      border-radius: 6px;
-      padding: 0.3rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--copper);
+      border-radius: 8px;
+      padding: 0.5rem;
       text-align: center;
       cursor: pointer;
-      border: 1px solid transparent;
-    }
-
-    .mini-day.has-events {
-      border-color: var(--copper);
-      background: rgba(184,115,51,0.15);
     }
 
     .mini-day.today {
-      background: rgba(184,115,51,0.35);
-      border-color: var(--copper);
-      font-weight: 600;
+      background: rgba(184,115,51,0.25);
+      border-color: var(--copper-light);
     }
 
-    .mini-day span {
-      display: block;
+    .mini-date {
+      font-size: 1rem;
+      color: var(--copper-light);
     }
 
-    .mini-day .mini-date {
-      font-size: 0.85rem;
-    }
-
-    .mini-day .mini-label {
-      font-size: 0.7rem;
+    .mini-label {
+      font-size: 0.75rem;
       opacity: 0.8;
+    }
+
+    .mini-dots {
+      margin-top: 0.25rem;
+      color: var(--copper);
+      font-size: 0.9rem;
     }
 
     .mini-footer-link {
       display: inline-block;
       margin-top: 0.75rem;
-      padding: 0.35rem 0.9rem;
+      padding: 0.4rem 1rem;
       border-radius: 999px;
       background: var(--copper);
       color: #000;
       font-family: 'Dancing Script', cursive;
-      font-size: 1rem;
+      font-size: 1.1rem;
       text-decoration: none;
-    }
-
-    .mini-footer-link:hover {
-      background: rgba(184,115,51,0.25);
-      color: var(--copper-light);
-    }
-
-    /* Booking links copper */
-    a[href^="http"] {
-      color: var(--copper-light);
-      text-decoration: underline;
-    }
-
-    a[href^="http"]:hover {
-      color: var(--copper);
     }
   </style>
 </head>
@@ -266,9 +107,7 @@
 <!-- REMINDERS -->
 <section class="section-card">
   <h2 class="cursive" style="font-size:2rem;">Upcoming Reminders</h2>
-  <p style="margin-bottom:0.5rem;">
-    Deadlines, shows, releases, and tasks from your calendar surface here automatically.
-  </p>
+  <p>Deadlines, shows, releases, and tasks from your calendar surface here automatically.</p>
 
   <div id="reminders-list" style="
       background: rgba(0,0,0,0.55);
@@ -281,13 +120,10 @@
   </div>
 </section>
 
-
-<!-- MINI WEEKLY CALENDAR -->
+<!-- MINI WEEKLY CALENDAR (6 DAYS) -->
 <section class="section-card">
   <h2 class="cursive" style="font-size:2rem;">Weekly Calendar</h2>
-  <p style="margin-bottom:0.5rem;">
-    See this week at a glance. Tap any day to open the full calendar and edit details.
-  </p>
+  <p>Six‑day snapshot of your week. Tap any day to open the full calendar.</p>
 
   <div id="mini-calendar" style="
       background: rgba(0,0,0,0.55);
@@ -295,7 +131,6 @@
       border-radius: 10px;
       padding: 1rem;
       color: var(--copper-light);
-      font-size: 0.9rem;
     ">
 
     <div id="mini-calendar-header" style="
@@ -311,7 +146,6 @@
           border-radius:999px;
           padding:0.2rem 0.6rem;
           cursor:pointer;
-          font-size:0.9rem;
         ">&lt;</button>
 
       <div id="mini-week-label" style="font-size:1rem; color:var(--copper);">
@@ -325,62 +159,29 @@
           border-radius:999px;
           padding:0.2rem 0.6rem;
           cursor:pointer;
-          font-size:0.9rem;
         ">&gt;</button>
     </div>
 
-    <div id="mini-calendar-days" style="
-        display:grid;
-        grid-template-columns:repeat(7,1fr);
-        gap:0.35rem;
-      ">
-      <!-- JS will populate days here -->
+    <div id="mini-calendar-days">
+      <!-- JS populates 6 days here -->
     </div>
 
   </div>
 
-  <a href="calendar.html" class="mini-footer-link" style="
-      display:inline-block;
-      margin-top:0.75rem;
-      padding:0.4rem 1rem;
-      border-radius:999px;
-      background:var(--copper);
-      color:#000;
-      font-family:'Dancing Script', cursive;
-      font-size:1.1rem;
-      text-decoration:none;
-    ">
-    Open Full Calendar
-  </a>
+  <a href="calendar.html" class="mini-footer-link">Open Full Calendar</a>
 </section>
-
 
 <!-- INTRO -->
 <section class="section-card">
   <h2 class="cursive" style="font-size:2rem;">What a Manager Really Does</h2>
-  <p>
-    A music manager is the architect of an artist’s career — strategist, negotiator, business partner,
-    and shield. This page gives you the same tools and structure a real management team uses.
-  </p>
-  <ul>
-    <li>Booking shows, tours, and appearances</li>
-    <li>Negotiating performance fees and contracts</li>
-    <li>Coordinating releases, marketing, and timelines</li>
-    <li>Building industry relationships</li>
-    <li>Managing budgets, revenue, and expenses</li>
-    <li>Protecting the artist from bad deals and bad actors</li>
-    <li>Overseeing branding, image, and long-term strategy</li>
-    <li>Connecting the artist with lawyers, publicists, and agencies</li>
-  </ul>
+  <p>A music manager is the architect of an artist’s career — strategist, negotiator, business partner, and shield.</p>
 </section>
 
 <!-- TOOLS HUB -->
 <section class="section-card">
   <h2 class="cursive" style="font-size:2rem;">Management Tools Hub</h2>
-  <p>This is your access point to every department a manager controls.</p>
 
   <div class="tools-grid">
-
     <div class="tool-card">
       <h4>Documents Vault</h4>
       <p>Store contracts, riders, invoices, EPKs, legal proof, and all career files.</p>
@@ -410,38 +211,7 @@
       <p>Copyright, trademark, brand protection, and proof of authorship tools.</p>
       <a href="protection.html">Open Protection</a>
     </div>
-
   </div>
-</section>
-
-<!-- BOOKING -->
-<section class="section-card">
-  <h2 class="cursive" style="font-size:2rem;">Booking Shows & Touring</h2>
-  <p>Managers secure shows, negotiate fees, and build touring schedules. Use your calendar to lock in dates and reminders.</p>
-
-  <h3 class="cursive" style="font-size:1.6rem;">Essential Booking Tools</h3>
-  <ul>
-    <li><a href="https://www.sonicbids.com" target="_blank">Sonicbids – Booking Platform</a></li>
-    <li><a href="https://www.reverbnation.com" target="_blank">ReverbNation – Gig Finder</a></li>
-    <li><a href="https://www.bandsintown.com" target="_blank">Bandsintown – Tour Tools</a></li>
-    <li><a href="https://www.eventbrite.com" target="_blank">Eventbrite – Show Hosting</a></li>
-    <li><a href="https://www.pollstar.com" target="_blank">Pollstar – Venue & Tour Data</a></li>
-  </ul>
-
-  <h3 class="cursive" style="font-size:1.6rem;">Booking Checklist</h3>
-  <ul>
-    <li>Confirm venue capacity and age restrictions</li>
-    <li>Negotiate performance fee and payment schedule</li>
-    <li>Review contract terms and cancellation clauses</li>
-    <li>Confirm sound requirements and stage plot</li>
-    <li>Send tech rider, hospitality rider, and EPK</li>
-    <li>Verify backline availability</li>
-    <li>Arrange travel and lodging</li>
-    <li>Promote the event across socials and email</li>
-    <li>Collect payment details and tax forms</li>
-    <li>Confirm load‑in time, soundcheck, and set length</li>
-    <li>Add all key dates and reminders to your calendar</li>
-  </ul>
 </section>
 
 </main>
@@ -457,7 +227,7 @@
   <a href="glossary.html">Glossary</a>
 </div>
 
-<script src="assets/js/calendar.js"></script>
+<script src="assets/js/manage-calendar.js"></script>
 <script>
   document.getElementById("rr-menu-btn").addEventListener("click", () => {
     document.getElementById("rr-menu-panel").classList.toggle("show");
