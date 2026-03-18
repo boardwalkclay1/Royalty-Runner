@@ -1,3 +1,9 @@
+/* ============================================================
+   ROYALTY RUNNER — BRAND NEW CALENDAR ENGINE
+   Clean. Accurate. Only current month days.
+   Fully compatible with your modal + DB.
+   ============================================================ */
+
 /* ===== DB ===== */
 const DB_NAME = "RoyaltyRunner_CalendarDB";
 let db;
@@ -44,93 +50,135 @@ function deleteEvent(id) {
 /* ===== DATE HELPERS ===== */
 const ymd = d => d.toISOString().slice(0,10);
 const parse = s => { const [y,m,d]=s.split("-").map(Number); return new Date(y,m-1,d); };
-const add = (d,n) => { const x=new Date(d); x.setDate(x.getDate()+n); return x; };
 const same = (a,b) => a.getFullYear()==b.getFullYear() && a.getMonth()==b.getMonth() && a.getDate()==b.getDate();
 
 /* ===== STATE ===== */
 let current = new Date();
 let view = "month";
 
-/* ===== RENDER MONTH ===== */
+/* ============================================================
+   NEW MONTH VIEW — ONLY CURRENT MONTH DAYS
+   ============================================================ */
 async function renderMonth() {
   const grid = document.getElementById("calendar-grid");
   const label = document.getElementById("calendar-current-label");
   const weekdays = document.getElementById("calendar-weekday-labels");
 
   grid.innerHTML = "";
-  weekdays.innerHTML = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].map(d=>`<div>${d}</div>`).join("");
+  weekdays.innerHTML = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]
+    .map(d => `<div>${d}</div>`).join("");
 
   const events = await getEvents();
-  const first = new Date(current.getFullYear(), current.getMonth(), 1);
-  const start = add(first, -first.getDay());
-  label.textContent = current.toLocaleString("default",{month:"long",year:"numeric"});
 
-  for (let i=0;i<42;i++) {
-    const d = add(start,i);
-    const dayEvents = events.filter(e => e.date === ymd(d));
+  const year = current.getFullYear();
+  const month = current.getMonth();
+
+  const firstDay = new Date(year, month, 1);
+  const lastDay = new Date(year, month + 1, 0);
+  const totalDays = lastDay.getDate();
+
+  label.textContent = current.toLocaleString("default", {
+    month: "long",
+    year: "numeric"
+  });
+
+  // Add blank cells before the 1st
+  const blanks = firstDay.getDay();
+  for (let i = 0; i < blanks; i++) {
+    const blank = document.createElement("div");
+    blank.className = "calendar-cell empty-cell";
+    grid.appendChild(blank);
+  }
+
+  // Render ONLY the days in the current month
+  for (let day = 1; day <= totalDays; day++) {
+    const d = new Date(year, month, day);
+    const dateStr = ymd(d);
+    const dayEvents = events.filter(e => e.date === dateStr);
 
     const cell = document.createElement("div");
     cell.className = "calendar-cell";
-    if (same(d,new Date())) cell.classList.add("today");
+
+    if (same(d, new Date())) cell.classList.add("today");
 
     cell.innerHTML = `
       <div class="calendar-cell-header">
-        <span class="date-number">${d.getDate()}</span>
+        <span class="date-number">${day}</span>
       </div>
       <div class="calendar-events">
-        ${dayEvents.map(ev=>`<div class="calendar-event-pill" data-id="${ev.id}">${ev.title}</div>`).join("")}
+        ${dayEvents.map(ev => `
+          <div class="calendar-event-pill" data-id="${ev.id}">
+            ${ev.title}
+          </div>
+        `).join("")}
       </div>
     `;
 
-    cell.onclick = () => openModal({ date: ymd(d) });
+    cell.onclick = () => openModal({ date: dateStr });
     grid.appendChild(cell);
   }
 
   renderAgenda(events);
 }
 
-/* ===== RENDER WEEK ===== */
+/* ============================================================
+   WEEK VIEW (kept simple + clean)
+   ============================================================ */
 async function renderWeek() {
   const grid = document.getElementById("calendar-grid");
   const label = document.getElementById("calendar-current-label");
   const weekdays = document.getElementById("calendar-weekday-labels");
 
   grid.innerHTML = "";
-  weekdays.innerHTML = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].map(d=>`<div>${d}</div>`).join("");
+  weekdays.innerHTML = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]
+    .map(d => `<div>${d}</div>`).join("");
 
   const events = await getEvents();
-  const start = add(current, -current.getDay());
+
+  const start = new Date(current);
+  start.setDate(start.getDate() - start.getDay());
+
   label.textContent = `Week of ${start.toLocaleDateString()}`;
 
-  for (let i=0;i<7;i++) {
-    const d = add(start,i);
-    const dayEvents = events.filter(e => e.date === ymd(d));
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(start);
+    d.setDate(start.getDate() + i);
+
+    const dateStr = ymd(d);
+    const dayEvents = events.filter(e => e.date === dateStr);
 
     const cell = document.createElement("div");
     cell.className = "calendar-cell";
-    if (same(d,new Date())) cell.classList.add("today");
+
+    if (same(d, new Date())) cell.classList.add("today");
 
     cell.innerHTML = `
       <div class="calendar-cell-header">
         <span class="date-number">${d.getDate()}</span>
       </div>
       <div class="calendar-events">
-        ${dayEvents.map(ev=>`<div class="calendar-event-pill" data-id="${ev.id}">${ev.title}</div>`).join("")}
+        ${dayEvents.map(ev => `
+          <div class="calendar-event-pill" data-id="${ev.id}">
+            ${ev.title}
+          </div>
+        `).join("")}
       </div>
     `;
 
-    cell.onclick = () => openModal({ date: ymd(d) });
+    cell.onclick = () => openModal({ date: dateStr });
     grid.appendChild(cell);
   }
 
   renderAgenda(events);
 }
 
-/* ===== AGENDA ===== */
+/* ============================================================
+   AGENDA
+   ============================================================ */
 function renderAgenda(events) {
   const list = document.getElementById("agenda-list");
   const upcoming = events
-    .filter(e => parse(e.date) >= add(new Date(), -1))
+    .filter(e => parse(e.date) >= new Date())
     .sort((a,b)=>parse(a.date)-parse(b.date));
 
   if (!upcoming.length) {
@@ -138,7 +186,7 @@ function renderAgenda(events) {
     return;
   }
 
-  list.innerHTML = upcoming.map(ev=>`
+  list.innerHTML = upcoming.map(ev => `
     <div class="agenda-item">
       <div class="agenda-main">
         <div class="agenda-title">${ev.title}</div>
@@ -152,7 +200,9 @@ function renderAgenda(events) {
   `).join("");
 }
 
-/* ===== MODAL ===== */
+/* ============================================================
+   MODAL
+   ============================================================ */
 function openModal(ev) {
   const modal = document.getElementById("event-modal");
   const isEdit = typeof ev === "number";
@@ -212,18 +262,45 @@ document.getElementById("event-delete").onclick = async () => {
   refresh();
 };
 
-/* ===== REFRESH ===== */
-function refresh() {
-  view === "month" ? renderMonth() : renderWeek();
-}
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+document.getElementById("cal-prev").onclick = () => {
+  if (view === "month") {
+    current.setMonth(current.getMonth() - 1);
+  } else {
+    current.setDate(current.getDate() - 7);
+  }
+  refresh();
+};
 
-/* ===== NAV ===== */
-document.getElementById("cal-prev").onclick = () => { current.setDate(current.getDate() - (view==="month"?30:7)); refresh(); };
-document.getElementById("cal-next").onclick = () => { current.setDate(current.getDate() + (view==="month"?30:7)); refresh(); };
-document.getElementById("cal-today").onclick = () => { current = new Date(); refresh(); };
-document.getElementById("cal-view-month").onclick = () => { view="month"; refresh(); };
-document.getElementById("cal-view-week").onclick = () => { view="week"; refresh(); };
+document.getElementById("cal-next").onclick = () => {
+  if (view === "month") {
+    current.setMonth(current.getMonth() + 1);
+  } else {
+    current.setDate(current.getDate() + 7);
+  }
+  refresh();
+};
+
+document.getElementById("cal-today").onclick = () => {
+  current = new Date();
+  refresh();
+};
+
+document.getElementById("cal-view-month").onclick = () => {
+  view = "month";
+  refresh();
+};
+
+document.getElementById("cal-view-week").onclick = () => {
+  view = "week";
+  refresh();
+};
+
 document.getElementById("cal-new-event").onclick = () => openModal({});
 
-/* ===== INIT ===== */
+/* ============================================================
+   INIT
+   ============================================================ */
 initDB().then(refresh);
