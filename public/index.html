@@ -1,178 +1,38 @@
-<!DOCTYPE html>
-<html lang="en" data-page="index">
-<head>
-  <meta charset="UTF-8" />
-  <title>Royalty Runner – Artist Rights & Royalty Command Center</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- HERO — MOBILE-FIRST -->
+<section class="hero section-card" style="text-align:center; padding:2rem 1rem;">
 
-  <link rel="manifest" href="/manifest.json" />
-  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+  <!-- BIG MESSAGE FIRST -->
+  <h1 class="cursive" style="
+      font-size:3rem;
+      color:var(--copper);
+      line-height:1.1;
+      margin-bottom:1rem;
+    ">
+    GET PAID<br>FOR YOUR MUSIC
+  </h1>
 
-  <link rel="stylesheet" href="assets/css/style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600&display=swap" rel="stylesheet">
+  <p style="font-size:1.2rem; color:var(--copper-light); margin-bottom:2rem;">
+    Learn every royalty.  
+    Register your works.  
+    Connect to distributors.  
+    And soon — get paid directly from fans.
+  </p>
 
-  <style>
-    body {
-      background: url("assets/img/royal-index.jpg") no-repeat center center fixed;
-      background-size: cover;
-      background-color: #000;
-    }
+  <!-- HERO TEXT UNDER IT -->
+  <h2 class="cursive" style="font-size:2.2rem; margin-top:1rem;">
+    The Independent Artist’s Survival Kit
+  </h2>
 
-    .overlay {
-      background: rgba(0, 0, 0, 0.72);
-      min-height: 100vh;
-      padding-bottom: 4rem;
-    }
-
-    .cursive {
-      font-family: 'Dancing Script', cursive;
-      letter-spacing: 1px;
-    }
-
-    .section-card {
-      background: rgba(0, 0, 0, 0.65);
-      border: 1px solid var(--copper);
-      border-radius: 10px;
-      padding: 1.5rem;
-      margin-bottom: 2rem;
-      backdrop-filter: blur(4px);
-    }
-
-    .dropdown-header {
-      cursor: pointer;
-      font-family: 'Dancing Script', cursive;
-      font-size: 1.6rem;
-      color: var(--copper);
-      margin-bottom: 0.5rem;
-    }
-
-    .dropdown-content {
-      display: none;
-      padding-left: 1rem;
-      border-left: 2px solid var(--copper);
-      margin-bottom: 1rem;
-      color: #ddd;
-    }
-
-    .bubble-btn {
-      display: inline-block;
-      padding: 0.4rem 1rem;
-      background: var(--copper);
-      color: #000;
-      border-radius: 999px;
-      font-family: 'Dancing Script', cursive;
-      font-size: 1.1rem;
-      text-decoration: none;
-      margin-top: 0.5rem;
-    }
-
-    .rr-menu-btn {
-      position: absolute;
-      right: 1rem;
-      top: 1rem;
-      font-size: 2rem;
-      background: none;
-      border: none;
-      color: var(--copper);
-      cursor: pointer;
-      z-index: 9999;
-    }
-
-    .rr-menu-panel {
-      position: fixed;
-      top: 0;
-      right: 0;
-      width: 260px;
-      height: 100vh;
-      background: rgba(0,0,0,0.92);
-      border-left: 2px solid var(--copper);
-      padding: 2rem 1rem;
-      transition: transform 0.3s ease;
-      transform: translateX(100%);
-      z-index: 9998;
-    }
-
-    .rr-menu-panel.show {
-      transform: translateX(0);
-    }
-
-    .rr-menu-panel a {
-      display: block;
-      margin-bottom: 1.2rem;
-      color: var(--copper-light);
-      font-family: 'Dancing Script', cursive;
-      font-size: 1.5rem;
-      text-decoration: none;
-    }
-
-    .pay-section {
-      text-align: center;
-      margin-top: 3rem;
-    }
-
-    .pay-section img {
-      width: 180px;
-      height: 180px;
-      border-radius: 12px;
-      border: 2px solid var(--copper);
-      margin-bottom: 1rem;
-    }
-
-    .pay-section a {
-      color: var(--copper-light);
-      font-size: 1.1rem;
-      text-decoration: underline;
-    }
-  </style>
-</head>
-
-<body>
-<div class="overlay">
-
-<header class="rr-header">
-  <h1 class="cursive" style="font-size:3rem;">Royalty Runner</h1>
-  <p class="tagline cursive" style="font-size:1.6rem;">Your one-stop shop for navigating the music business.</p>
-
-  <button id="rr-menu-btn" class="rr-menu-btn">☰</button>
-
-  <nav class="rr-nav cursive">
-    <a href="profile.html">Profile</a>
-    <a href="manage.html">Manage</a>
-    <a href="works.html">Works</a>
-    <a href="rights-and-registration.html">Rights</a>
-    <a href="glossary.html">Glossary</a>
-  </nav>
-</header>
-
-<main class="rr-main">
-
-<!-- HERO — REBUILT -->
-<section class="hero section-card" style="display:flex; justify-content:space-between; align-items:center; gap:2rem;">
-  
-  <div style="flex:1;">
-    <h2 class="cursive" style="font-size:2.4rem;">The Independent Artist’s Survival Kit</h2>
-    <p>
-      Built for every artist who ever felt lost, overlooked, or unprepared.  
-      Royalty Runner is your offline-first, cinematic command center for rights, royalties, contracts, 
-      management, releases, and real music business knowledge.
-    </p>
-  </div>
-
-  <div style="flex:1; text-align:right;">
-    <h1 class="cursive" style="font-size:3.2rem; color:var(--copper); line-height:1.1;">
-      GET PAID<br>FOR YOUR MUSIC
-    </h1>
-    <p style="font-size:1.2rem; color:var(--copper-light); margin-top:0.5rem;">
-      Learn every royalty.  
-      Register your works.  
-      Connect to distributors.  
-      And soon — get paid directly from fans.
-    </p>
-  </div>
+  <p style="margin-top:0.5rem;">
+    Built for every artist who ever felt lost, overlooked, or unprepared.  
+    Royalty Runner is your offline-first, cinematic command center for rights, royalties, contracts, 
+    management, releases, and real music business knowledge.
+  </p>
 
 </section>
 
-<!-- ABOUT — REBUILT -->
+
+<!-- ABOUT — MOBILE-FIRST -->
 <section class="section-card">
   <h3 class="cursive" style="font-size:2rem;">What Royalty Runner Really Does</h3>
 
@@ -252,71 +112,3 @@
   </div>
 
 </section>
-
-<!-- SUPPORT -->
-<section id="support" class="pay-section section-card">
-  <h3 class="cursive" style="font-size:2rem;">Support Royalty Runner</h3>
-
-  <img src="assets/img/royal-qrcode.png" alt="Royalty Runner QR Code">
-
-  <p class="cursive" style="font-size:1.4rem; margin-top:1rem;">
-    Royalty Runner is a <strong>Pay What You Want</strong> app — built for the community, by the community.
-  </p>
-
-  <p>
-    Your support keeps this project alive.  
-    It helps build new tools, expand the knowledge base, and bring <strong>Royalty Runner Online</strong> —  
-    a full cloud version for artists everywhere.
-  </p>
-
-  <p>
-    This isn’t a corporation.  
-    This is one artist building the resource he wished he had —  
-    so no one else has to walk into the industry blind.
-  </p>
-
-  <p style="margin-top:1rem;">
-    <a href="https://www.paypal.com/ncp/payment/7ZRSKPQGURJD4" target="_blank">
-      PayPal – Support Royalty Runner
-    </a>
-  </p>
-
-  <p style="margin-top:1rem; color:#ccc;">
-    Every contribution — big or small — helps build a safer, smarter future for independent artists.
-  </p>
-</section>
-
-</main>
-</div>
-
-<!-- BURGER MENU -->
-<div id="rr-menu-panel" class="rr-menu-panel">
-  <a href="index.html">Home</a>
-  <a href="profile.html">Profile</a>
-  <a href="manage.html">Manage</a>
-  <a href="documents.html">Docs</a>
-  <a href="glossary.html">Glossary</a>
-  <a href="works.html">Works</a>
-  <a href="royalties.html">Royalties</a>
-  <a href="rights-and-registration.html">Rights</a>
-  <a href="law.html">Law</a>
-  <a href="contracts.html">Contracts</a>
-  <a href="protection.html">Protection</a>
-  <a href="export.html">Export</a>
-</div>
-
-<script>
-  document.getElementById("rr-menu-btn").addEventListener("click", () => {
-    document.getElementById("rr-menu-panel").classList.toggle("show");
-  });
-
-  document.querySelectorAll(".dropdown-header").forEach(header => {
-    header.addEventListener("click", () => {
-      const content = header.nextElementSibling;
-      content.style.display = content.style.display === "block" ? "none" : "block";
-    });
-  });
-</script>
-
-</body>
-</html>
