@@ -266,26 +266,94 @@
 <!-- REMINDERS -->
 <section class="section-card">
   <h2 class="cursive" style="font-size:2rem;">Upcoming Reminders</h2>
-  <p>Deadlines, shows, releases, and tasks from your calendar surface here automatically.</p>
-  <div id="reminders-list">
+  <p style="margin-bottom:0.5rem;">
+    Deadlines, shows, releases, and tasks from your calendar surface here automatically.
+  </p>
+
+  <div id="reminders-list" style="
+      background: rgba(0,0,0,0.55);
+      border: 1px solid var(--copper);
+      border-radius: 10px;
+      padding: 1rem;
+      color: var(--copper-light);
+    ">
     <p style="opacity:0.7;">Loading reminders…</p>
   </div>
 </section>
 
+
 <!-- MINI WEEKLY CALENDAR -->
 <section class="section-card">
   <h2 class="cursive" style="font-size:2rem;">Weekly Calendar</h2>
-  <p>See this week at a glance. Tap any day to open the full calendar and edit details.</p>
-  <div id="mini-calendar">
-    <div id="mini-calendar-header">
-      <button id="mini-prev-week">&lt;</button>
-      <div id="mini-week-label">This Week</div>
-      <button id="mini-next-week">&gt;</button>
+  <p style="margin-bottom:0.5rem;">
+    See this week at a glance. Tap any day to open the full calendar and edit details.
+  </p>
+
+  <div id="mini-calendar" style="
+      background: rgba(0,0,0,0.55);
+      border: 1px solid var(--copper);
+      border-radius: 10px;
+      padding: 1rem;
+      color: var(--copper-light);
+      font-size: 0.9rem;
+    ">
+
+    <div id="mini-calendar-header" style="
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        margin-bottom:0.75rem;
+      ">
+      <button id="mini-prev-week" style="
+          background:none;
+          border:1px solid var(--copper);
+          color:var(--copper-light);
+          border-radius:999px;
+          padding:0.2rem 0.6rem;
+          cursor:pointer;
+          font-size:0.9rem;
+        ">&lt;</button>
+
+      <div id="mini-week-label" style="font-size:1rem; color:var(--copper);">
+        This Week
+      </div>
+
+      <button id="mini-next-week" style="
+          background:none;
+          border:1px solid var(--copper);
+          color:var(--copper-light);
+          border-radius:999px;
+          padding:0.2rem 0.6rem;
+          cursor:pointer;
+          font-size:0.9rem;
+        ">&gt;</button>
     </div>
-    <div id="mini-calendar-days"></div>
+
+    <div id="mini-calendar-days" style="
+        display:grid;
+        grid-template-columns:repeat(7,1fr);
+        gap:0.35rem;
+      ">
+      <!-- JS will populate days here -->
+    </div>
+
   </div>
-  <a href="calendar.html" class="mini-footer-link">Open Full Calendar</a>
+
+  <a href="calendar.html" class="mini-footer-link" style="
+      display:inline-block;
+      margin-top:0.75rem;
+      padding:0.4rem 1rem;
+      border-radius:999px;
+      background:var(--copper);
+      color:#000;
+      font-family:'Dancing Script', cursive;
+      font-size:1.1rem;
+      text-decoration:none;
+    ">
+    Open Full Calendar
+  </a>
 </section>
+
 
 <!-- INTRO -->
 <section class="section-card">
