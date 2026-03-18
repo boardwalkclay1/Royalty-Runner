@@ -5,11 +5,9 @@
   <title>Royalty Runner – Artist Rights & Royalty Command Center</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- PWA -->
   <link rel="manifest" href="/manifest.json" />
   <link rel="icon" href="/favicon.ico" type="image/x-icon" />
 
-  <!-- Styles -->
   <link rel="stylesheet" href="assets/css/style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600&display=swap" rel="stylesheet">
 
@@ -68,7 +66,6 @@
       margin-top: 0.5rem;
     }
 
-    /* Burger */
     .rr-menu-btn {
       position: absolute;
       right: 1rem;
@@ -108,7 +105,6 @@
       text-decoration: none;
     }
 
-    /* QR + Pay Section */
     .pay-section {
       text-align: center;
       margin-top: 3rem;
@@ -133,172 +129,164 @@
 <body>
 <div class="overlay">
 
-  <header class="rr-header">
-    <h1 class="cursive" style="font-size:3rem;">Royalty Runner</h1>
-    <p class="tagline cursive" style="font-size:1.6rem;">Your one-stop shop for navigating the music business.</p>
+<header class="rr-header">
+  <h1 class="cursive" style="font-size:3rem;">Royalty Runner</h1>
+  <p class="tagline cursive" style="font-size:1.6rem;">Your one-stop shop for navigating the music business.</p>
 
-    <button id="rr-menu-btn" class="rr-menu-btn">☰</button>
+  <button id="rr-menu-btn" class="rr-menu-btn">☰</button>
 
-    <!-- MAIN NAV (new order) -->
-    <nav class="rr-nav cursive">
-      <a href="profile.html">Profile</a>
-      <a href="manage.html">Manage</a>
-      <a href="works.html">Works</a>
-      <a href="rights-and-registration.html">Rights</a>
-      <a href="glossary.html">Glossary</a>
-    </nav>
-  </header>
+  <nav class="rr-nav cursive">
+    <a href="profile.html">Profile</a>
+    <a href="manage.html">Manage</a>
+    <a href="works.html">Works</a>
+    <a href="rights-and-registration.html">Rights</a>
+    <a href="glossary.html">Glossary</a>
+  </nav>
+</header>
 
-  <main class="rr-main">
+<main class="rr-main">
 
-    <!-- HERO -->
-    <section class="hero section-card">
-      <h2 class="cursive" style="font-size:2.2rem;">The Independent Artist’s Survival Kit</h2>
+<!-- HERO — REBUILT -->
+<section class="hero section-card" style="display:flex; justify-content:space-between; align-items:center; gap:2rem;">
+  
+  <div style="flex:1;">
+    <h2 class="cursive" style="font-size:2.4rem;">The Independent Artist’s Survival Kit</h2>
+    <p>
+      Built for every artist who ever felt lost, overlooked, or unprepared.  
+      Royalty Runner is your offline-first, cinematic command center for rights, royalties, contracts, 
+      management, releases, and real music business knowledge.
+    </p>
+  </div>
+
+  <div style="flex:1; text-align:right;">
+    <h1 class="cursive" style="font-size:3.2rem; color:var(--copper); line-height:1.1;">
+      GET PAID<br>FOR YOUR MUSIC
+    </h1>
+    <p style="font-size:1.2rem; color:var(--copper-light); margin-top:0.5rem;">
+      Learn every royalty.  
+      Register your works.  
+      Connect to distributors.  
+      And soon — get paid directly from fans.
+    </p>
+  </div>
+
+</section>
+
+<!-- ABOUT — REBUILT -->
+<section class="section-card">
+  <h3 class="cursive" style="font-size:2rem;">What Royalty Runner Really Does</h3>
+
+  <div class="dropdown">
+    <div class="dropdown-header">Understand Every Royalty & Get Paid Properly</div>
+    <div class="dropdown-content">
       <p>
-        Royalty Runner is built for every artist who ever felt lost, overlooked, or unprepared in the music industry.  
-        It’s your offline-first, cinematic command center for rights, royalties, contracts, management, and knowledge.
+        Streaming, publishing, mechanical, performance — every royalty explained in plain language.  
+        Learn how to collect everything you’re owed.
       </p>
-    </section>
+      <a href="royalties.html" class="bubble-btn">Open Royalties Center</a>
+    </div>
+  </div>
 
-    <!-- ABOUT ROYALTY RUNNER -->
-    <section class="section-card">
-      <h3 class="cursive" style="font-size:2rem;">What Royalty Runner Really Is</h3>
-
-      <div class="dropdown">
-        <div class="dropdown-header">A complete rights & royalty education</div>
-        <div class="dropdown-content">
-          <p>
-            Every royalty type, every organization, every form, every registration — broken down in plain language.
-            No gatekeeping. No confusion. No industry secrets.
-          </p>
-        </div>
-      </div>
-
-      <div class="dropdown">
-        <div class="dropdown-header">A management team in your pocket</div>
-        <div class="dropdown-content">
-          <p>
-            Booking tools, publicist tools, budgeting, touring, release planning, and strategy — all in one place.
-            Built so independent artists can move like they have a full team.
-          </p>
-        </div>
-      </div>
-
-      <div class="dropdown">
-        <div class="dropdown-header">A legal & contract safety net</div>
-        <div class="dropdown-content">
-          <p>
-            Artist-friendly contracts, red flag warnings, deal breakdowns, and a glossary that explains every term you’ll ever see in a contract.
-          </p>
-        </div>
-      </div>
-
-      <div class="dropdown">
-        <div class="dropdown-header">A catalog & document vault</div>
-        <div class="dropdown-content">
-          <p>
-            Store your works, metadata, stems, memos, contracts, invoices, and legal files — all offline, all private, all yours.
-          </p>
-        </div>
-      </div>
-
-      <div class="dropdown">
-        <div class="dropdown-header">A tool built from real experience</div>
-        <div class="dropdown-content">
-          <p>
-            Royalty Runner was created by an artist — a skater — who was approached by the industry without guidance, without knowledge, and without anyone to teach him the business.  
-            This app exists so no independent artist ever has to feel that lost again.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- FEATURE DROPDOWNS -->
-    <section class="features section-card">
-      <h3 class="cursive" style="font-size:2rem;">Explore Your Command Center</h3>
-
-      <!-- PROFILE -->
-      <div class="dropdown">
-        <div class="dropdown-header">Profile</div>
-        <div class="dropdown-content">
-          <p>Your legal + artist identity powers every form in the app.</p>
-          <a href="profile.html" class="bubble-btn">Open Profile</a>
-        </div>
-      </div>
-
-      <!-- MANAGE -->
-      <div class="dropdown">
-        <div class="dropdown-header">Management Command Center</div>
-        <div class="dropdown-content">
-          <p>Your booking tools, publicist tools, budgeting, routing, and career strategy live here.</p>
-          <a href="manage.html" class="bubble-btn">Open Management</a>
-        </div>
-      </div>
-
-      <!-- DOCS -->
-      <div class="dropdown">
-        <div class="dropdown-header">Document Vault</div>
-        <div class="dropdown-content">
-          <p>Store contracts, EPKs, invoices, and legal files offline.</p>
-          <a href="documents.html" class="bubble-btn">Open Documents</a>
-        </div>
-      </div>
-
-      <!-- GLOSSARY -->
-      <div class="dropdown">
-        <div class="dropdown-header">Glossary</div>
-        <div class="dropdown-content">
-          <p>Every industry term explained in plain language.</p>
-          <a href="glossary.html" class="bubble-btn">Open Glossary</a>
-        </div>
-      </div>
-
-      <!-- WORKS -->
-      <div class="dropdown">
-        <div class="dropdown-header">Works</div>
-        <div class="dropdown-content">
-          <p>Save songs, stems, memos, metadata, and your entire catalog.</p>
-          <a href="works.html" class="bubble-btn">Open Works</a>
-        </div>
-      </div>
-
-    </section>
-
-    <!-- PAY WHAT YOU WANT -->
-    <section class="pay-section section-card">
-      <h3 class="cursive" style="font-size:2rem;">Support Royalty Runner</h3>
-
-      <img src="assets/img/royal-qrcode.png" alt="Royalty Runner QR Code">
-
-      <p class="cursive" style="font-size:1.4rem; margin-top:1rem;">
-        Royalty Runner is a <strong>Pay What You Want</strong> app — built for the community, by the community.
-      </p>
-
+  <div class="dropdown">
+    <div class="dropdown-header">Distribute Your Music the Right Way</div>
+    <div class="dropdown-content">
       <p>
-        Your support keeps this project alive.  
-        It helps build new tools, expand the knowledge base, and bring <strong>Royalty Runner Online</strong> —  
-        a full cloud version for artists everywhere.
+        Direct links to DistroKid, TuneCore, UnitedMasters, and more.  
+        Learn what each one pays, what they take, and how to keep control of your masters.
       </p>
+      <a href="rights-and-registration.html" class="bubble-btn">Open Rights & Registration</a>
+    </div>
+  </div>
 
+  <div class="dropdown">
+    <div class="dropdown-header">The Future: Direct Fan → Artist Payments</div>
+    <div class="dropdown-content">
       <p>
-        This isn’t a corporation.  
-        This is one artist building the resource he wished he had —  
-        so no one else has to walk into the industry blind.
+        With enough support, Royalty Runner Online will let fans pay artists directly —  
+        no middlemen, no labels, no delays.
       </p>
+      <a href="#support" class="bubble-btn">Support the Project</a>
+    </div>
+  </div>
 
-      <p style="margin-top:1rem;">
-        <a href="https://www.paypal.com/ncp/payment/7ZRSKPQGURJD4" target="_blank">
-          PayPal – Support Royalty Runner
-        </a>
+  <div class="dropdown">
+    <div class="dropdown-header">A Management Team in Your Pocket</div>
+    <div class="dropdown-content">
+      <p>
+        Booking tools, publicist tools, budgeting, touring, release planning, and strategy —  
+        all in one place.
       </p>
+      <a href="manage.html" class="bubble-btn">Open Management</a>
+    </div>
+  </div>
 
-      <p style="margin-top:1rem; color:#ccc;">
-        Every contribution — big or small — helps build a safer, smarter future for independent artists.
+  <div class="dropdown">
+    <div class="dropdown-header">Contracts, Red Flags, and Legal Protection</div>
+    <div class="dropdown-content">
+      <p>
+        Artist-friendly contracts, deal breakdowns, red flag warnings, and a glossary that explains 
+        every term you’ll ever see in a contract.
       </p>
-    </section>
+      <a href="contracts.html" class="bubble-btn">Open Contracts Command</a>
+    </div>
+  </div>
 
-  </main>
+  <div class="dropdown">
+    <div class="dropdown-header">Your Works, Metadata, and Catalog</div>
+    <div class="dropdown-content">
+      <p>
+        Save songs, stems, memos, metadata, and your entire catalog — all offline, all private, all yours.
+      </p>
+      <a href="works.html" class="bubble-btn">Open Works Studio</a>
+    </div>
+  </div>
 
+  <div class="dropdown">
+    <div class="dropdown-header">Document Vault</div>
+    <div class="dropdown-content">
+      <p>
+        Store contracts, invoices, EPKs, legal proof, and all career files in one secure offline vault.
+      </p>
+      <a href="documents.html" class="bubble-btn">Open Document Vault</a>
+    </div>
+  </div>
+
+</section>
+
+<!-- SUPPORT -->
+<section id="support" class="pay-section section-card">
+  <h3 class="cursive" style="font-size:2rem;">Support Royalty Runner</h3>
+
+  <img src="assets/img/royal-qrcode.png" alt="Royalty Runner QR Code">
+
+  <p class="cursive" style="font-size:1.4rem; margin-top:1rem;">
+    Royalty Runner is a <strong>Pay What You Want</strong> app — built for the community, by the community.
+  </p>
+
+  <p>
+    Your support keeps this project alive.  
+    It helps build new tools, expand the knowledge base, and bring <strong>Royalty Runner Online</strong> —  
+    a full cloud version for artists everywhere.
+  </p>
+
+  <p>
+    This isn’t a corporation.  
+    This is one artist building the resource he wished he had —  
+    so no one else has to walk into the industry blind.
+  </p>
+
+  <p style="margin-top:1rem;">
+    <a href="https://www.paypal.com/ncp/payment/7ZRSKPQGURJD4" target="_blank">
+      PayPal – Support Royalty Runner
+    </a>
+  </p>
+
+  <p style="margin-top:1rem; color:#ccc;">
+    Every contribution — big or small — helps build a safer, smarter future for independent artists.
+  </p>
+</section>
+
+</main>
 </div>
 
 <!-- BURGER MENU -->
@@ -309,8 +297,6 @@
   <a href="documents.html">Docs</a>
   <a href="glossary.html">Glossary</a>
   <a href="works.html">Works</a>
-
-  <!-- Management-only pages -->
   <a href="royalties.html">Royalties</a>
   <a href="rights-and-registration.html">Rights</a>
   <a href="law.html">Law</a>
