@@ -324,8 +324,13 @@
   <a href="export.html">Export</a>
 </div>
 
+<!-- LOAD THE GLOBAL DATABASE ENGINE FIRST -->
+<script src="assets/js/db.js"></script>
+
+<!-- THEN LOAD THE PAGE LOGIC THAT DEPENDS ON THE DB -->
 <script src="assets/js/documents.js"></script>
 
+<!-- BURGER MENU -->
 <script>
   document.getElementById("rr-menu-btn").addEventListener("click", () => {
     document.getElementById("rr-menu-panel").classList.toggle("show");
@@ -334,3 +339,4 @@
 
 </body>
 </html>
+
