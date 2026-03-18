@@ -1,80 +1,27 @@
 <!DOCTYPE html>
-<html lang="en" data-page="calendar">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Royalty Runner – Calendar & Reminders</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="manifest" href="manifest.json" />
-  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  <title>Royalty Runner – Calendar</title>
+
   <link rel="stylesheet" href="assets/css/style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="icon" href="/favicon.ico" />
 
   <style>
     body {
-      background: url("assets/img/royal-manage.jpg") no-repeat center center fixed;
-      background-size: cover;
-      background-color: #000;
-    }
-
-    .overlay {
-      background: rgba(0, 0, 0, 0.78);
-      min-height: 100vh;
-      padding-bottom: 4rem;
-    }
-
-    .section-card {
-      background: rgba(0, 0, 0, 0.65);
-      border: 1px solid var(--copper);
-      border-radius: 10px;
-      padding: 1.5rem;
-      margin-bottom: 2rem;
-      backdrop-filter: blur(4px);
-    }
-
-    h2, h3 {
-      text-shadow: 0 0 10px rgba(184, 115, 51, 0.4);
-    }
-
-    .rr-menu-btn {
-      position: absolute;
-      right: 1rem;
-      top: 1rem;
-      font-size: 2rem;
-      background: none;
-      border: none;
-      color: var(--copper);
-      cursor: pointer;
-      z-index: 9999;
-    }
-
-    .rr-menu-panel {
-      position: fixed;
-      top: 0;
-      right: 0;
-      width: 260px;
-      height: 100vh;
-      background: rgba(0,0,0,0.92);
-      border-left: 2px solid var(--copper);
-      padding: 2rem 1rem;
-      transition: transform 0.3s ease;
-      transform: translateX(100%);
-      z-index: 9998;
-    }
-
-    .rr-menu-panel.show {
-      transform: translateX(0);
-    }
-
-    .rr-menu-panel a {
-      display: block;
-      margin-bottom: 1.2rem;
+      background: #000;
       color: var(--copper-light);
-      font-family: 'Dancing Script', cursive;
-      font-size: 1.5rem;
-      text-decoration: none;
+      font-family: sans-serif;
     }
 
-    /* Calendar layout */
+    .calendar-container {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+
     #calendar-header {
       display: flex;
       justify-content: space-between;
@@ -82,362 +29,159 @@
       margin-bottom: 1rem;
     }
 
-    #calendar-header-left {
-      display: flex;
-      gap: 0.5rem;
-      align-items: center;
-    }
-
-    #calendar-header-left button,
-    #calendar-header-right button {
-      background: none;
-      border: 1px solid var(--copper);
-      color: var(--copper-light);
-      border-radius: 999px;
-      padding: 0.3rem 0.8rem;
-      cursor: pointer;
-      font-size: 0.9rem;
-    }
-
-    #calendar-header-left button:hover,
-    #calendar-header-right button:hover {
-      background: rgba(184,115,51,0.25);
-      color: var(--copper);
-    }
-
-    #calendar-current-label {
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: var(--copper-light);
-    }
-
     #calendar-grid {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
-      gap: 0.25rem;
-      border-top: 1px solid rgba(184,115,51,0.4);
-      border-left: 1px solid rgba(184,115,51,0.4);
+      gap: 0.5rem;
+    }
+
+    #calendar-weekday-labels {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      text-align: center;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+      color: var(--copper);
     }
 
     .calendar-cell {
-      min-height: 90px;
-      border-right: 1px solid rgba(184,115,51,0.4);
-      border-bottom: 1px solid rgba(184,115,51,0.4);
-      padding: 0.25rem;
-      font-size: 0.8rem;
-      position: relative;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--copper);
+      border-radius: 6px;
+      padding: 0.5rem;
       cursor: pointer;
-      background: rgba(0,0,0,0.6);
-    }
-
-    .calendar-cell-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 0.25rem;
-      font-size: 0.75rem;
-      color: var(--copper-light);
     }
 
     .calendar-cell.today {
-      background: rgba(184,115,51,0.35);
-    }
-
-    .calendar-cell .date-number {
-      font-weight: 600;
-      color: var(--copper);
+      border-color: var(--copper-light);
+      background: rgba(184,115,51,0.25);
     }
 
     .calendar-events {
-      max-height: 70px;
-      overflow-y: auto;
+      margin-top: 0.25rem;
+      font-size: 0.8rem;
     }
 
     .calendar-event-pill {
-      background: rgba(184,115,51,0.25);
+      background: var(--copper);
+      color: #000;
+      padding: 2px 6px;
       border-radius: 999px;
-      padding: 0.1rem 0.4rem;
-      margin-bottom: 0.15rem;
-      font-size: 0.7rem;
-      color: var(--copper-light);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      cursor: grab;
-    }
-
-    .calendar-event-pill:active {
-      cursor: grabbing;
-    }
-
-    .calendar-weekday-labels {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 0.25rem;
-      margin-bottom: 0.25rem;
-      font-size: 0.8rem;
-      color: var(--copper-light);
-      text-align: center;
-    }
-
-    /* Agenda */
-    #agenda-list {
-      max-height: 260px;
-      overflow-y: auto;
-      background: rgba(0,0,0,0.55);
-      border-radius: 10px;
-      border: 1px solid var(--copper);
-      padding: 0.75rem;
-      color: var(--copper-light);
-      font-size: 0.9rem;
-    }
-
-    .agenda-item {
-      padding: 0.35rem 0;
-      border-bottom: 1px solid rgba(184,115,51,0.3);
-      display: flex;
-      justify-content: space-between;
-      gap: 0.5rem;
-      align-items: center;
-    }
-
-    .agenda-item:last-child {
-      border-bottom: none;
-    }
-
-    .agenda-main {
-      flex: 1;
-    }
-
-    .agenda-title {
-      font-weight: 600;
-      color: var(--copper);
-    }
-
-    .agenda-meta {
-      font-size: 0.8rem;
-      opacity: 0.8;
-    }
-
-    .agenda-actions button {
-      background: none;
-      border: 1px solid var(--copper);
-      color: var(--copper-light);
-      border-radius: 999px;
-      padding: 0.1rem 0.5rem;
-      cursor: pointer;
+      margin-bottom: 2px;
+      display: inline-block;
       font-size: 0.75rem;
-      margin-left: 0.25rem;
     }
 
-    .agenda-actions button:hover {
-      background: rgba(184,115,51,0.25);
-      color: var(--copper);
+    #agenda-list {
+      margin-top: 2rem;
+      padding: 1rem;
+      border: 1px solid var(--copper);
+      border-radius: 8px;
+      background: rgba(255,255,255,0.05);
     }
 
     /* Modal */
     #event-modal {
       position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.85);
+      inset: 0;
+      background: rgba(0,0,0,0.8);
       display: none;
       justify-content: center;
       align-items: center;
-      padding: 1.5rem;
-      z-index: 99999;
+      z-index: 9999;
     }
 
-    #event-modal-inner {
-      background: rgba(0,0,0,0.95);
+    #event-modal-content {
+      background: #111;
+      padding: 1.5rem;
       border: 1px solid var(--copper);
-      border-radius: 12px;
-      padding: 1.5rem;
-      max-width: 480px;
-      width: 100%;
-      color: var(--copper-light);
+      border-radius: 10px;
+      width: 90%;
+      max-width: 400px;
     }
 
-    #event-modal-inner h3 {
-      margin-top: 0;
+    #event-modal-content input,
+    #event-modal-content select,
+    #event-modal-content textarea {
+      width: 100%;
       margin-bottom: 0.75rem;
-    }
-
-    #event-modal-inner label {
-      display: block;
-      font-size: 0.85rem;
-      margin-top: 0.5rem;
-      margin-bottom: 0.15rem;
-    }
-
-    #event-modal-inner input,
-    #event-modal-inner textarea,
-    #event-modal-inner select {
-      width: 100%;
-      padding: 0.4rem 0.5rem;
-      border-radius: 6px;
-      border: 1px solid var(--copper);
+      padding: 0.5rem;
       background: #000;
-      color: var(--copper-light);
-      font-size: 0.9rem;
-    }
-
-    #event-modal-inner textarea {
-      min-height: 80px;
-      resize: vertical;
-    }
-
-    #event-modal-actions {
-      margin-top: 0.75rem;
-      display: flex;
-      justify-content: space-between;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-    }
-
-    #event-modal-actions button {
-      flex: 1;
-      background: none;
       border: 1px solid var(--copper);
       color: var(--copper-light);
-      border-radius: 999px;
-      padding: 0.35rem 0.8rem;
+      border-radius: 6px;
+    }
+
+    #event-modal-content button {
+      padding: 0.5rem 1rem;
+      margin-right: 0.5rem;
+      border-radius: 6px;
+      border: none;
       cursor: pointer;
-      font-size: 0.9rem;
     }
 
-    #event-modal-actions button.primary {
-      background: var(--copper);
-      color: #000;
-    }
-
-    #event-modal-actions button.danger {
-      border-color: #922;
-      color: #f88;
-    }
-
-    #event-modal-actions button:hover {
-      background: rgba(184,115,51,0.25);
-      color: var(--copper);
-    }
-
-    #event-modal-actions button.danger:hover {
-      background: rgba(146,34,34,0.4);
-      color: #fff;
-    }
+    #event-save { background: var(--copper); color: #000; }
+    #event-delete { background: #900; color: #fff; }
+    #event-cancel { background: #333; color: #fff; }
   </style>
 </head>
 
 <body>
-<div class="overlay">
+<div class="calendar-container">
 
-<header class="rr-header">
-  <h1 class="cursive" style="font-size:3rem;">Calendar & Reminders</h1>
-  <p class="tagline cursive" style="font-size:1.4rem;">Lock in shows, releases, deadlines, and life.</p>
-
-  <button id="rr-menu-btn" class="rr-menu-btn">☰</button>
-
-  <nav class="rr-nav cursive">
-    <a href="index.html">Home</a>
-    <a href="manage.html">Manage</a>
-    <a href="calendar.html">Calendar</a>
-    <a href="rights-and-registration.html">Rights</a>
-    <a href="documents.html">Documents</a>
-    <a href="glossary.html">Glossary</a>
-  </nav>
-</header>
-
-<main class="rr-main">
-
-<section class="section-card">
   <div id="calendar-header">
-    <div id="calendar-header-left">
-      <button id="cal-today">Today</button>
-      <button id="cal-prev">&lt;</button>
-      <button id="cal-next">&gt;</button>
-      <span id="calendar-current-label"></span>
-    </div>
-    <div id="calendar-header-right">
-      <button data-view="month" id="cal-view-month">Month</button>
-      <button data-view="week" id="cal-view-week">Week</button>
-      <button id="cal-new-event">New Event</button>
-    </div>
+    <button id="cal-prev">&lt;</button>
+    <h2 id="calendar-current-label"></h2>
+    <button id="cal-next">&gt;</button>
   </div>
 
-  <div class="calendar-weekday-labels" id="calendar-weekday-labels"></div>
+  <div style="text-align:center; margin-bottom:1rem;">
+    <button id="cal-today">Today</button>
+    <button id="cal-view-month">Month</button>
+    <button id="cal-view-week">Week</button>
+    <button id="cal-new-event">New Event</button>
+  </div>
+
+  <div id="calendar-weekday-labels"></div>
   <div id="calendar-grid"></div>
-</section>
 
-<section class="section-card">
-  <h2 class="cursive" style="font-size:2rem;">Agenda</h2>
-  <p>All upcoming events in one list. Use this to double‑check your week before you move.</p>
-  <div id="agenda-list">
-    <p style="opacity:0.7;">No events yet. Add one from the calendar above.</p>
-  </div>
-</section>
+  <h3 style="margin-top:2rem; color:var(--copper);">Upcoming Agenda</h3>
+  <div id="agenda-list"></div>
 
-</main>
-</div>
-
-<!-- BURGER MENU PANEL -->
-<div id="rr-menu-panel" class="rr-menu-panel">
-  <a href="index.html">Home</a>
-  <a href="manage.html">Manage</a>
-  <a href="calendar.html">Calendar</a>
-  <a href="rights-and-registration.html">Rights</a>
-  <a href="documents.html">Documents</a>
-  <a href="glossary.html">Glossary</a>
 </div>
 
 <!-- EVENT MODAL -->
 <div id="event-modal">
-  <div id="event-modal-inner">
-    <h3 class="cursive">Event Details</h3>
+  <div id="event-modal-content">
+    <h3 style="color:var(--copper); margin-bottom:1rem;">Event Details</h3>
 
-    <label for="event-title">Title</label>
-    <input type="text" id="event-title" placeholder="Show at The Earl, Release Day, Studio Session..." />
+    <input id="event-title" placeholder="Title" />
+    <input id="event-date" type="date" />
+    <input id="event-start" type="time" />
+    <input id="event-end" type="time" />
 
-    <label for="event-date">Date</label>
-    <input type="date" id="event-date" />
-
-    <label for="event-start">Start Time</label>
-    <input type="time" id="event-start" />
-
-    <label for="event-end">End Time</label>
-    <input type="time" id="event-end" />
-
-    <label for="event-type">Type</label>
     <select id="event-type">
       <option value="general">General</option>
-      <option value="show">Show / Performance</option>
+      <option value="show">Show</option>
       <option value="release">Release</option>
-      <option value="meeting">Meeting / Call</option>
-      <option value="deadline">Deadline</option>
-      <option value="travel">Travel</option>
+      <option value="task">Task</option>
     </select>
 
-    <label for="event-notes">Notes</label>
-    <textarea id="event-notes" placeholder="Venue address, contact, fee, link, etc."></textarea>
+    <textarea id="event-notes" rows="3" placeholder="Notes..."></textarea>
 
-    <label>
+    <label style="display:flex;align-items:center;gap:0.5rem;">
       <input type="checkbox" id="event-reminder" />
-      Reminder (show in Upcoming Reminders on Manage page)
+      Reminder
     </label>
 
-    <div id="event-modal-actions">
+    <div style="margin-top:1rem;">
+      <button id="event-save">Save</button>
+      <button id="event-delete">Delete</button>
       <button id="event-cancel">Cancel</button>
-      <button id="event-delete" class="danger">Delete</button>
-      <button id="event-save" class="primary">Save</button>
     </div>
   </div>
 </div>
 
 <script src="assets/js/calendar.js"></script>
-<script>
-  document.getElementById("rr-menu-btn").addEventListener("click", () => {
-    document.getElementById("rr-menu-panel").classList.toggle("show");
-  });
-</script>
-
 </body>
 </html>
