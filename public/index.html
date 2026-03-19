@@ -1,65 +1,105 @@
-<div class="dropdown">
-        <div class="dropdown-header">Contracts, Red Flags, and Legal Protection</div>
-        <div class="dropdown-content">
-          <p>
-            Every artist eventually signs something — a split sheet, a beat lease, a management deal, a distribution agreement, or even a simple collaboration message. Understanding contracts isn’t optional; it’s survival. Most bad deals don’t look dangerous at first, and the biggest red flags are usually hidden in friendly language. When you know how to read terms, spot traps, and understand your rights, you protect your future royalties, your ownership, and your freedom as an artist. This section exists so you never walk into a deal blind again.
-          </p>
-          <a href="contracts.html" class="bubble-btn">Open Contracts Command</a>
-        </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Royalty Runner</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="favicon.ico" />
+</head>
+<body>
+
+<div id="rr-container">
+
+  <!-- NAVIGATION (ordered: Profile, Manage, Works, Docs, Glossary) -->
+  <header id="rr-header">
+    <button id="rr-menu-btn" aria-label="Open menu">☰</button>
+    <nav id="rr-nav">
+      <a href="profile.html">Profile</a>
+      <a href="manage.html">Manage</a>
+      <a href="works.html">Works</a>
+      <a href="documents.html">Docs</a>
+      <a href="glossary.html">Glossary</a>
+    </nav>
+    <h1 class="cursive">Royalty Runner</h1>
+  </header>
+
+  <main>
+
+    <!-- HERO / INTRO -->
+    <section id="intro" class="section-card">
+      <h2 class="cursive" style="font-size:2.4rem;">GET PAID FOR YOUR MUSIC</h2>
+
+      <p class="small-quote" style="font-size:1.05rem; margin-top:0.6rem; font-style:italic;">
+        You are supposed to get paid every time your music is played.
+      </p>
+
+      <p class="cursive" style="font-size:1.2rem; margin-top:0.9rem;">
+        For rappers, singers, producers, beatmakers, engineers, composers, and musicians of every kind.
+      </p>
+
+      <p style="margin-top:1rem;">
+        Most artists are not getting paid because the money has nowhere to land. Streams, placements, and performances
+        generate revenue — but without correct registrations and payment routing, those earnings never reach you.
+        Check the <a href="rights-and-registration.html">Rights & Registration</a> page to learn where royalties come from
+        and how to claim them.
+      </p>
+    </section>
+
+    <!-- ONE-LINE LIST (each header is one line; JS will inject full paragraph into the hidden content) -->
+    <section id="categories" class="section-card">
+
+      <div class="dropdown">
+        <div class="dropdown-header">Profile — Your identity, your info, your artist foundation.</div>
+        <div class="dropdown-content" id="profile-content" hidden></div>
       </div>
 
       <div class="dropdown">
-        <div class="dropdown-header">Your Works, Metadata, and Catalog</div>
-        <div class="dropdown-content">
-          <p>
-            Your catalog is your legacy — every song, stem, memo, lyric, and idea becomes part of the story you’re building. Artists lose money every day because their files are scattered, metadata is missing, or they can’t prove when something was created. Keeping your works organized, timestamped, and stored privately gives you control over your creativity and your business. When your catalog is clean, you can register songs faster, pitch confidently, and protect your ownership with real proof.
-          </p>
-          <a href="works.html" class="bubble-btn">Open Works Studio</a>
-        </div>
+        <div class="dropdown-header">Manage — Your tools, workflow, and release control center.</div>
+        <div class="dropdown-content" id="manage-content" hidden></div>
       </div>
 
       <div class="dropdown">
-        <div class="dropdown-header">Document Vault</div>
-        <div class="dropdown-content">
-          <p>
-            Every artist eventually collects important documents — contracts, invoices, agreements, EPKs, release forms, and legal proof of ownership. Losing even one of these can cost you money, opportunities, or protection. A secure offline vault keeps everything in one place, under your control, with no third‑party access. When you can instantly pull up any document, you move like a professional, protect your rights, and stay ready for managers, labels, lawyers, or collaborators.
-          </p>
-          <a href="documents.html" class="bubble-btn">Open Document Vault</a>
-        </div>
+        <div class="dropdown-header">Works — Songs, stems, metadata, and your catalog.</div>
+        <div class="dropdown-content" id="works-content" hidden></div>
+      </div>
+
+      <div class="dropdown">
+        <div class="dropdown-header">Docs — Contracts, invoices, release forms, and legal proof.</div>
+        <div class="dropdown-content" id="docs-content" hidden></div>
+      </div>
+
+      <div class="dropdown">
+        <div class="dropdown-header">Glossary — Industry terms explained in plain language.</div>
+        <div class="dropdown-content" id="glossary-content" hidden></div>
       </div>
 
     </section>
 
-    <!-- SUPPORT SECTION (UNCHANGED) -->
+    <!-- SUPPORT SECTION -->
     <section id="support" class="pay-section section-card">
       <h3 class="cursive" style="font-size:2rem;">Support Royalty Runner</h3>
 
-      <img src="assets/img/royal-qrcode.png" alt="Royalty Runner QR Code">
+      <img src="assets/img/royal-qrcode.png" alt="Royalty Runner QR Code" style="max-width:220px; display:block; margin-top:1rem;">
 
-      <p class="cursive" style="font-size:1.4rem; margin-top:1rem;">
+      <p class="cursive" style="font-size:1.2rem; margin-top:1rem;">
         Royalty Runner is a <strong>Pay What You Want</strong> app — built for the community, by the community.
       </p>
 
-      <p>
-        Your support keeps this project alive.  
-        It helps build new tools, expand the knowledge base, and bring <strong>Royalty Runner Online</strong> —  
-        a full cloud version for artists everywhere.
+      <p style="margin-top:0.75rem;">
+        Your support keeps this project alive and funds new tools, guides, and the full cloud version of Royalty Runner.
       </p>
 
-      <p>
-        This isn’t a corporation.  
-        This is one artist building the resource he wished he had —  
-        so no one else has to walk into the industry blind.
-      </p>
-
-      <p style="margin-top:1rem;">
-        <a href="https://www.paypal.com/ncp/payment/7ZRSKPQGURJD4" target="_blank">
-          PayPal – Support Royalty Runner
-        </a>
+      <p style="margin-top:0.75rem;">
+        <a href="https://www.paypal.com/ncp/payment/7ZRSKPQGURJD4" target="_blank" rel="noopener">PayPal – Support Royalty Runner</a>
       </p>
 
       <p style="margin-top:1rem; color:#ccc;">
-        Every contribution — big or small — helps build a safer, smarter future for independent artists.
+        Every contribution helps build a safer, smarter future for independent artists.
+      </p>
+
+      <p style="margin-top:1.25rem;">
+        <a href="big-plan.html" class="bubble-btn">View The Big Plan</a>
       </p>
     </section>
 
@@ -67,14 +107,14 @@
 
 </div>
 
-<!-- BURGER MENU (UNCHANGED) -->
-<div id="rr-menu-panel" class="rr-menu-panel">
+<!-- BURGER MENU PANEL -->
+<div id="rr-menu-panel" class="rr-menu-panel" hidden>
   <a href="index.html">Home</a>
   <a href="profile.html">Profile</a>
   <a href="manage.html">Manage</a>
+  <a href="works.html">Works</a>
   <a href="documents.html">Docs</a>
   <a href="glossary.html">Glossary</a>
-  <a href="works.html">Works</a>
   <a href="royalties.html">Royalties</a>
   <a href="rights-and-registration.html">Rights</a>
   <a href="law.html">Law</a>
@@ -83,18 +123,12 @@
   <a href="export.html">Export</a>
 </div>
 
-<script>
-  document.getElementById("rr-menu-btn").addEventListener("click", () => {
-    document.getElementById("rr-menu-panel").classList.toggle("show");
-  });
+<!-- FOOTER / COPYRIGHT -->
+<footer id="rr-footer" style="text-align:center; padding:1.5rem 0; color:#888;">
+  <p style="margin:0.25rem 0;">© <span id="copyright-year"></span> Royalty Runner</p>
+</footer>
 
-  document.querySelectorAll(".dropdown-header").forEach(header => {
-    header.addEventListener("click", () => {
-      const content = header.nextElementSibling;
-      content.style.display = content.style.display === "block" ? "none" : "block";
-    });
-  });
-</script>
-
+<!-- external index.js will inject dropdown paragraphs and handle toggles -->
+<script src="index.js" defer></script>
 </body>
 </html>
