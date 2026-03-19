@@ -1,52 +1,8 @@
-// Royalty Runner – Documents Vault Engine (v2)
-let db;
-const DB_NAME = "RoyaltyRunnerDB";
-const DB_VERSION = 5;
-const STORE_NAME = "documents";
+// Royalty Runner – Documents Vault Engine (v3, unified with RRDB)
 
-const request = indexedDB.open(DB_NAME, DB_VERSION);
+const DOC_STORE = "documents";
 
-// UPGRADE DB
-request.onupgradeneeded = (e) => {
-  db = e.target.result;
-
-  let store;
-  if (!db.objectStoreNames.contains(STORE_NAME)) {
-    store = db.createObjectStore(STORE_NAME, { keyPath: "id", autoIncrement: true });
-  } else {
-    store = e.target.transaction.objectStore(STORE_NAME);
-  }
-
-  if (!store.indexNames.contains("name"))   store.createIndex("name", "name", { unique: false });
-  if (!store.indexNames.contains("type"))   store.createIndex("type", "type", { unique: false });
-  if (!store.indexNames.contains("folder")) store.createIndex("folder", "folder", { unique: false });
-  if (!store.indexNames.contains("date"))   store.createIndex("date", "date", { unique: false });
-};
-
-request.onsuccess = (e) => {
-  db = e.target.result;
-  wireUI();
-  loadDocuments();
-};
-
-request.onerror = () => console.error("IndexedDB failed.");
-
-// ---------- CORE HELPERS ----------
-
-function saveDocument(doc) {
-  const tx = db.transaction(STORE_NAME, "readwrite");
-  tx.objectStore(STORE_NAME).add(doc);
-}
-
-function updateDocument(doc) {
-  const tx = db.transaction(STORE_NAME, "readwrite");
-  tx.objectStore(STORE_NAME).put(doc);
-}
-
-function getDocument(id, cb) {
-  const tx = db.transaction(STORE_NAME, "readonly");
-  tx.objectStore(STORE_NAME).get(id).onsuccess = (e) => cb(e.target.result);
-}
+// ---------- TYPE HELPERS ----------
 
 function detectType(name) {
   const lower = name.toLowerCase();
@@ -71,6 +27,25 @@ function isTextLike(mimeOrName) {
   );
 }
 
+// ---------- CORE HELPERS (via RRDB) ----------
+
+function saveDocument(doc) {
+  // autoIncrement id handled by DB; addToStore returns new id
+  return window.RRDB.addToStore(DOC_STORE, doc);
+}
+
+function updateDocument(doc) {
+  return window.RRDB.saveToStore(DOC_STORE, doc);
+}
+
+function getDocument(id, cb) {
+  window.RRDB.getFromStore(DOC_STORE, id).then(cb);
+}
+
+function deleteDocRecord(id) {
+  return window.RRDB.deleteFromStore(DOC_STORE, id);
+}
+
 // ---------- UI WIRING ----------
 
 function wireUI() {
@@ -89,28 +64,33 @@ function wireUI() {
       return;
     }
 
-    [...files].forEach(file => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const now = new Date();
-        const doc = {
-          name: file.name,
-          type: detectType(file.name),
-          folder: "Uploads",
-          content: reader.result,          // Data URL
-          mime: file.type || "",
-          date: now.toLocaleString(),
-          timestamp: now.getTime(),
-          tags: ["upload"]
+    const now = new Date();
+
+    const promises = [...files].map(file => {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const doc = {
+            name: file.name,
+            type: detectType(file.name),
+            folder: "Uploads",
+            content: reader.result,          // Data URL
+            mime: file.type || "",
+            date: now.toLocaleString(),
+            timestamp: now.getTime(),
+            tags: ["upload"]
+          };
+          saveDocument(doc).then(resolve).catch(resolve);
         };
-        saveDocument(doc);
-      };
-      reader.readAsDataURL(file);
+        reader.readAsDataURL(file);
+      });
     });
 
-    alert("Saved to Documents Vault.");
-    uploadInput.value = "";
-    loadDocuments();
+    Promise.all(promises).then(() => {
+      alert("Saved to Documents Vault.");
+      uploadInput.value = "";
+      loadDocuments();
+    });
   });
 
   // Folder filter
@@ -145,28 +125,29 @@ function loadDocuments() {
 
   list.innerHTML = "";
 
-  const tx = db.transaction(STORE_NAME, "readonly");
-  const store = tx.objectStore(STORE_NAME);
+  window.RRDB.openDB().then((db) => {
+    const tx = db.transaction(DOC_STORE, "readonly");
+    const store = tx.objectStore(DOC_STORE);
 
-  const docs = [];
-  store.openCursor().onsuccess = (e) => {
-    const cursor = e.target.result;
-    if (!cursor) {
-      // sort newest first
-      docs.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-      docs.forEach(renderDocCard);
-      return;
-    }
+    const docs = [];
+    store.openCursor().onsuccess = (e) => {
+      const cursor = e.target.result;
+      if (!cursor) {
+        docs.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+        docs.forEach(renderDocCard);
+        return;
+      }
 
-    const doc = cursor.value;
-    if (folderFilter !== "all" && doc.folder !== folderFilter) {
+      const doc = cursor.value;
+      if (folderFilter !== "all" && doc.folder !== folderFilter) {
+        cursor.continue();
+        return;
+      }
+
+      docs.push(doc);
       cursor.continue();
-      return;
-    }
-
-    docs.push(doc);
-    cursor.continue();
-  };
+    };
+  });
 }
 
 function renderDocCard(doc) {
@@ -176,7 +157,6 @@ function renderDocCard(doc) {
   card.className = "doc-card";
 
   const tags = (doc.tags || []).map(t => `<span class="tag">${t}</span>`).join("");
-
   const signedLabel = (doc.tags || []).includes("signed") ? " (Signed)" : "";
 
   card.innerHTML = `
@@ -221,10 +201,9 @@ function previewDoc(id) {
 
     titleEl.textContent = doc.name;
 
-    // If it's a text-like Data URL, show decoded text; otherwise show a note
     if (typeof doc.content === "string" && doc.content.startsWith("data:")) {
       const commaIndex = doc.content.indexOf(",");
-      const meta = doc.content.substring(5, commaIndex); // e.g. text/plain;base64
+      const meta = doc.content.substring(5, commaIndex);
       const base64 = doc.content.substring(commaIndex + 1);
 
       if (isTextLike(meta)) {
@@ -337,8 +316,7 @@ function markSigned(id) {
     doc.tags = doc.tags || [];
     if (!doc.tags.includes("signed")) {
       doc.tags.push("signed");
-      updateDocument(doc);
-      loadDocuments();
+      updateDocument(doc).then(() => loadDocuments());
     }
   });
 }
@@ -347,10 +325,7 @@ function markSigned(id) {
 
 function deleteDoc(id) {
   if (!confirm("Delete this document from your Documents Vault?")) return;
-
-  const tx = db.transaction(STORE_NAME, "readwrite");
-  tx.objectStore(STORE_NAME).delete(id);
-  tx.oncomplete = () => loadDocuments();
+  deleteDocRecord(id).then(() => loadDocuments());
 }
 
 // ---------- RECEIVE CONTRACTS FROM CONTRACTS PAGE ----------
@@ -363,13 +338,21 @@ window.addEventListener("message", (event) => {
     name: event.data.name || "Contract Draft",
     type: event.data.type || "Contract",
     folder: "Contracts",
-    content: event.data.contractText, // plain text from Contracts page
+    content: event.data.contractText,
     mime: "text/plain",
     date: now.toLocaleString(),
     timestamp: now.getTime(),
     tags: ["contract", event.data.type || "Contract"]
   };
 
-  saveDocument(doc);
-  loadDocuments();
+  saveDocument(doc).then(() => loadDocuments());
+});
+
+// ---------- INIT ----------
+
+document.addEventListener("DOMContentLoaded", () => {
+  window.RRDB.openDB().then(() => {
+    wireUI();
+    loadDocuments();
+  });
 });
