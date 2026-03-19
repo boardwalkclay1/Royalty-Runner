@@ -1,81 +1,83 @@
-// Inject HTML
-document.getElementById("voice-module").innerHTML = `
-  <h2 class="cursive" style="font-size:1.8rem;">Voice Recorder</h2>
-
-  <div id="record-btn" class="record-btn">●</div>
-  <div id="voice-status" style="color:var(--copper-light);">Ready</div>
-  <div id="voice-timer" style="color:var(--copper-light); margin-bottom:1rem;">00:00</div>
-
-  <input id="voice-title" placeholder="Title" style="width:100%; margin-bottom:1rem;" />
-
-  <audio id="voice-playback" controls style="display:none; margin-top:1rem;"></audio>
-
-  <button id="voice-save" disabled style="margin-top:1rem;">Save to Catalog</button>
-`;
-
-let rec = false;
-let chunks = [];
-let recObj = null;
-let start = 0;
-let timer = null;
-let blob = null;
-
-const recordBtn = document.getElementById("record-btn");
-const voiceStatus = document.getElementById("voice-status");
-const voiceTimer = document.getElementById("voice-timer");
-const voicePlayback = document.getElementById("voice-playback");
-const voiceSave = document.getElementById("voice-save");
-const voiceTitle = document.getElementById("voice-title");
+// Voice recorder — save recordings into RRDB (works store)
+// Replace the existing recordBtn.onclick and voiceSave.onclick with this block
 
 recordBtn.onclick = async () => {
-  if (!rec) {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    recObj = new MediaRecorder(stream);
-    chunks = [];
+  try {
+    if (!rec) {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      recObj = new MediaRecorder(stream);
+      chunks = [];
 
-    recObj.ondataavailable = e => chunks.push(e.data);
+      recObj.ondataavailable = (e) => chunks.push(e.data);
 
-    recObj.onstop = () => {
-      blob = new Blob(chunks, { type: "audio/webm" });
-      const url = URL.createObjectURL(blob);
-      voicePlayback.src = url;
-      voicePlayback.style.display = "block";
-      voiceSave.disabled = false;
-    };
+      recObj.onstop = () => {
+        blob = new Blob(chunks, { type: "audio/webm" });
+        const url = URL.createObjectURL(blob);
+        voicePlayback.src = url;
+        voicePlayback.style.display = "block";
+        voiceSave.disabled = false;
+      };
 
-    recObj.start();
-    rec = true;
-    start = Date.now();
+      recObj.start();
+      rec = true;
+      start = Date.now();
 
-    timer = setInterval(() => {
-      voiceTimer.textContent = rrFormatTime((Date.now() - start) / 1000);
-    }, 500);
+      timer = setInterval(() => {
+        voiceTimer.textContent = rrFormatTime((Date.now() - start) / 1000);
+      }, 500);
 
-    recordBtn.classList.add("recording");
-    voiceStatus.textContent = "Recording...";
-  } else {
-    recObj.stop();
-    rec = false;
-    clearInterval(timer);
-    recordBtn.classList.remove("recording");
-    voiceStatus.textContent = "Stopped";
+      recordBtn.classList.add("recording");
+      voiceStatus.textContent = "Recording...";
+    } else {
+      if (recObj && recObj.state !== "inactive") recObj.stop();
+      rec = false;
+      clearInterval(timer);
+      recordBtn.classList.remove("recording");
+      voiceStatus.textContent = "Stopped";
+    }
+  } catch (err) {
+    console.error("Microphone error", err);
+    voiceStatus.textContent = "Microphone unavailable";
   }
 };
 
 voiceSave.onclick = () => {
+  if (!blob) return alert("No recording to save.");
   const reader = new FileReader();
   reader.onloadend = () => {
-    rrAddWork({
-      id: "work_" + Date.now(),
-      type: "audio",
-      title: voiceTitle.value || "Untitled",
-      createdAt: Date.now(),
-      audioBase64: reader.result,
-      duration: voiceTimer.textContent
-    });
+    const dataUrl = reader.result;
 
-    voiceStatus.textContent = "Saved to Catalog";
-    voiceSave.disabled = true;
+    const work = {
+      // let saveWork generate id if needed
+      title: voiceTitle.value && voiceTitle.value.trim() ? voiceTitle.value.trim() : "Untitled Recording",
+      type: "audio",
+      createdAt: Date.now(),
+      audioBase64: dataUrl,
+      duration: voiceTimer.textContent,
+      // optional metadata for catalog
+      progress: {},
+      tags: ["recording"]
+    };
+
+    const saveFn =
+      window.RRDB && typeof window.RRDB.saveWork === "function"
+        ? window.RRDB.saveWork(work)
+        : (window.RRDB && window.RRDB.addToStore && window.RRDB.STORES && window.RRDB.STORES.WORKS
+            ? window.RRDB.addToStore(window.RRDB.STORES.WORKS, work)
+            : Promise.reject(new Error("RRDB API not available")));
+
+    saveFn
+      .then(() => {
+        voiceStatus.textContent = "Saved to Catalog";
+        voiceSave.disabled = true;
+        // optional: clear title and timer if you want
+        // voiceTitle.value = "";
+        // voiceTimer.textContent = "00:00";
+      })
+      .catch((err) => {
+        console.error("Save failed", err);
+        alert("Unable to save recording.");
+      });
   };
   reader.readAsDataURL(blob);
 };
