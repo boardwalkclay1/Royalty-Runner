@@ -1,19 +1,19 @@
 /* ============================================================
-   ROYALTY RUNNER — CALENDAR ENGINE (ALIGNED WITH RRDB)
-   Uses unified DB: RoyaltyRunnerDB / store: calendar / version: 5
+   ROYALTY RUNNER — CALENDAR ENGINE (UNIFIED, RRDB-ALIGNED)
+   Single file: uses window.RRDB (RoyaltyRunnerDB, store: "calendar")
    ============================================================ */
 
 const STORE = "calendar";
 
-/* ===== HELPERS (use RRDB) ===== */
+/* ===== SAFE HELPERS (use RRDB) ===== */
 function getEvents() {
-  return window.RRDB.getAllFromStore(STORE).then(list => list || []);
+  if (!window.RRDB || !window.RRDB.getAllFromStore) return Promise.resolve([]);
+  return window.RRDB.getAllFromStore(STORE).then(list => list || []).catch(() => []);
 }
 
 function saveEvent(ev) {
   if (ev == null) return Promise.reject(new Error("No event"));
-  // if id exists, use saveToStore; otherwise addToStore to get auto id
-  if (ev.id !== undefined && ev.id !== null) {
+  if (ev.id !== undefined && ev.id !== null && ev.id !== "") {
     return window.RRDB.saveToStore(STORE, ev).then(() => ev.id);
   } else {
     return window.RRDB.addToStore(STORE, ev);
@@ -29,9 +29,24 @@ function getEventById(id) {
 }
 
 /* ===== DATE HELPERS ===== */
-const ymd = d => new Date(d).toISOString().slice(0, 10);
-const parseYmd = s => { const [y,m,d]=s.split("-").map(Number); return new Date(y,m-1,d); };
-const sameDay = (a,b) => a.getFullYear()==b.getFullYear() && a.getMonth()==b.getMonth() && a.getDate()==b.getDate();
+const ymd = d => {
+  const dt = (d instanceof Date) ? d : new Date(d);
+  return dt.toISOString().slice(0, 10);
+};
+const parseYmd = s => {
+  if (!s) return new Date(NaN);
+  const parts = String(s).split("-").map(Number);
+  if (parts.length !== 3) return new Date(s);
+  return new Date(parts[0], parts[1] - 1, parts[2]);
+};
+const sameDay = (a, b) => {
+  const A = (a instanceof Date) ? a : new Date(a);
+  const B = (b instanceof Date) ? b : new Date(b);
+  return A.getFullYear() === B.getFullYear() && A.getMonth() === B.getMonth() && A.getDate() === B.getDate();
+};
+function escapeHtml(str) {
+  return String(str || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
 
 /* ===== STATE ===== */
 let current = new Date();
@@ -78,14 +93,19 @@ async function renderMonth() {
         <span class="date-number">${day}</span>
       </div>
       <div class="calendar-events">
-        ${dayEvents.map(ev => `<div class="calendar-event-pill" data-id="${ev.id}">${ev.title || ""}</div>`).join("")}
+        ${dayEvents.map(ev => `<div class="calendar-event-pill" data-id="${escapeHtml(ev.id)}">${escapeHtml(ev.title || "")}</div>`).join("")}
       </div>
     `;
 
-    cell.addEventListener("click", () => openModal({ date: dateStr }));
+    cell.addEventListener("click", (e) => {
+      if (e.target.closest && e.target.closest(".calendar-event-pill")) return;
+      openModal({ date: dateStr });
+    });
+
     grid.appendChild(cell);
   }
 
+  attachPillHandlers();
   renderAgenda(events);
 }
 
@@ -118,23 +138,32 @@ async function renderWeek() {
         <span class="date-number">${d.getDate()}</span>
       </div>
       <div class="calendar-events">
-        ${dayEvents.map(ev => `<div class="calendar-event-pill" data-id="${ev.id}">${ev.title || ""}</div>`).join("")}
+        ${dayEvents.map(ev => `<div class="calendar-event-pill" data-id="${escapeHtml(ev.id)}">${escapeHtml(ev.title || "")}</div>`).join("")}
       </div>
     `;
 
-    cell.addEventListener("click", () => openModal({ date: dateStr }));
+    cell.addEventListener("click", (e) => {
+      if (e.target.closest && e.target.closest(".calendar-event-pill")) return;
+      openModal({ date: dateStr });
+    });
+
     grid.appendChild(cell);
   }
 
+  attachPillHandlers();
   renderAgenda(events);
 }
 
 function renderAgenda(events) {
   const list = document.getElementById("agenda-list");
   if (!list) return;
+  const todayStr = new Date().toISOString().slice(0,10);
   const upcoming = (events || [])
-    .filter(e => parseYmd(e.date) >= new Date(new Date().toISOString().slice(0,10)))
-    .sort((a,b) => parseYmd(a.date) - parseYmd(b.date));
+    .filter(e => {
+      const d = String(e.date || "");
+      return d >= todayStr;
+    })
+    .sort((a,b) => String(a.date).localeCompare(String(b.date)));
 
   if (!upcoming.length) {
     list.innerHTML = `<p style="opacity:0.7;">No events yet.</p>`;
@@ -144,12 +173,12 @@ function renderAgenda(events) {
   list.innerHTML = upcoming.map(ev => `
     <div class="agenda-item">
       <div class="agenda-main">
-        <div class="agenda-title">${ev.title || ""}</div>
-        <div class="agenda-meta">${ev.date}</div>
+        <div class="agenda-title">${escapeHtml(ev.title || "")}</div>
+        <div class="agenda-meta">${escapeHtml(ev.date || "")}</div>
       </div>
       <div class="agenda-actions">
-        <button class="agenda-edit" data-id="${ev.id}">Edit</button>
-        <button class="agenda-del" data-id="${ev.id}">Del</button>
+        <button class="agenda-edit" data-id="${escapeHtml(ev.id)}">Edit</button>
+        <button class="agenda-del" data-id="${escapeHtml(ev.id)}">Del</button>
       </div>
     </div>
   `).join("");
@@ -158,14 +187,31 @@ function renderAgenda(events) {
   list.querySelectorAll(".agenda-edit").forEach(btn => {
     btn.addEventListener("click", (e) => {
       const id = Number(e.currentTarget.getAttribute("data-id"));
+      if (Number.isNaN(id)) return;
       getEventById(id).then(ev => { if (ev) { fillModal(ev); document.getElementById("event-modal").style.display = "flex"; } });
     });
   });
   list.querySelectorAll(".agenda-del").forEach(btn => {
     btn.addEventListener("click", (e) => {
       const id = Number(e.currentTarget.getAttribute("data-id"));
+      if (Number.isNaN(id)) return;
       deleteEvent(id).then(() => refresh()).catch(err => console.error(err));
     });
+  });
+}
+
+/* ===== PILL HANDLERS ===== */
+function attachPillHandlers() {
+  document.querySelectorAll(".calendar-event-pill").forEach(pill => {
+    pill.removeEventListener("click", pill._rr_click);
+    const handler = (e) => {
+      const id = Number(pill.getAttribute("data-id"));
+      if (Number.isNaN(id)) return;
+      getEventById(id).then(ev => { if (ev) { fillModal(ev); document.getElementById("event-modal").style.display = "flex"; } });
+      e.stopPropagation();
+    };
+    pill._rr_click = handler;
+    pill.addEventListener("click", handler);
   });
 }
 
@@ -247,7 +293,7 @@ function next() {
 function goToday() { current = new Date(); refresh(); }
 function setMonthView() { view = "month"; refresh(); }
 function setWeekView() { view = "week"; refresh(); }
-function newEvent() { openModal({}); }
+function newEvent() { openModal({ date: ymd(new Date()) }); }
 
 /* ===== REFRESH ===== */
 function refresh() {
@@ -257,14 +303,12 @@ function refresh() {
 
 /* ===== INIT BINDINGS ===== */
 document.addEventListener("DOMContentLoaded", () => {
-  // ensure RRDB is ready
   if (!window.RRDB || !window.RRDB.openDB) {
     console.error("RRDB not available");
     return;
   }
 
   window.RRDB.openDB().then(() => {
-    // wire buttons (guard existence)
     const el = id => document.getElementById(id);
     if (el("cal-prev")) el("cal-prev").onclick = prev;
     if (el("cal-next")) el("cal-next").onclick = next;
@@ -280,7 +324,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (el("event-cancel")) el("event-cancel").onclick = closeModal;
     if (el("event-delete")) el("event-delete").onclick = onDeleteFromModal;
 
-    // delegate clicks on event pills to open edit
     document.addEventListener("click", (e) => {
       const pill = e.target.closest && e.target.closest(".calendar-event-pill");
       if (pill) {
