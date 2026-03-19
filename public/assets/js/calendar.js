@@ -1,5 +1,5 @@
 /* assets/js/calendar.js
-   Minimal, robust calendar that uses window.RRDB when available.
+   Clean, self-contained calendar client that uses window.RRDB when available.
    Store name: "calendar"
    Date format: YYYY-MM-DD (strings)
 */
@@ -15,15 +15,17 @@
   function ensureDBOpen(timeout = 3000) {
     return new Promise((resolve) => {
       if (!rrdbAvailable()) return resolve(false);
-      let done = false;
-      window.RRDB.openDB().then(() => { done = true; resolve(true); }).catch(() => { done = true; resolve(false); });
-      setTimeout(() => { if (!done) resolve(false); }, timeout);
+      let finished = false;
+      window.RRDB.openDB().then(() => { finished = true; resolve(true); }).catch(() => { finished = true; resolve(false); });
+      setTimeout(() => { if (!finished) resolve(false); }, timeout);
     });
   }
 
   function getAllEvents() {
-    if (rrdbAvailable() && window.RRDB.getAllFromStore) return window.RRDB.getAllFromStore(STORE).then(r => r || []).catch(() => []);
-    return Promise.resolve([]); // fallback: empty
+    if (rrdbAvailable() && window.RRDB.getAllFromStore) {
+      return window.RRDB.getAllFromStore(STORE).then(r => r || []).catch(() => []);
+    }
+    return Promise.resolve([]);
   }
 
   function addEventToDB(ev) {
@@ -47,16 +49,18 @@
   }
 
   /* ---------- Utilities ---------- */
-  const ymd = d => {
+  const ymd = (d) => {
     const dt = (d instanceof Date) ? d : new Date(d);
     return dt.toISOString().slice(0, 10);
   };
+
   const sameDay = (a, b) => {
     const A = (a instanceof Date) ? a : new Date(a);
     const B = (b instanceof Date) ? b : new Date(b);
     return A.getFullYear() === B.getFullYear() && A.getMonth() === B.getMonth() && A.getDate() === B.getDate();
   };
-  const escapeHtml = s => String(s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+  const escapeHtml = (s) => String(s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
   /* ---------- State ---------- */
   let current = new Date();
@@ -70,7 +74,7 @@
     if (!grid || !label || !weekdays) return;
 
     grid.innerHTML = "";
-    weekdays.innerHTML = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].map(d => `<div>${d}</div>`).join("");
+    weekdays.innerHTML = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(d => `<div>${d}</div>`).join("");
 
     const events = await getAllEvents();
     const year = current.getFullYear();
@@ -97,12 +101,14 @@
       cell.className = "calendar-cell";
       if (sameDay(d, new Date())) cell.classList.add("today");
 
-      const pills = dayEvents.map(ev => `<div class="calendar-event-pill" data-id="${escapeHtml(ev.id)}">${escapeHtml(ev.title || "")}</div>`).join("");
+      const pills = dayEvents.map(ev => {
+        const id = escapeHtml(ev.id);
+        const title = escapeHtml(ev.title || "");
+        return `<div class="calendar-event-pill" data-id="${id}">${title}</div>`;
+      }).join("");
 
-      cell.innerHTML = `
-        <div class="calendar-cell-header"><span class="date-number">${day}</span></div>
-        <div class="calendar-events">${pills}</div>
-      `;
+      cell.innerHTML = '<div class="calendar-cell-header"><span class="date-number">' + day + '</span></div>' +
+                       '<div class="calendar-events">' + pills + '</div>';
 
       cell.addEventListener("click", (e) => {
         if (e.target.closest && e.target.closest(".calendar-event-pill")) return;
@@ -123,7 +129,7 @@
     if (!grid || !label || !weekdays) return;
 
     grid.innerHTML = "";
-    weekdays.innerHTML = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].map(d => `<div>${d}</div>`).join("");
+    weekdays.innerHTML = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(d => `<div>${d}</div>`).join("");
 
     const events = await getAllEvents();
     const start = new Date(current);
@@ -140,12 +146,14 @@
       cell.className = "calendar-cell";
       if (sameDay(d, new Date())) cell.classList.add("today");
 
-      const pills = dayEvents.map(ev => `<div class="calendar-event-pill" data-id="${escapeHtml(ev.id)}">${escapeHtml(ev.title || "")}</div>`).join("");
+      const pills = dayEvents.map(ev => {
+        const id = escapeHtml(ev.id);
+        const title = escapeHtml(ev.title || "");
+        return `<div class="calendar-event-pill" data-id="${id}">${title}</div>`;
+      }).join("");
 
-      cell.innerHTML = `
-        <div class="calendar-cell-header"><span class="date-number">${d.getDate()}</span></div>
-        <div class="calendar-events">${pills}</div>
-      `;
+      cell.innerHTML = '<div class="calendar-cell-header"><span class="date-number">' + d.getDate() + '</span></div>' +
+                       '<div class="calendar-events">' + pills + '</div>';
 
       cell.addEventListener("click", (e) => {
         if (e.target.closest && e.target.closest(".calendar-event-pill")) return;
@@ -162,26 +170,23 @@
   function renderAgenda(events) {
     const list = document.getElementById("agenda-list");
     if (!list) return;
-    const todayStr = new Date().toISOString().slice(0,10);
-    const upcoming = (events || []).filter(e => String(e.date || "") >= todayStr).sort((a,b) => String(a.date).localeCompare(String(b.date)));
+    const todayStr = new Date().toISOString().slice(0, 10);
+    const upcoming = (events || []).filter(e => String(e.date || "") >= todayStr).sort((a, b) => String(a.date).localeCompare(String(b.date)));
 
     if (!upcoming.length) {
-      list.innerHTML = `<p style="opacity:0.7">No events yet.</p>`;
+      list.innerHTML = '<p style="opacity:0.7">No events yet.</p>';
       return;
     }
 
-    list.innerHTML = upcoming.map(ev => `
-      <div class="agenda-item">
-        <div>
-          <div class="agenda-title">${escapeHtml(ev.title || "")}</div>
-          <div class="agenda-meta">${escapeHtml(ev.date || "")} ${ev.startTime ? "• " + escapeHtml(ev.startTime) : ""}</div>
-        </div>
-        <div>
-          <button class="agenda-edit" data-id="${escapeHtml(ev.id)}">Edit</button>
-          <button class="agenda-del" data-id="${escapeHtml(ev.id)}">Del</button>
-        </div>
-      </div>
-    `).join("");
+    list.innerHTML = upcoming.map(ev => {
+      const id = escapeHtml(ev.id);
+      const title = escapeHtml(ev.title || "");
+      const meta = escapeHtml(ev.date || "") + (ev.startTime ? ' • ' + escapeHtml(ev.startTime) : '');
+      return '<div class="agenda-item">' +
+               '<div><div class="agenda-title">' + title + '</div><div class="agenda-meta">' + meta + '</div></div>' +
+               '<div><button class="agenda-edit" data-id="' + id + '">Edit</button> <button class="agenda-del" data-id="' + id + '">Del</button></div>' +
+             '</div>';
+    }).join('');
 
     list.querySelectorAll(".agenda-edit").forEach(btn => {
       btn.addEventListener("click", (e) => {
