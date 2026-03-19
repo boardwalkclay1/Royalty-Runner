@@ -8,19 +8,19 @@
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="assets/css/style.css" />
+  <!-- Main stylesheet (updated to index.css) -->
+  <link rel="stylesheet" href="index.css" />
   <link rel="icon" href="favicon.ico" />
 
   <style>
     :root{
-      --royal-orange: #ff8c42; /* bright royal orange */
-      --royal-copper: #b87333; /* fallback copper tone */
+      --royal-orange: #ff8c42;
+      --royal-copper: #b87333;
       --bg-dark: #0b0b0b;
       --muted-white: #f6f6f6;
       --accent-white: #ffffff;
     }
 
-    /* Make the hero heading readable and elegant */
     #intro .cursive {
       font-family: "Playfair Display", "Dancing Script", serif;
       font-weight: 700;
@@ -31,7 +31,6 @@
       margin: 0;
     }
 
-    /* Make the small quote more prominent and append the new sentence visually */
     .small-quote {
       font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
       color: var(--muted-white);
@@ -43,7 +42,6 @@
       max-width: 60ch;
     }
 
-    /* Emphasize the added sentence in the quote */
     .small-quote .extra {
       display:block;
       margin-top:0.6rem;
@@ -54,7 +52,6 @@
       letter-spacing:0.3px;
     }
 
-    /* Links: royal style with orange and subtle flourish */
     a {
       color: var(--royal-orange);
       text-decoration: none;
@@ -68,7 +65,6 @@
       outline: none;
     }
 
-    /* Make plain white words more unique: headings and section labels */
     #categories .dropdown-header {
       font-family: "Playfair Display", serif;
       color: var(--accent-white);
@@ -86,12 +82,10 @@
       display: none;
     }
 
-    /* When JS toggles, show block */
     #categories .dropdown-content.show {
       display: block;
     }
 
-    /* Royal style list for the dropdown items (orange cursive) */
     .royal-list {
       display: flex;
       gap: 1rem;
@@ -109,7 +103,6 @@
       font-size: 1rem;
     }
 
-    /* Musicians side-by-side list styling */
     .musicians-row {
       display: flex;
       gap: 1rem;
@@ -130,14 +123,12 @@
       letter-spacing:0.4px;
     }
 
-    /* Make the Docs/Glossary list royal style orange cursive */
     .dropdown .dropdown-content.royal {
       color: var(--royal-orange);
       font-family: "Dancing Script", cursive;
       font-size: 1.05rem;
     }
 
-    /* Ensure overall page contrast and spacing remain consistent */
     body {
       background: var(--bg-dark);
       color: #ddd;
@@ -147,7 +138,6 @@
       -moz-osx-font-smoothing:grayscale;
     }
 
-    /* Small responsive tweaks */
     @media (max-width:720px) {
       .musicians-row { flex-direction: column; }
       .musicians-row .musician { width:100%; }
@@ -159,23 +149,20 @@
 
 <div id="rr-container">
 
-  <!-- NAVIGATION (ordered: Profile, Manage, Works, Docs, Glossary) -->
-  <header id="rr-header">
-    <button id="rr-menu-btn" aria-label="Open menu">☰</button>
-    <nav id="rr-nav">
+  <header id="rr-header" style="display:flex; align-items:center; gap:1rem; padding:1rem; border-bottom:1px solid rgba(255,255,255,0.04);">
+    <button id="rr-menu-btn" aria-label="Open menu" style="background:transparent;border:0;color:var(--royal-orange);font-size:1.2rem;">☰</button>
+    <nav id="rr-nav" style="display:flex; gap:1rem;">
       <a href="profile.html">Profile</a>
       <a href="manage.html">Manage</a>
       <a href="works.html">Works</a>
       <a href="documents.html">Docs</a>
       <a href="glossary.html">Glossary</a>
     </nav>
-    <h1 class="cursive">Royalty Runner</h1>
+    <h1 class="cursive" style="margin-left:auto;">Royalty Runner</h1>
   </header>
 
-  <main>
-
-    <!-- HERO / INTRO -->
-    <section id="intro" class="section-card">
+  <main style="padding:1.25rem; display:grid; grid-template-columns: 1fr; gap:1rem; max-width:1100px; margin:0 auto;">
+    <section id="intro" class="section-card" style="padding:1rem; background:linear-gradient(180deg, rgba(255,140,66,0.08), rgba(0,0,0,0.02)); border-radius:8px;">
       <h2 class="cursive" style="font-size:2.4rem;">GET PAID FOR YOUR MUSIC</h2>
 
       <p class="small-quote" style="font-size:1.05rem; margin-top:0.6rem;">
@@ -194,7 +181,6 @@
         and how to claim them.
       </p>
 
-      <!-- Musicians side-by-side list (next to each other) -->
       <div class="musicians-row" aria-label="Musicians list">
         <div class="musician">Rapper</div>
         <div class="musician">Singer</div>
@@ -205,9 +191,7 @@
       </div>
     </section>
 
-    <!-- ONE-LINE LIST (each header is one line; JS will inject full paragraph into the hidden content) -->
-    <section id="categories" class="section-card">
-
+    <section id="categories" class="section-card" style="display:grid; gap:0.75rem;">
       <div class="dropdown">
         <div class="dropdown-header">Profile — Your identity, your info, your artist foundation.</div>
         <div class="dropdown-content royal" id="profile-content" hidden>
@@ -252,11 +236,9 @@
           </div>
         </div>
       </div>
-
     </section>
 
-    <!-- SUPPORT SECTION -->
-    <section id="support" class="pay-section section-card">
+    <section id="support" class="pay-section section-card" style="padding:1rem; border-radius:8px;">
       <h3 class="cursive" style="font-size:2rem;">Support Royalty Runner</h3>
 
       <img src="assets/img/royal-qrcode.png" alt="Royalty Runner QR Code" style="max-width:220px; display:block; margin-top:1rem;">
@@ -278,56 +260,39 @@
       </p>
 
       <p style="margin-top:1.25rem;">
-        <a href="big-plan.html" class="bubble-btn">View The Big Plan</a>
+        <a href="big-plan.html" class="bubble-btn" style="background:var(--royal-orange); color:#111; padding:.5rem .75rem; border-radius:6px; text-decoration:none;">View The Big Plan</a>
       </p>
     </section>
-
   </main>
-
 </div>
 
-<!-- BURGER MENU PANEL -->
-<div id="rr-menu-panel" class="rr-menu-panel">
-  <a href="index.html">Home</a>
-  <a href="profile.html">Profile</a>
-  <a href="manage.html">Manage</a>
-  <a href="works.html">Works</a>
-  <a href="documents.html">Docs</a>
-  <a href="glossary.html">Glossary</a>
-  <a href="royalties.html">Royalties</a>
-  <a href="rights-and-registration.html">Rights</a>
-  <a href="law.html">Law</a>
-  <a href="contracts.html">Contracts</a>
-  <a href="protection.html">Protection</a>
-  <a href="export.html">Export</a>
+<div id="rr-menu-panel" class="rr-menu-panel" style="position:fixed; right:0; top:0; background:#111; color:#fff; padding:1rem; display:none;">
+  <a href="index.html">Home</a><br/>
+  <a href="profile.html">Profile</a><br/>
+  <a href="manage.html">Manage</a><br/>
+  <a href="works.html">Works</a><br/>
+  <a href="documents.html">Docs</a><br/>
+  <a href="glossary.html">Glossary</a><br/>
+  <a href="royalties.html">Royalties</a><br/>
+  <a href="rights-and-registration.html">Rights</a><br/>
+  <a href="law.html">Law</a><br/>
+  <a href="contracts.html">Contracts</a><br/>
+  <a href="protection.html">Protection</a><br/>
+  <a href="export.html">Export</a><br/>
 </div>
 
-<!-- FOOTER / COPYRIGHT -->
 <footer id="rr-footer" style="text-align:center; padding:1.5rem 0; color:#888;">
   <p style="margin:0.25rem 0;">© <span id="copyright-year"></span> Royalty Runner</p>
 </footer>
 
 <!-- external index.js will inject dropdown paragraphs and handle toggles -->
+<script src="index.js" defer></script>
 <script>
-  // Simple dropdown toggle to reveal the royal-style content (keeps original behavior)
-  document.addEventListener("DOMContentLoaded", () => {
-    document.querySelectorAll("#categories .dropdown-header").forEach(h => {
-      h.addEventListener("click", () => {
-        const content = h.nextElementSibling;
-        if (!content) return;
-        content.classList.toggle("show");
-        // keep the hidden attribute in sync for accessibility
-        if (content.classList.contains("show")) content.hidden = false;
-        else content.hidden = true;
-      });
-    });
-
-    // set copyright year
-    const y = new Date().getFullYear();
-    document.getElementById("copyright-year").textContent = y;
+  // small runtime: set copyright year
+  document.addEventListener('DOMContentLoaded', () => {
+    const el = document.getElementById('copyright-year');
+    if (el) el.textContent = new Date().getFullYear();
   });
 </script>
-
-<script src="assets/js/index.js" defer></script>
 </body>
 </html>
