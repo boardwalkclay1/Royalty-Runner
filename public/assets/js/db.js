@@ -2,7 +2,7 @@
 
 (function () {
   const DB_NAME = "RoyaltyRunnerDB";
-  const DB_VERSION = 3; // bumped version to add calendar + ui_state
+  const DB_VERSION = 5; // unified version for calendar + ui_state + documents
 
   const STORES = {
     PROFILE: "profile",
@@ -38,9 +38,12 @@
           store.createIndex("by_createdAt", "createdAt", { unique: false });
         }
 
-        // DOCUMENTS
+        // DOCUMENTS (FIXED: autoIncrement so docs.js can omit id)
         if (!db.objectStoreNames.contains(STORES.DOCUMENTS)) {
-          db.createObjectStore(STORES.DOCUMENTS, { keyPath: "id" });
+          db.createObjectStore(STORES.DOCUMENTS, {
+            keyPath: "id",
+            autoIncrement: true,
+          });
         }
 
         // CONTRACTS
@@ -58,14 +61,14 @@
           db.createObjectStore(STORES.CHECKLIST, { keyPath: "id" });
         }
 
-        // CALENDAR (NEW)
+        // CALENDAR
         if (!db.objectStoreNames.contains(STORES.CALENDAR)) {
           const store = db.createObjectStore(STORES.CALENDAR, { keyPath: "id" });
           store.createIndex("by_date", "date", { unique: false });
           store.createIndex("by_type", "type", { unique: false });
         }
 
-        // UI_STATE (NEW) – for things like glossary tab, filters, last page state
+        // UI_STATE
         if (!db.objectStoreNames.contains(STORES.UI_STATE)) {
           db.createObjectStore(STORES.UI_STATE, { keyPath: "id" });
         }
@@ -88,6 +91,17 @@
         tx.objectStore(storeName).put(data);
         tx.oncomplete = () => resolve(true);
         tx.onerror = () => reject(tx.error);
+      });
+    });
+  }
+
+  function addToStore(storeName, data) {
+    return openDB().then((db) => {
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(storeName, "readwrite");
+        const req = tx.objectStore(storeName).add(data);
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error);
       });
     });
   }
@@ -125,7 +139,7 @@
     });
   }
 
-  // PROFILE HELPERS
+  // PROFILE
   function saveProfile(profile) {
     profile.id = "artist_profile";
     profile.aka = profile.aka || "";
@@ -141,7 +155,7 @@
     return deleteFromStore(STORES.PROFILE, "artist_profile");
   }
 
-  // WORKS HELPERS
+  // WORKS
   function createWorkId() {
     return "work_" + Date.now() + "_" + Math.random().toString(16).slice(2);
   }
@@ -190,7 +204,7 @@
     });
   }
 
-  // CHECKLIST HELPERS
+  // CHECKLIST
   function saveChecklist(checklist) {
     checklist.id = "protection_checklist";
     return saveToStore(STORES.CHECKLIST, checklist);
@@ -210,7 +224,7 @@
     });
   }
 
-  // CALENDAR HELPERS (NEW)
+  // CALENDAR
   function createCalendarEventId() {
     return "cal_" + Date.now() + "_" + Math.random().toString(16).slice(2);
   }
@@ -228,14 +242,16 @@
     return deleteFromStore(STORES.CALENDAR, id);
   }
 
-  // UI STATE HELPERS (NEW) – e.g. glossary tab, filters, last page
+  // UI STATE
   function saveUIState(key, value) {
     const record = { id: key, value };
     return saveToStore(STORES.UI_STATE, record);
   }
 
   function getUIState(key) {
-    return getFromStore(STORES.UI_STATE, key).then((record) => record ? record.value : null);
+    return getFromStore(STORES.UI_STATE, key).then((record) =>
+      record ? record.value : null
+    );
   }
 
   // EXPOSE GLOBALS
@@ -243,6 +259,7 @@
     STORES,
     openDB,
     saveToStore,
+    addToStore,
     getAllFromStore,
     getFromStore,
     deleteFromStore,
