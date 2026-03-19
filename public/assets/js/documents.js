@@ -1,200 +1,23 @@
-// Royalty Runner – Documents Vault Engine (v3, unified with RRDB)
-
-const DOC_STORE = "documents";
-
-// ---------- TYPE HELPERS ----------
-
-function detectType(name) {
-  const lower = name.toLowerCase();
-  if (lower.includes("split"))    return "Split Sheet";
-  if (lower.includes("producer")) return "Producer Agreement";
-  if (lower.includes("record"))   return "Recording Agreement";
-  if (lower.includes("manage"))   return "Management Agreement";
-  if (lower.includes("public"))   return "Publicist Agreement";
-  if (lower.includes("hire"))     return "Work for Hire";
-  if (lower.includes("sync"))     return "Sync License";
-  return "General Document";
-}
-
-function isTextLike(mimeOrName) {
-  if (!mimeOrName) return false;
-  const lower = mimeOrName.toLowerCase();
-  return (
-    lower.startsWith("text/") ||
-    lower.endsWith(".txt") ||
-    lower.endsWith(".md") ||
-    lower.endsWith(".json")
-  );
-}
+// Replace these functions in your documents.js (use Promise-based RRDB API and consistent callers)
 
 // ---------- CORE HELPERS (via RRDB) ----------
-
 function saveDocument(doc) {
-  // autoIncrement id handled by DB; addToStore returns new id
   return window.RRDB.addToStore(DOC_STORE, doc);
 }
-
 function updateDocument(doc) {
   return window.RRDB.saveToStore(DOC_STORE, doc);
 }
-
-function getDocument(id, cb) {
-  window.RRDB.getFromStore(DOC_STORE, id).then(cb);
+function getDocument(id) {
+  return window.RRDB.getFromStore(DOC_STORE, id); // returns Promise
 }
-
 function deleteDocRecord(id) {
   return window.RRDB.deleteFromStore(DOC_STORE, id);
 }
 
-// ---------- UI WIRING ----------
-
-function wireUI() {
-  const saveBtn      = document.getElementById("save-docs");
-  const uploadInput  = document.getElementById("doc-upload");
-  const folderFilter = document.getElementById("folder-filter");
-  const searchInput  = document.getElementById("doc-search");
-  const modal        = document.getElementById("doc-modal");
-  const modalClose   = document.getElementById("doc-modal-close");
-
-  // Save uploaded files
-  saveBtn.addEventListener("click", () => {
-    const files = uploadInput.files;
-    if (!files.length) {
-      alert("Upload a file first.");
-      return;
-    }
-
-    const now = new Date();
-
-    const promises = [...files].map(file => {
-      return new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onload = () => {
-          const doc = {
-            name: file.name,
-            type: detectType(file.name),
-            folder: "Uploads",
-            content: reader.result,          // Data URL
-            mime: file.type || "",
-            date: now.toLocaleString(),
-            timestamp: now.getTime(),
-            tags: ["upload"]
-          };
-          saveDocument(doc).then(resolve).catch(resolve);
-        };
-        reader.readAsDataURL(file);
-      });
-    });
-
-    Promise.all(promises).then(() => {
-      alert("Saved to Documents Vault.");
-      uploadInput.value = "";
-      loadDocuments();
-    });
-  });
-
-  // Folder filter
-  folderFilter.addEventListener("change", loadDocuments);
-
-  // Search
-  searchInput.addEventListener("input", () => {
-    const term = searchInput.value.toLowerCase();
-    const cards = document.querySelectorAll(".doc-card");
-    cards.forEach(card => {
-      const text = card.textContent.toLowerCase();
-      card.style.display = text.includes(term) ? "block" : "none";
-    });
-  });
-
-  // Modal close
-  modalClose.addEventListener("click", () => {
-    modal.style.display = "none";
-  });
-
-  // Click outside modal content to close
-  modal.addEventListener("click", (e) => {
-    if (e.target === modal) modal.style.display = "none";
-  });
-}
-
-// ---------- LOAD & RENDER ----------
-
-function loadDocuments() {
-  const list = document.getElementById("documents-list");
-  const folderFilter = document.getElementById("folder-filter").value;
-
-  list.innerHTML = "";
-
-  window.RRDB.openDB().then((db) => {
-    const tx = db.transaction(DOC_STORE, "readonly");
-    const store = tx.objectStore(DOC_STORE);
-
-    const docs = [];
-    store.openCursor().onsuccess = (e) => {
-      const cursor = e.target.result;
-      if (!cursor) {
-        docs.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-        docs.forEach(renderDocCard);
-        return;
-      }
-
-      const doc = cursor.value;
-      if (folderFilter !== "all" && doc.folder !== folderFilter) {
-        cursor.continue();
-        return;
-      }
-
-      docs.push(doc);
-      cursor.continue();
-    };
-  });
-}
-
-function renderDocCard(doc) {
-  const list = document.getElementById("documents-list");
-
-  const card = document.createElement("div");
-  card.className = "doc-card";
-
-  const tags = (doc.tags || []).map(t => `<span class="tag">${t}</span>`).join("");
-  const signedLabel = (doc.tags || []).includes("signed") ? " (Signed)" : "";
-
-  card.innerHTML = `
-    <h4>${doc.name}${signedLabel}</h4>
-    <div class="doc-meta">${doc.type} • ${doc.folder} • ${doc.date}</div>
-    ${tags}
-    <div style="margin-top:0.5rem;">
-      <button class="bubble-btn" data-action="open" data-id="${doc.id}">Open</button>
-      <button class="bubble-btn" data-action="email" data-id="${doc.id}">Email</button>
-      <button class="bubble-btn" data-action="print" data-id="${doc.id}">Print</button>
-      <button class="bubble-btn" data-action="signed" data-id="${doc.id}" style="background:#0b7;">Mark Signed</button>
-      <button class="bubble-btn" data-action="delete" data-id="${doc.id}" style="background:#922;">Delete</button>
-    </div>
-  `;
-
-  card.addEventListener("click", (e) => {
-    const btn = e.target.closest("button");
-    if (!btn) return;
-
-    const id = Number(btn.getAttribute("data-id"));
-    const action = btn.getAttribute("data-action");
-
-    if (action === "open")   previewDoc(id);
-    if (action === "delete") deleteDoc(id);
-    if (action === "email")  emailDoc(id);
-    if (action === "print")  printDoc(id);
-    if (action === "signed") markSigned(id);
-  });
-
-  list.appendChild(card);
-}
-
-// ---------- PREVIEW / EMAIL / PRINT / SIGN ----------
-
+// ---------- PREVIEW / EMAIL / PRINT / SIGN (Promise-based) ----------
 function previewDoc(id) {
-  getDocument(id, (doc) => {
+  getDocument(id).then(doc => {
     if (!doc) return;
-
     const modal      = document.getElementById("doc-modal");
     const titleEl    = document.getElementById("doc-modal-title");
     const bodyEl     = document.getElementById("doc-modal-body");
@@ -221,11 +44,11 @@ function previewDoc(id) {
     }
 
     modal.style.display = "flex";
-  });
+  }).catch(err => console.error('previewDoc error', err));
 }
 
 function emailDoc(id) {
-  getDocument(id, (doc) => {
+  getDocument(id).then(doc => {
     if (!doc) return;
 
     let body = "";
@@ -252,11 +75,11 @@ function emailDoc(id) {
     const mailBody = encodeURIComponent(body);
 
     window.location.href = `mailto:?subject=${subject}&body=${mailBody}`;
-  });
+  }).catch(err => console.error('emailDoc error', err));
 }
 
 function printDoc(id) {
-  getDocument(id, (doc) => {
+  getDocument(id).then(doc => {
     if (!doc) return;
 
     let printable = "";
@@ -280,8 +103,10 @@ function printDoc(id) {
     }
 
     const title = doc.name || "Document";
-
     const win = window.open("", "_blank");
+    if (!win) return alert("Popup blocked. Allow popups to print.");
+
+    const safePrintable = String(printable).replace(/</g, "&lt;").replace(/>/g, "&gt;");
     win.document.write(`
       <html>
       <head>
@@ -292,67 +117,60 @@ function printDoc(id) {
             white-space: pre-wrap;
             padding: 2rem;
           }
-          h1 {
-            text-align: center;
-            margin-bottom: 1.5rem;
-          }
+          h1 { text-align: center; margin-bottom: 1.5rem; }
         </style>
       </head>
       <body>
         <h1>${title}</h1>
-        <pre>${printable.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</pre>
+        <pre>${safePrintable}</pre>
       </body>
       </html>
     `);
     win.document.close();
     win.focus();
-    win.print();
-  });
+    // small delay to ensure content loads before print
+    setTimeout(() => win.print(), 250);
+  }).catch(err => console.error('printDoc error', err));
 }
 
 function markSigned(id) {
-  getDocument(id, (doc) => {
+  getDocument(id).then(doc => {
     if (!doc) return;
     doc.tags = doc.tags || [];
     if (!doc.tags.includes("signed")) {
       doc.tags.push("signed");
-      updateDocument(doc).then(() => loadDocuments());
+      updateDocument(doc).then(() => loadDocuments()).catch(err => console.error(err));
     }
-  });
+  }).catch(err => console.error('markSigned error', err));
 }
 
 // ---------- DELETE ----------
-
 function deleteDoc(id) {
   if (!confirm("Delete this document from your Documents Vault?")) return;
-  deleteDocRecord(id).then(() => loadDocuments());
+  deleteDocRecord(id).then(() => loadDocuments()).catch(err => console.error('deleteDoc error', err));
 }
 
-// ---------- RECEIVE CONTRACTS FROM CONTRACTS PAGE ----------
+// ---------- LOAD & RENDER (use RRDB helper) ----------
+function loadDocuments() {
+  const list = document.getElementById("documents-list");
+  const folderFilter = document.getElementById("folder-filter").value;
+  list.innerHTML = "";
 
-window.addEventListener("message", (event) => {
-  if (!event.data || !event.data.contractText) return;
-
-  const now = new Date();
-  const doc = {
-    name: event.data.name || "Contract Draft",
-    type: event.data.type || "Contract",
-    folder: "Contracts",
-    content: event.data.contractText,
-    mime: "text/plain",
-    date: now.toLocaleString(),
-    timestamp: now.getTime(),
-    tags: ["contract", event.data.type || "Contract"]
-  };
-
-  saveDocument(doc).then(() => loadDocuments());
-});
+  window.RRDB.getAllFromStore(DOC_STORE).then(allDocs => {
+    const docs = allDocs
+      .filter(doc => folderFilter === "all" ? true : doc.folder === folderFilter)
+      .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+    docs.forEach(renderDocCard);
+  }).catch(err => {
+    console.error('loadDocuments error', err);
+    list.innerHTML = `<p style="opacity:0.7;">Unable to load documents.</p>`;
+  });
+}
 
 // ---------- INIT ----------
-
 document.addEventListener("DOMContentLoaded", () => {
   window.RRDB.openDB().then(() => {
     wireUI();
     loadDocuments();
-  });
+  }).catch(err => console.error('RRDB open error', err));
 });
