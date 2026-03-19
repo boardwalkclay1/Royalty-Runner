@@ -199,3 +199,40 @@ button, [role="button"], a { touch-action:manipulation; }
 /* --- Utility --- */
 .hidden { display:none !important; }
 .center { text-align:center; }
+/* Make all previously white/muted-white text use royal copper, except dropdown content */
+:root{
+  --royal-copper: #b87333;
+  --royal-orange: #ff8c42;
+}
+
+/* Base override: replace bright/white text with copper */
+body, body * {
+  color: var(--royal-copper) !important;
+}
+
+/* Preserve dropdowns (middle list) as the orange/cursive style */
+.dropdown-content,
+.dropdown-content * ,
+.royal-list,
+.royal-list * {
+  color: var(--royal-orange) !important;
+  font-family: "Dancing Script", cursive !important;
+}
+
+/* Keep links styled as orange cursive */
+a { color: var(--royal-orange) !important; }
+
+/* Ensure headings remain copper and prominent */
+.cursive, h1, h2, h3, h4 { color: var(--royal-copper) !important; }
+
+/* Inputs, placeholders, and modal body readable in copper */
+input, textarea, select, ::placeholder, #doc-modal-body { color: var(--royal-copper) !important; }
+
+/* Buttons remain copper background with black text */
+button, .bubble-btn {
+  background: linear-gradient(180deg, var(--royal-copper), #c08a52) !important;
+  color: #0b0b0b !important;
+}
+
+/* Exception class to force black text where needed */
+.text-black, .text-black * { color: #0b0b0b !important; }
