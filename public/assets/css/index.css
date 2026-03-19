@@ -236,3 +236,89 @@ button, .bubble-btn {
 
 /* Exception class to force black text where needed */
 .text-black, .text-black * { color: #0b0b0b !important; }
+/* --- Force white/muted text to royal copper except dropdown content --- */
+:root {
+  --royal-copper: #b87333;
+  --royal-orange: #ff8c42;
+}
+
+/* Replace bright/white text with copper across the page */
+body, body * {
+  color: var(--royal-copper) !important;
+}
+
+/* Preserve dropdown content (orange cursive) */
+.dropdown-content,
+.dropdown-content *,
+.royal-list,
+.royal-list * {
+  color: var(--royal-orange) !important;
+  font-family: "Dancing Script", cursive !important;
+}
+
+/* Dropdown header styling (one-line label) */
+.dropdown-header {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:0.5rem;
+  cursor:pointer;
+  padding:0.5rem 0;
+  border-bottom:1px dashed rgba(184,115,51,0.06);
+  font-weight:700;
+  color:var(--royal-copper) !important;
+}
+
+/* Descriptive paragraph inside dropdown content */
+.dropdown-content .desc {
+  display:block;
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  color: var(--royal-copper);
+  background: rgba(184,115,51,0.03);
+  border-left: 3px solid rgba(184,115,51,0.12);
+  padding:0.6rem 0.9rem;
+  margin-top:0.5rem;
+  border-radius:6px;
+  line-height:1.45;
+  max-width:60ch;
+}
+
+/* Keep the royal-list chips visible below the description */
+.dropdown-content .royal-list {
+  margin-top:0.6rem;
+}
+
+/* Smooth open/close animation */
+.dropdown-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 260ms ease, opacity 200ms ease;
+  opacity: 0;
+}
+.dropdown-content.show {
+  opacity: 1;
+  max-height: 400px; /* enough for description + chips */
+}
+
+/* Small caret indicator on header */
+.dropdown-header::after {
+  content: "▾";
+  font-size:0.9rem;
+  color: var(--royal-copper);
+  transition: transform 200ms ease;
+}
+.dropdown-header[aria-expanded="true"]::after {
+  transform: rotate(-180deg);
+}
+
+/* Ensure links remain orange cursive */
+a { color: var(--royal-orange) !important; }
+
+/* Keep inputs and modal body readable in copper */
+input, textarea, select, ::placeholder, #doc-modal-body { color: var(--royal-copper) !important; }
+
+/* Buttons: copper background, black text */
+button, .bubble-btn {
+  background: linear-gradient(180deg, var(--royal-copper), #c08a52) !important;
+  color: #0b0b0b !important;
+}
