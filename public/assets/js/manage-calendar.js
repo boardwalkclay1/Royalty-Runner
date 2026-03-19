@@ -1,29 +1,24 @@
 /* ============================================================
-   ROYALTY RUNNER – MANAGE CALENDAR ENGINE (FULL REBUILD)
+   ROYALTY RUNNER – MANAGE CALENDAR ENGINE (SYNCED WITH db.js)
    ============================================================ */
 
 /* ===== DB CONFIG ===== */
-const DB_NAME = "RoyaltyRunner_CalendarDB";
-const STORE = "events";
+const DB_NAME = "RoyaltyRunnerDB";
+const STORE = "calendar";
+const DB_VERSION = 5;
 let db = null;
 
 /* ===== INIT DB ===== */
 function initDB() {
-  return new Promise(res => {
-    const req = indexedDB.open(DB_NAME, 1);
+  return new Promise((res, rej) => {
+    const req = indexedDB.open(DB_NAME, DB_VERSION);
 
     req.onupgradeneeded = e => {
-      const db = e.target.result;
-
-      // Create store if missing
-      if (!db.objectStoreNames.contains(STORE)) {
-        const s = db.createObjectStore(STORE, {
-          keyPath: "id",
-          autoIncrement: true
-        });
-
-        s.createIndex("date", "date", { unique: false });
-        s.createIndex("reminder", "reminder", { unique: false });
+      const dbu = e.target.result;
+      if (!dbu.objectStoreNames.contains(STORE)) {
+        const s = dbu.createObjectStore(STORE, { keyPath: "id" });
+        s.createIndex("by_date", "date", { unique: false });
+        s.createIndex("by_type", "type", { unique: false });
       }
     };
 
@@ -31,11 +26,14 @@ function initDB() {
       db = e.target.result;
       res();
     };
+
+    req.onerror = e => rej(e.target.error);
   });
 }
 
 /* ===== STORE ACCESSOR ===== */
 function store(mode = "readonly") {
+  if (!db) throw new Error("DB not initialized");
   return db.transaction(STORE, mode).objectStore(STORE);
 }
 
@@ -43,14 +41,14 @@ function store(mode = "readonly") {
 function getEvents() {
   return new Promise(res => {
     const out = [];
-    const cursor = store().openCursor();
-
-    cursor.onsuccess = e => {
+    const cursorReq = store().openCursor();
+    cursorReq.onsuccess = e => {
       const cur = e.target.result;
       if (!cur) return res(out);
       out.push(cur.value);
       cur.continue();
     };
+    cursorReq.onerror = () => res(out);
   });
 }
 
@@ -142,4 +140,6 @@ document.getElementById("mini-next-week").onclick = () => {
 initDB().then(() => {
   renderMini();
   renderReminders();
+}).catch(err => {
+  console.error('Calendar DB init failed', err);
 });
