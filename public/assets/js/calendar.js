@@ -1,299 +1,300 @@
-/* assets/js/calendar.js
-   Clean, self-contained calendar client that uses window.RRDB when available.
-   Store name: "calendar"
-   Date format: YYYY-MM-DD (strings)
+/* calendar.js — Royalty Runner calendar module (fixed, syntax-checked)
+   Uses window.RRDB store "calendar" and guards DOM/DB availability.
 */
 
-(function () {
-  const STORE = "calendar";
+const STORE = "calendar";
 
-  /* ---------- RRDB wrappers with safe fallbacks ---------- */
-  function rrdbAvailable() {
-    return !!(window.RRDB && typeof window.RRDB.openDB === "function");
+/* Helpers using RRDB */
+function getEvents() {
+  if (!window.RRDB || !window.RRDB.getAllFromStore) return Promise.resolve([]);
+  return window.RRDB.getAllFromStore(STORE).then(list => list || []).catch(() => []);
+}
+
+function saveEvent(ev) {
+  if (!window.RRDB) return Promise.reject(new Error("RRDB not available"));
+  if (ev == null) return Promise.reject(new Error("No event"));
+  if (ev.id !== undefined && ev.id !== null) {
+    return window.RRDB.saveToStore(STORE, ev).then(() => ev.id);
+  } else {
+    return window.RRDB.addToStore(STORE, ev);
+  }
+}
+
+function deleteEvent(id) {
+  if (!window.RRDB) return Promise.reject(new Error("RRDB not available"));
+  return window.RRDB.deleteFromStore(STORE, id);
+}
+
+function getEventById(id) {
+  if (!window.RRDB) return Promise.reject(new Error("RRDB not available"));
+  return window.RRDB.getFromStore(STORE, id);
+}
+
+/* Date helpers */
+const ymd = d => new Date(d).toISOString().slice(0, 10);
+const parseYmd = s => { const [y,m,d] = String(s).split("-").map(Number); return new Date(y, m - 1, d); };
+const sameDay = (a, b) => a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+
+/* State */
+let current = new Date();
+let view = "month";
+
+/* Render month view */
+async function renderMonth() {
+  const grid = document.getElementById("calendar-grid");
+  const label = document.getElementById("calendar-current-label");
+  const weekdays = document.getElementById("calendar-weekday-labels");
+  if (!grid || !label || !weekdays) return;
+
+  grid.innerHTML = "";
+  weekdays.innerHTML = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].map(d => `<div>${d}</div>`).join("");
+
+  const events = await getEvents();
+  const year = current.getFullYear();
+  const month = current.getMonth();
+  const firstDay = new Date(year, month, 1);
+  const lastDay = new Date(year, month + 1, 0);
+  const totalDays = lastDay.getDate();
+
+  label.textContent = current.toLocaleString("default", { month: "long", year: "numeric" });
+
+  const blanks = firstDay.getDay();
+  for (let i = 0; i < blanks; i++) {
+    const blank = document.createElement("div");
+    blank.className = "calendar-cell empty-cell";
+    grid.appendChild(blank);
   }
 
-  function ensureDBOpen(timeout = 3000) {
-    return new Promise((resolve) => {
-      if (!rrdbAvailable()) return resolve(false);
-      let finished = false;
-      window.RRDB.openDB().then(() => { finished = true; resolve(true); }).catch(() => { finished = true; resolve(false); });
-      setTimeout(() => { if (!finished) resolve(false); }, timeout);
-    });
-  }
+  for (let day = 1; day <= totalDays; day++) {
+    const d = new Date(year, month, day);
+    const dateStr = ymd(d);
+    const dayEvents = events.filter(e => String(e.date) === dateStr);
 
-  function getAllEvents() {
-    if (rrdbAvailable() && window.RRDB.getAllFromStore) {
-      return window.RRDB.getAllFromStore(STORE).then(r => r || []).catch(() => []);
-    }
-    return Promise.resolve([]);
-  }
+    const cell = document.createElement("div");
+    cell.className = "calendar-cell";
+    if (sameDay(d, new Date())) cell.classList.add("today");
 
-  function addEventToDB(ev) {
-    if (rrdbAvailable() && window.RRDB.addToStore) return window.RRDB.addToStore(STORE, ev);
-    return Promise.reject(new Error("DB unavailable"));
-  }
+    const header = document.createElement("div");
+    header.className = "calendar-cell-header";
+    const num = document.createElement("span");
+    num.className = "date-number";
+    num.textContent = String(day);
+    header.appendChild(num);
 
-  function saveEventToDB(ev) {
-    if (rrdbAvailable() && window.RRDB.saveToStore) return window.RRDB.saveToStore(STORE, ev);
-    return Promise.reject(new Error("DB unavailable"));
-  }
-
-  function deleteEventFromDB(id) {
-    if (rrdbAvailable() && window.RRDB.deleteFromStore) return window.RRDB.deleteFromStore(STORE, id);
-    return Promise.reject(new Error("DB unavailable"));
-  }
-
-  function getEventFromDB(id) {
-    if (rrdbAvailable() && window.RRDB.getFromStore) return window.RRDB.getFromStore(STORE, id);
-    return Promise.resolve(null);
-  }
-
-  /* ---------- Utilities ---------- */
-  const ymd = (d) => {
-    const dt = (d instanceof Date) ? d : new Date(d);
-    return dt.toISOString().slice(0, 10);
-  };
-
-  const sameDay = (a, b) => {
-    const A = (a instanceof Date) ? a : new Date(a);
-    const B = (b instanceof Date) ? b : new Date(b);
-    return A.getFullYear() === B.getFullYear() && A.getMonth() === B.getMonth() && A.getDate() === B.getDate();
-  };
-
-  const escapeHtml = (s) => String(s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-
-  /* ---------- State ---------- */
-  let current = new Date();
-  let view = "month";
-
-  /* ---------- Rendering ---------- */
-  async function renderMonth() {
-    const grid = document.getElementById("calendar-grid");
-    const label = document.getElementById("calendar-current-label");
-    const weekdays = document.getElementById("calendar-weekday-labels");
-    if (!grid || !label || !weekdays) return;
-
-    grid.innerHTML = "";
-    weekdays.innerHTML = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(d => `<div>${d}</div>`).join("");
-
-    const events = await getAllEvents();
-    const year = current.getFullYear();
-    const month = current.getMonth();
-    const firstDay = new Date(year, month, 1);
-    const lastDay = new Date(year, month + 1, 0);
-    const totalDays = lastDay.getDate();
-
-    label.textContent = current.toLocaleString("default", { month: "long", year: "numeric" });
-
-    const blanks = firstDay.getDay();
-    for (let i = 0; i < blanks; i++) {
-      const blank = document.createElement("div");
-      blank.className = "calendar-cell empty-cell";
-      grid.appendChild(blank);
-    }
-
-    for (let day = 1; day <= totalDays; day++) {
-      const d = new Date(year, month, day);
-      const dateStr = ymd(d);
-      const dayEvents = events.filter(e => String(e.date) === dateStr);
-
-      const cell = document.createElement("div");
-      cell.className = "calendar-cell";
-      if (sameDay(d, new Date())) cell.classList.add("today");
-
-      const pills = dayEvents.map(ev => {
-        const id = escapeHtml(ev.id);
-        const title = escapeHtml(ev.title || "");
-        return `<div class="calendar-event-pill" data-id="${id}">${title}</div>`;
-      }).join("");
-
-      cell.innerHTML = '<div class="calendar-cell-header"><span class="date-number">' + day + '</span></div>' +
-                       '<div class="calendar-events">' + pills + '</div>';
-
-      cell.addEventListener("click", (e) => {
-        if (e.target.closest && e.target.closest(".calendar-event-pill")) return;
-        openModal({ date: dateStr });
-      });
-
-      grid.appendChild(cell);
-    }
-
-    attachPillHandlers();
-    renderAgenda(events);
-  }
-
-  async function renderWeek() {
-    const grid = document.getElementById("calendar-grid");
-    const label = document.getElementById("calendar-current-label");
-    const weekdays = document.getElementById("calendar-weekday-labels");
-    if (!grid || !label || !weekdays) return;
-
-    grid.innerHTML = "";
-    weekdays.innerHTML = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(d => `<div>${d}</div>`).join("");
-
-    const events = await getAllEvents();
-    const start = new Date(current);
-    start.setDate(start.getDate() - start.getDay());
-    label.textContent = `Week of ${start.toLocaleDateString()}`;
-
-    for (let i = 0; i < 7; i++) {
-      const d = new Date(start);
-      d.setDate(start.getDate() + i);
-      const dateStr = ymd(d);
-      const dayEvents = events.filter(e => String(e.date) === dateStr);
-
-      const cell = document.createElement("div");
-      cell.className = "calendar-cell";
-      if (sameDay(d, new Date())) cell.classList.add("today");
-
-      const pills = dayEvents.map(ev => {
-        const id = escapeHtml(ev.id);
-        const title = escapeHtml(ev.title || "");
-        return `<div class="calendar-event-pill" data-id="${id}">${title}</div>`;
-      }).join("");
-
-      cell.innerHTML = '<div class="calendar-cell-header"><span class="date-number">' + d.getDate() + '</span></div>' +
-                       '<div class="calendar-events">' + pills + '</div>';
-
-      cell.addEventListener("click", (e) => {
-        if (e.target.closest && e.target.closest(".calendar-event-pill")) return;
-        openModal({ date: dateStr });
-      });
-
-      grid.appendChild(cell);
-    }
-
-    attachPillHandlers();
-    renderAgenda(events);
-  }
-
-  function renderAgenda(events) {
-    const list = document.getElementById("agenda-list");
-    if (!list) return;
-    const todayStr = new Date().toISOString().slice(0, 10);
-    const upcoming = (events || []).filter(e => String(e.date || "") >= todayStr).sort((a, b) => String(a.date).localeCompare(String(b.date)));
-
-    if (!upcoming.length) {
-      list.innerHTML = '<p style="opacity:0.7">No events yet.</p>';
-      return;
-    }
-
-    list.innerHTML = upcoming.map(ev => {
-      const id = escapeHtml(ev.id);
-      const title = escapeHtml(ev.title || "");
-      const meta = escapeHtml(ev.date || "") + (ev.startTime ? ' • ' + escapeHtml(ev.startTime) : '');
-      return '<div class="agenda-item">' +
-               '<div><div class="agenda-title">' + title + '</div><div class="agenda-meta">' + meta + '</div></div>' +
-               '<div><button class="agenda-edit" data-id="' + id + '">Edit</button> <button class="agenda-del" data-id="' + id + '">Del</button></div>' +
-             '</div>';
-    }).join('');
-
-    list.querySelectorAll(".agenda-edit").forEach(btn => {
-      btn.addEventListener("click", (e) => {
-        const id = Number(e.currentTarget.getAttribute("data-id"));
-        if (Number.isNaN(id)) return;
-        getEventFromDB(id).then(ev => { if (ev) { fillModal(ev); openModal(); } });
-      });
+    const eventsWrap = document.createElement("div");
+    eventsWrap.className = "calendar-events";
+    dayEvents.forEach(ev => {
+      const pill = document.createElement("div");
+      pill.className = "calendar-event-pill";
+      pill.setAttribute("data-id", String(ev.id));
+      pill.textContent = ev.title || "";
+      eventsWrap.appendChild(pill);
     });
 
-    list.querySelectorAll(".agenda-del").forEach(btn => {
-      btn.addEventListener("click", (e) => {
-        const id = Number(e.currentTarget.getAttribute("data-id"));
-        if (Number.isNaN(id)) return;
-        deleteEventFromDB(id).then(() => refresh()).catch(err => console.error(err));
-      });
-    });
+    cell.appendChild(header);
+    cell.appendChild(eventsWrap);
+
+    cell.addEventListener("click", () => openModal({ date: dateStr }));
+    grid.appendChild(cell);
   }
 
-  /* ---------- Pill handlers ---------- */
-  function attachPillHandlers() {
-    document.querySelectorAll(".calendar-event-pill").forEach(pill => {
-      pill.onclick = (e) => {
-        e.stopPropagation();
-        const id = Number(pill.getAttribute("data-id"));
-        if (Number.isNaN(id)) return;
-        getEventFromDB(id).then(ev => { if (ev) { fillModal(ev); openModal(); } });
-      };
+  renderAgenda(events);
+}
+
+/* Render week view */
+async function renderWeek() {
+  const grid = document.getElementById("calendar-grid");
+  const label = document.getElementById("calendar-current-label");
+  const weekdays = document.getElementById("calendar-weekday-labels");
+  if (!grid || !label || !weekdays) return;
+
+  grid.innerHTML = "";
+  weekdays.innerHTML = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].map(d => `<div>${d}</div>`).join("");
+
+  const events = await getEvents();
+  const start = new Date(current);
+  start.setDate(start.getDate() - start.getDay());
+  label.textContent = `Week of ${start.toLocaleDateString()}`;
+
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(start);
+    d.setDate(start.getDate() + i);
+    const dateStr = ymd(d);
+    const dayEvents = events.filter(e => String(e.date) === dateStr);
+
+    const cell = document.createElement("div");
+    cell.className = "calendar-cell";
+    if (sameDay(d, new Date())) cell.classList.add("today");
+
+    const header = document.createElement("div");
+    header.className = "calendar-cell-header";
+    const num = document.createElement("span");
+    num.className = "date-number";
+    num.textContent = String(d.getDate());
+    header.appendChild(num);
+
+    const eventsWrap = document.createElement("div");
+    eventsWrap.className = "calendar-events";
+    dayEvents.forEach(ev => {
+      const pill = document.createElement("div");
+      pill.className = "calendar-event-pill";
+      pill.setAttribute("data-id", String(ev.id));
+      pill.textContent = ev.title || "";
+      eventsWrap.appendChild(pill);
     });
+
+    cell.appendChild(header);
+    cell.appendChild(eventsWrap);
+
+    cell.addEventListener("click", () => openModal({ date: dateStr }));
+    grid.appendChild(cell);
   }
 
-  /* ---------- Modal ---------- */
-  function openModal(pref) {
-    const modal = document.getElementById("event-modal");
-    if (!modal) return;
-    modal.setAttribute("aria-hidden", "false");
-    if (pref && typeof pref === "object" && pref.date) fillModal(pref);
+  renderAgenda(events);
+}
+
+/* Agenda */
+function renderAgenda(events) {
+  const list = document.getElementById("agenda-list");
+  if (!list) return;
+
+  const todayStr = new Date().toISOString().slice(0,10);
+  const upcoming = (events || [])
+    .filter(e => String(e.date) >= todayStr)
+    .sort((a,b) => String(a.date).localeCompare(String(b.date)));
+
+  if (!upcoming.length) {
+    list.innerHTML = `<p style="opacity:0.7;">No events yet.</p>`;
+    return;
+  }
+
+  list.innerHTML = upcoming.map(ev => {
+    const idAttr = ev.id !== undefined ? String(ev.id) : "";
+    return (
+      '<div class="agenda-item">' +
+        '<div class="agenda-main">' +
+          `<div class="agenda-title">${escapeHtml(ev.title || "")}</div>` +
+          `<div class="agenda-meta">${escapeHtml(String(ev.date || ""))}</div>` +
+        '</div>' +
+        '<div class="agenda-actions">' +
+          `<button class="agenda-edit" data-id="${idAttr}">Edit</button>` +
+          `<button class="agenda-del" data-id="${idAttr}">Del</button>` +
+        '</div>' +
+      '</div>'
+    );
+  }).join("");
+
+  // attach handlers
+  list.querySelectorAll(".agenda-edit").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      const id = Number(e.currentTarget.getAttribute("data-id"));
+      if (Number.isNaN(id)) return;
+      getEventById(id).then(ev => { if (ev) { fillModal(ev); document.getElementById("event-modal").style.display = "flex"; } });
+    });
+  });
+  list.querySelectorAll(".agenda-del").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      const id = Number(e.currentTarget.getAttribute("data-id"));
+      if (Number.isNaN(id)) return;
+      deleteEvent(id).then(() => refresh()).catch(err => console.error(err));
+    });
+  });
+}
+
+/* Modal helpers */
+function openModal(ev) {
+  const modal = document.getElementById("event-modal");
+  if (!modal) return;
+  if (typeof ev === "number") {
+    getEventById(ev).then(e => { if (e) { fillModal(e); modal.style.display = "flex"; } });
+  } else {
+    fillModal(ev || {});
     modal.style.display = "flex";
   }
+}
 
-  function closeModal() {
-    const modal = document.getElementById("event-modal");
-    if (!modal) return;
-    modal.setAttribute("aria-hidden", "true");
-    modal.style.display = "none";
-    modal.dataset.id = "";
-  }
+function fillModal(ev) {
+  const set = (id, value) => { const el = document.getElementById(id); if (el) el.value = value || ""; };
+  set("event-title", ev.title || "");
+  set("event-date", ev.date || ymd(new Date()));
+  set("event-start", ev.startTime || "");
+  set("event-end", ev.endTime || "");
+  set("event-type", ev.type || "general");
+  set("event-notes", ev.notes || "");
+  const rem = document.getElementById("event-reminder");
+  if (rem) rem.checked = !!ev.reminder;
+  const modal = document.getElementById("event-modal");
+  if (modal) modal.dataset.id = ev.id !== undefined ? String(ev.id) : "";
+}
 
-  function fillModal(ev) {
-    document.getElementById("event-title").value = ev.title || "";
-    document.getElementById("event-date").value = ev.date || ymd(new Date());
-    document.getElementById("event-start").value = ev.startTime || "";
-    document.getElementById("event-end").value = ev.endTime || "";
-    document.getElementById("event-type").value = ev.type || "general";
-    document.getElementById("event-notes").value = ev.notes || "";
-    document.getElementById("event-reminder").checked = !!ev.reminder;
-    document.getElementById("event-modal").dataset.id = ev.id !== undefined ? String(ev.id) : "";
-  }
+function closeModal() {
+  const m = document.getElementById("event-modal");
+  if (m) m.style.display = "none";
+}
 
-  /* ---------- UI actions ---------- */
-  async function onSaveEvent() {
-    const id = document.getElementById("event-modal").dataset.id;
-    const ev = {
-      id: id ? Number(id) : undefined,
-      title: document.getElementById("event-title").value.trim(),
-      date: document.getElementById("event-date").value,
-      startTime: document.getElementById("event-start").value,
-      endTime: document.getElementById("event-end").value,
-      type: document.getElementById("event-type").value,
-      notes: document.getElementById("event-notes").value,
-      reminder: document.getElementById("event-reminder").checked
-    };
-
-    try {
-      if (ev.id !== undefined && ev.id !== null && ev.id !== "") {
-        await saveEventToDB(ev);
-      } else {
-        await addEventToDB(ev);
-      }
-      closeModal();
-      refresh();
-    } catch (err) {
-      console.error(err);
-      alert("Unable to save event (DB unavailable).");
-    }
-  }
-
-  async function onDeleteFromModal() {
-    const id = document.getElementById("event-modal").dataset.id;
-    if (id) {
-      try { await deleteEventFromDB(Number(id)); } catch (err) { console.error(err); }
-    }
+/* UI actions */
+async function onSaveEvent() {
+  const modal = document.getElementById("event-modal");
+  if (!modal) return;
+  const id = modal.dataset.id;
+  const ev = {
+    id: id ? Number(id) : undefined,
+    title: (document.getElementById("event-title") || {}).value || "",
+    date: (document.getElementById("event-date") || {}).value || ymd(new Date()),
+    startTime: (document.getElementById("event-start") || {}).value || "",
+    endTime: (document.getElementById("event-end") || {}).value || "",
+    type: (document.getElementById("event-type") || {}).value || "general",
+    notes: (document.getElementById("event-notes") || {}).value || "",
+    reminder: !!(document.getElementById("event-reminder") || {}).checked
+  };
+  try {
+    await saveEvent(ev);
     closeModal();
     refresh();
+  } catch (err) {
+    console.error(err);
+    alert("Unable to save event.");
+  }
+}
+
+async function onDeleteFromModal() {
+  const modal = document.getElementById("event-modal");
+  if (!modal) return;
+  const id = modal.dataset.id;
+  if (id) {
+    try {
+      await deleteEvent(Number(id));
+    } catch (err) {
+      console.error(err);
+    }
+  }
+  closeModal();
+  refresh();
+}
+
+/* Navigation helpers */
+function prev() { if (view === "month") current.setMonth(current.getMonth() - 1); else current.setDate(current.getDate() - 7); refresh(); }
+function next() { if (view === "month") current.setMonth(current.getMonth() + 1); else current.setDate(current.getDate() + 7); refresh(); }
+function goToday() { current = new Date(); refresh(); }
+function setMonthView() { view = "month"; refresh(); }
+function setWeekView() { view = "week"; refresh(); }
+function newEvent() { openModal({}); }
+
+function refresh() { if (view === "month") renderMonth(); else renderWeek(); }
+
+/* Escape helper */
+function escapeHtml(s) {
+  return String(s || "").replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[c]);
+}
+
+/* Init and bindings */
+document.addEventListener("DOMContentLoaded", () => {
+  if (!window.RRDB || !window.RRDB.openDB) {
+    console.error("RRDB not available");
+    return;
   }
 
-  /* ---------- Navigation ---------- */
-  function prev() { if (view === "month") current.setMonth(current.getMonth() - 1); else current.setDate(current.getDate() - 7); refresh(); }
-  function next() { if (view === "month") current.setMonth(current.getMonth() + 1); else current.setDate(current.getDate() + 7); refresh(); }
-  function goToday() { current = new Date(); refresh(); }
-  function setMonthView() { view = "month"; refresh(); }
-  function setWeekView() { view = "week"; refresh(); }
-  function newEvent() { openModal({ date: ymd(new Date()) }); }
-
-  function refresh() { if (view === "month") renderMonth(); else renderWeek(); }
-
-  /* ---------- Init ---------- */
-  document.addEventListener("DOMContentLoaded", () => {
+  window.RRDB.openDB().then(() => {
     const el = id => document.getElementById(id);
     if (el("cal-prev")) el("cal-prev").onclick = prev;
     if (el("cal-next")) el("cal-next").onclick = next;
@@ -306,9 +307,16 @@
     if (el("event-cancel")) el("event-cancel").onclick = closeModal;
     if (el("event-delete")) el("event-delete").onclick = onDeleteFromModal;
 
-    const modal = document.getElementById("event-modal");
-    if (modal) modal.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
+    document.addEventListener("click", (e) => {
+      const pill = e.target.closest && e.target.closest(".calendar-event-pill");
+      if (pill) {
+        const id = Number(pill.getAttribute("data-id"));
+        if (!Number.isNaN(id)) {
+          getEventById(id).then(ev => { if (ev) { fillModal(ev); document.getElementById("event-modal").style.display = "flex"; } });
+        }
+      }
+    });
 
-    ensureDBOpen(3000).then(() => refresh()).catch(() => refresh());
-  });
-})();
+    refresh();
+  }).catch(err => console.error("RRDB open failed", err));
+});
