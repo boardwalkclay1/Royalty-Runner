@@ -1,4 +1,3 @@
-<!-- Save as: royalty-center.html (in your web root next to index.html) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,38 +13,55 @@
 
 <div id="rr-container">
 
+  <!-- HEADER -->
   <header id="rr-header">
     <button id="rr-menu-btn" aria-label="Open menu">☰</button>
+
     <nav id="rr-nav">
-      <a href="index.html">Home</a>
+      <a href="profile.html">Profile</a>
       <a href="manage.html">Manage</a>
       <a href="works.html">Works</a>
       <a href="documents.html">Docs</a>
+      <a href="glossary.html">Glossary</a>
       <a href="royalty-center.html" class="active">Registration Hub</a>
     </nav>
-    <h1 class="cursive">Royalty Runner</h1>
+
+    <h1 class="cursive rr-title">Royalty Runner</h1>
   </header>
 
+  <!-- MAIN -->
   <main id="rr-main">
+
+    <!-- INTRO -->
     <section id="hub-intro" class="card">
       <h2 class="cursive">Registration Hub</h2>
       <p class="lead">
         One page to register for every platform that owes you money. Tap a service, complete the signup
         inside this app, and mark it done to earn XP and lock in your royalty routes.
       </p>
+
       <div id="hub-progress">
-        <div id="hub-progress-label">Progress: <span id="hub-progress-count">0</span>/<span id="hub-progress-total">0</span> complete</div>
-        <div id="hub-progress-bar"><div id="hub-progress-fill"></div></div>
+        <div id="hub-progress-label">
+          Progress: <span id="hub-progress-count">0</span>/<span id="hub-progress-total">0</span> complete
+        </div>
+        <div id="hub-progress-bar">
+          <div id="hub-progress-fill"></div>
+        </div>
       </div>
     </section>
 
+    <!-- LAYOUT -->
     <section id="hub-layout">
+
+      <!-- LEFT LIST -->
       <aside id="hub-list" class="card">
         <h3 class="cursive">Required Platforms</h3>
         <div id="hub-services"></div>
       </aside>
 
+      <!-- RIGHT DETAIL -->
       <section id="hub-detail" class="card">
+
         <div id="hub-detail-header">
           <div>
             <h3 id="hub-detail-title" class="cursive">Select a platform</h3>
@@ -53,31 +69,42 @@
               Choose a platform on the left to see what it does, why it matters, and open it inside Royalty Runner.
             </p>
           </div>
+
           <div id="hub-detail-meta">
             <div id="hub-detail-tag"></div>
             <button id="hub-mark-complete" disabled>Mark Complete</button>
           </div>
         </div>
 
+        <!-- EMBED PANEL -->
         <div id="hub-embed-wrapper">
           <div id="hub-embed-overlay">
             <p class="overlay-text">
               When you open a platform, it will load here in an embedded panel so you never leave the app.
             </p>
           </div>
-          <iframe id="hub-embed-frame" title="Registration Embed" sandbox="allow-same-origin allow-scripts allow-forms allow-popups" referrerpolicy="no-referrer"></iframe>
+
+          <iframe
+            id="hub-embed-frame"
+            title="Registration Embed"
+            sandbox="allow-same-origin allow-scripts allow-forms allow-popups"
+            referrerpolicy="no-referrer">
+          </iframe>
         </div>
 
+        <!-- NOTES -->
         <div id="hub-notes">
           <h4 class="cursive">Quick Notes</h4>
           <ul id="hub-notes-list"></ul>
         </div>
+
       </section>
     </section>
   </main>
 
 </div>
 
+<!-- MENU PANEL -->
 <div id="rr-menu-panel" class="rr-menu-panel">
   <a href="index.html">Home</a>
   <a href="profile.html">Profile</a>
@@ -90,10 +117,18 @@
   <a href="export.html">Export</a>
 </div>
 
+<!-- FOOTER -->
 <footer id="rr-footer">
   <p>© <span id="copyright-year"></span> Royalty Runner</p>
 </footer>
 
 <script src="assets/js/royalty-center.js" defer></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const y = document.getElementById("copyright-year");
+    if (y) y.textContent = new Date().getFullYear();
+  });
+</script>
+
 </body>
 </html>
