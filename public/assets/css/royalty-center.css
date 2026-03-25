@@ -35,12 +35,15 @@ body{
   padding:1rem;
 }
 
-/* Header */
+/* -------------------------------------------------- */
+/* HEADER — FINAL, FIXED, MERGED                      */
+/* -------------------------------------------------- */
+
 #rr-header{
   display:flex;
   align-items:center;
   gap:1rem;
-  padding:.75rem 1rem;
+  padding:1rem;
   background:var(--panel-black);
   border-radius:var(--radius);
   border:1px solid var(--card-border);
@@ -51,7 +54,7 @@ body{
   background:transparent;
   border:0;
   color:var(--royal-copper);
-  font-size:1.2rem;
+  font-size:1.4rem;
   cursor:pointer;
 }
 
@@ -67,8 +70,18 @@ body{
   font-size:.95rem;
 }
 
+#rr-nav a:hover{
+  color:var(--royal-orange);
+}
+
 #rr-nav a.active{
-  border-bottom:2px solid var(--royal-copper);
+  border-bottom:2px solid var(--royal-orange);
+}
+
+.rr-title{
+  margin-left:auto;
+  font-size:1.4rem;
+  color:var(--royal-copper);
 }
 
 .cursive{
@@ -77,7 +90,10 @@ body{
   margin:0;
 }
 
-/* Footer */
+/* -------------------------------------------------- */
+/* FOOTER                                              */
+/* -------------------------------------------------- */
+
 #rr-footer{
   text-align:center;
   padding:1.25rem 0;
@@ -85,7 +101,10 @@ body{
   font-size:.85rem;
 }
 
-/* Cards */
+/* -------------------------------------------------- */
+/* CARDS                                               */
+/* -------------------------------------------------- */
+
 .card{
   background:var(--panel-black);
   border-radius:var(--radius);
@@ -94,7 +113,10 @@ body{
   padding:1rem;
 }
 
-/* Main layout */
+/* -------------------------------------------------- */
+/* MAIN LAYOUT                                         */
+/* -------------------------------------------------- */
+
 #rr-main{
   margin-top:1rem;
   display:flex;
@@ -107,7 +129,10 @@ body{
   margin-top:.5rem;
 }
 
-/* Progress */
+/* -------------------------------------------------- */
+/* PROGRESS BAR                                        */
+/* -------------------------------------------------- */
+
 #hub-progress{
   margin-top:.75rem;
 }
@@ -133,7 +158,10 @@ body{
   transition:width .25s ease;
 }
 
-/* Layout: list + detail */
+/* -------------------------------------------------- */
+/* LAYOUT: LIST + DETAIL                               */
+/* -------------------------------------------------- */
+
 #hub-layout{
   display:grid;
   grid-template-columns:320px minmax(0,1fr);
@@ -152,7 +180,10 @@ body{
   margin-top:.5rem;
 }
 
-/* Service item */
+/* -------------------------------------------------- */
+/* SERVICE ITEM                                        */
+/* -------------------------------------------------- */
+
 .service-item{
   border-radius:8px;
   border:1px solid rgba(184,115,51,0.25);
@@ -192,7 +223,10 @@ body{
   color:#4caf50;
 }
 
-/* Detail panel */
+/* -------------------------------------------------- */
+/* DETAIL PANEL                                        */
+/* -------------------------------------------------- */
+
 #hub-detail{
   display:flex;
   flex-direction:column;
@@ -243,7 +277,10 @@ button:disabled{
   cursor:default;
 }
 
-/* Embed area */
+/* -------------------------------------------------- */
+/* EMBED AREA                                          */
+/* -------------------------------------------------- */
+
 #hub-embed-wrapper{
   position:relative;
   border-radius:8px;
@@ -277,7 +314,10 @@ button:disabled{
   color:var(--muted-copper);
 }
 
-/* Notes */
+/* -------------------------------------------------- */
+/* NOTES                                               */
+/* -------------------------------------------------- */
+
 #hub-notes{
   margin-top:.5rem;
 }
@@ -289,7 +329,10 @@ button:disabled{
   font-size:.9rem;
 }
 
-/* Menu panel */
+/* -------------------------------------------------- */
+/* MENU PANEL                                          */
+/* -------------------------------------------------- */
+
 .rr-menu-panel{
   position:fixed;
   top:0;
@@ -310,7 +353,10 @@ button:disabled{
   font-size:.9rem;
 }
 
-/* Responsive */
+/* -------------------------------------------------- */
+/* RESPONSIVE                                           */
+/* -------------------------------------------------- */
+
 @media (max-width:900px){
   #hub-layout{
     grid-template-columns:1fr;
