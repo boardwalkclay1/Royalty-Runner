@@ -1,43 +1,57 @@
-/* index.css — Royalty Runner: Copper on Black theme
-   Fonts: Inter (body), Playfair Display + Dancing Script (headings/cursive)
-   Primary palette: copper (text/buttons) on near-black background
-   Dropdowns keep the orange/cursive style as requested
+/* Royalty Runner — Copper on Black Theme
+   Cleaned, optimized, non-duplicated, production-ready
 */
 
-/* --- Variables --- */
-:root{
+/* -------------------------------------------------- */
+/* VARIABLES                                           */
+/* -------------------------------------------------- */
+:root {
   --bg-black: #070707;
   --panel-black: #0b0b0b;
-  --royal-copper: #b87333;    /* main copper tone for UI and text */
-  --royal-orange: #ff8c42;    /* accent/orange used for dropdowns */
-  --muted-copper: #c08a52;    /* softer copper for subtle text */
-  --muted-white: #f6f6f6;
+  --royal-copper: #b87333;
+  --royal-orange: #ff8c42;
+  --muted-copper: #c08a52;
   --card-border: rgba(255,255,255,0.04);
   --radius: 8px;
   --shadow: 0 6px 18px rgba(0,0,0,0.6);
-  --focus: 0 0 0 3px rgba(184,115,51,0.18);
   --max-width: 1100px;
 }
 
-/* --- Base --- */
+/* -------------------------------------------------- */
+/* BASE                                                */
+/* -------------------------------------------------- */
 @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600&display=swap');
 
 * { box-sizing: border-box; }
-html,body { height:100%; }
-body{
-  margin:0;
-  min-height:100%;
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
   background: linear-gradient(180deg, var(--bg-black), #0a0a0a);
   color: var(--royal-copper);
   font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
-  line-height:1.45;
-  -webkit-text-size-adjust:100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.45;
 }
 
-/* --- Layout helpers --- */
-#rr-container { max-width: var(--max-width); margin:0 auto; padding:1rem; }
+/* -------------------------------------------------- */
+/* GLOBAL TEXT OVERRIDE                                */
+/* -------------------------------------------------- */
+body, body * {
+  color: var(--royal-copper) !important;
+}
+
+/* -------------------------------------------------- */
+/* LAYOUT                                              */
+/* -------------------------------------------------- */
+#rr-container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 1rem;
+}
+
 .section-card, header, footer, .panel {
   background: var(--panel-black);
   border: 1px solid var(--card-border);
@@ -46,208 +60,145 @@ body{
   box-shadow: var(--shadow);
 }
 
-/* --- Headings (cursive + print mix) --- */
-.cursive, h1, h2, h3 {
+/* -------------------------------------------------- */
+/* HEADINGS                                            */
+/* -------------------------------------------------- */
+.cursive, h1, h2, h3, h4 {
   font-family: "Playfair Display", "Dancing Script", serif;
-  color: var(--royal-copper);
-  margin:0 0 .5rem 0;
-  letter-spacing:0.6px;
+  color: var(--royal-copper) !important;
+  margin: 0 0 .5rem 0;
+  letter-spacing: .6px;
 }
-h1 { font-size:1.25rem; font-weight:700; }
-h2 { font-size:1.8rem; font-weight:700; }
-h3 { font-size:1.1rem; font-weight:600; }
 
-/* --- Paragraphs and readable body text --- */
+h1 { font-size: 1.25rem; font-weight: 700; }
+h2 { font-size: 1.8rem; font-weight: 700; }
+h3 { font-size: 1.1rem; font-weight: 600; }
+
+/* -------------------------------------------------- */
+/* TEXT ELEMENTS                                       */
+/* -------------------------------------------------- */
 p, li, label, input, textarea, select {
-  color: var(--muted-copper);
   font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  font-weight:400;
-  font-size:0.98rem;
+  font-size: .98rem;
+  color: var(--muted-copper) !important;
 }
 
-/* When a section needs black text (on copper backgrounds) */
 .text-black { color: #0b0b0b !important; }
 
-/* --- Links --- */
+/* -------------------------------------------------- */
+/* LINKS                                               */
+/* -------------------------------------------------- */
 a {
-  color: var(--royal-copper);
+  color: var(--royal-orange) !important;
   text-decoration: none;
-  font-weight:600;
+  font-weight: 600;
 }
-a:hover, a:focus { color: var(--muted-copper); text-decoration:underline; outline:none; }
 
-/* --- Navigation --- */
-#rr-header { display:flex; align-items:center; gap:1rem; padding:0.75rem; }
-#rr-nav a { margin-right:.6rem; color:var(--royal-copper); font-weight:600; }
-#rr-menu-btn { background:transparent; border:0; color:var(--royal-copper); font-size:1.1rem; cursor:pointer; }
+a:hover { text-decoration: underline; }
 
-/* --- Buttons (copper buttons with black text) --- */
+/* -------------------------------------------------- */
+/* NAVIGATION                                          */
+/* -------------------------------------------------- */
+#rr-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: .75rem;
+}
+
+#rr-menu-btn {
+  background: transparent;
+  border: 0;
+  color: var(--royal-copper);
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+#rr-nav {
+  display: flex;
+  gap: 1rem;
+}
+
+#rr-nav a.active {
+  border-bottom: 2px solid var(--royal-orange);
+}
+
+/* -------------------------------------------------- */
+/* BUTTONS                                             */
+/* -------------------------------------------------- */
 button, .bubble-btn {
-  background: linear-gradient(180deg, var(--royal-copper), var(--muted-copper));
-  color: #0b0b0b;
+  background: linear-gradient(180deg, var(--royal-copper), #c08a52) !important;
+  color: #0b0b0b !important;
   border: none;
   padding: .45rem .7rem;
   border-radius: 6px;
   cursor: pointer;
-  font-weight:700;
+  font-weight: 700;
   box-shadow: 0 4px 10px rgba(184,115,51,0.18);
 }
-button:hover, .bubble-btn:hover { transform: translateY(-1px); }
-button:focus, .bubble-btn:focus { box-shadow: var(--focus); outline:none; }
 
-/* Secondary ghost buttons (for subtle actions) */
-.btn-ghost {
-  background: transparent;
-  border: 1px solid rgba(184,115,51,0.18);
-  color: var(--royal-copper);
-}
+button:hover { transform: translateY(-1px); }
 
-/* --- Panels and cards --- */
-.panel { padding: .75rem; }
-.section-card { margin-bottom:1rem; }
-
-/* --- Calendar styles --- */
-#calendar-grid { display:grid; grid-template-columns: repeat(7, 1fr); gap:8px; margin-top:.5rem; }
-.calendar-cell {
-  background: #0f0f0f;
-  border: 1px solid rgba(255,255,255,0.03);
-  border-radius:6px;
-  padding:8px;
-  min-height:72px;
-  color: var(--muted-copper);
-}
-.calendar-cell.empty-cell { background: transparent; border:0; min-height:40px; }
-.calendar-cell-header { display:flex; justify-content:flex-end; color:var(--muted-copper); font-weight:600; }
-.date-number { background:transparent; padding:.15rem .4rem; border-radius:4px; color:var(--royal-copper); font-weight:700; }
-.today { box-shadow: 0 0 0 2px rgba(184,115,51,0.18); }
-
-/* Event pill */
-.calendar-event-pill {
-  display:inline-block;
-  background: rgba(184,115,51,0.12);
-  color: var(--royal-copper);
-  padding: .25rem .45rem;
-  border-radius:999px;
-  margin:2px 0;
-  font-weight:600;
-  cursor:pointer;
-}
-
-/* Weekday labels */
-#calendar-weekday-labels { display:grid; grid-template-columns:repeat(7,1fr); gap:8px; color:var(--muted-copper); font-weight:600; }
-
-/* --- Mini calendar --- */
-#mini-calendar-days { display:grid; grid-template-columns: repeat(6, 1fr); gap:6px; margin-bottom:.5rem; }
-.mini-day { background: #0f0f0f; border-radius:6px; padding:.5rem; text-align:center; color:var(--muted-copper); }
-.mini-date { font-weight:700; color:var(--royal-copper); }
-.mini-dots { color:var(--royal-copper); margin-top:.25rem; }
-
-/* --- Agenda / Reminders --- */
-.agenda-item { display:flex; justify-content:space-between; align-items:center; padding:.45rem 0; border-bottom:1px dashed rgba(255,255,255,0.02); }
-.agenda-title { color:var(--royal-copper); font-weight:700; }
-.agenda-meta { color:var(--muted-copper); font-size:.92rem; }
-
-/* --- Documents list & doc cards --- */
-.doc-card {
-  background: #0f0f0f;
-  border: 1px solid rgba(255,255,255,0.03);
-  padding:.6rem;
-  border-radius:6px;
-  margin-bottom:.5rem;
-  color:var(--muted-copper);
-}
-.doc-card h4 { margin:0 0 .25rem 0; color:var(--royal-copper); font-weight:700; }
-.tag { display:inline-block; background: rgba(255,140,66,0.06); color:var(--royal-orange); padding:.15rem .4rem; border-radius:999px; margin-right:.35rem; font-weight:700; }
-
-/* --- Voice recorder --- */
-#voice-module { margin-top:.5rem; color:var(--muted-copper); }
-.record-btn {
-  width:48px; height:48px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center;
-  background: var(--royal-copper); color:#0b0b0b; font-weight:800; cursor:pointer; border:none;
-}
-.record-btn.recording { background:#b00; box-shadow:0 6px 18px rgba(176,0,0,0.25); color:#fff; }
-
-/* --- Modals --- */
-#event-modal, #doc-modal {
-  display:none; position:fixed; inset:0; align-items:center; justify-content:center; background:rgba(0,0,0,0.5);
-}
-#event-modal > div, #doc-modal > div {
-  width: min(92%, 720px); max-width:720px; background: #0b0b0b; border-radius:10px; padding:1rem; border:1px solid rgba(255,255,255,0.03);
-}
-#doc-modal-body { color:var(--muted-copper); white-space:pre-wrap; max-height:60vh; overflow:auto; }
-
-/* --- Inputs --- */
+/* -------------------------------------------------- */
+/* INPUTS                                              */
+/* -------------------------------------------------- */
 input, textarea, select {
-  width:100%; padding:.5rem; border-radius:6px; border:1px solid rgba(255,255,255,0.04);
-  background:#0b0b0b; color:var(--muted-copper); font-family:inherit;
-}
-input::placeholder, textarea::placeholder { color: rgba(192,138,82,0.6); }
-
-/* --- Dropdowns (keep orange/cursive style) --- */
-.dropdown-header { cursor:pointer; color:var(--royal-copper); font-weight:700; }
-.dropdown-content.royal { display:none; color:var(--royal-orange); font-family:"Dancing Script", cursive; font-size:1.05rem; }
-.dropdown-content.royal.show { display:block; }
-
-/* --- Accessibility & responsive --- */
-button, [role="button"], a { touch-action:manipulation; }
-@media (max-width:900px) {
-  #calendar-grid { grid-template-columns: repeat(7, 1fr); }
-  .musicians-row { flex-direction:column; }
-  #rr-container { padding:.75rem; }
+  width: 100%;
+  padding: .5rem;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.04);
+  background: #0b0b0b;
 }
 
-/* --- Utility --- */
-.hidden { display:none !important; }
-.center { text-align:center; }
-/* Make all previously white/muted-white text use royal copper, except dropdown content */
-:root{
-  --royal-copper: #b87333;
-  --royal-orange: #ff8c42;
+input::placeholder, textarea::placeholder {
+  color: rgba(192,138,82,0.6) !important;
 }
 
-/* Base override: replace bright/white text with copper */
-body, body * {
-  color: var(--royal-copper) !important;
+/* -------------------------------------------------- */
+/* DROPDOWNS                                           */
+/* -------------------------------------------------- */
+.dropdown-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .5rem 0;
+  cursor: pointer;
+  border-bottom: 1px dashed rgba(184,115,51,0.06);
+  font-weight: 700;
 }
 
-/* Preserve dropdowns (middle list) as the orange/cursive style */
-.dropdown-content,
-.dropdown-content * ,
-.royal-list,
-.royal-list * {
-  color: var(--royal-orange) !important;
-  font-family: "Dancing Script", cursive !important;
+.dropdown-header::after {
+  content: "▾";
+  font-size: .9rem;
+  transition: transform .2s ease;
 }
 
-/* Keep links styled as orange cursive */
-a { color: var(--royal-orange) !important; }
-
-/* Ensure headings remain copper and prominent */
-.cursive, h1, h2, h3, h4 { color: var(--royal-copper) !important; }
-
-/* Inputs, placeholders, and modal body readable in copper */
-input, textarea, select, ::placeholder, #doc-modal-body { color: var(--royal-copper) !important; }
-
-/* Buttons remain copper background with black text */
-button, .bubble-btn {
-  background: linear-gradient(180deg, var(--royal-copper), #c08a52) !important;
-  color: #0b0b0b !important;
+.dropdown-header[aria-expanded="true"]::after {
+  transform: rotate(-180deg);
 }
 
-/* Exception class to force black text where needed */
-.text-black, .text-black * { color: #0b0b0b !important; }
-/* --- Force white/muted text to royal copper except dropdown content --- */
-:root {
-  --royal-copper: #b87333;
-  --royal-orange: #ff8c42;
+.dropdown-content {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height .25s ease, opacity .2s ease;
 }
 
-/* Replace bright/white text with copper across the page */
-body, body * {
-  color: var(--royal-copper) !important;
+.dropdown-content.show {
+  max-height: 400px;
+  opacity: 1;
 }
 
-/* Preserve dropdown content (orange cursive) */
+.dropdown-content .desc {
+  background: rgba(184,115,51,0.03);
+  border-left: 3px solid rgba(184,115,51,0.12);
+  padding: .6rem .9rem;
+  border-radius: 6px;
+  margin-top: .5rem;
+  line-height: 1.45;
+}
+
+/* Preserve orange cursive for dropdown lists */
 .dropdown-content,
 .dropdown-content *,
 .royal-list,
@@ -256,69 +207,19 @@ body, body * {
   font-family: "Dancing Script", cursive !important;
 }
 
-/* Dropdown header styling (one-line label) */
-.dropdown-header {
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:0.5rem;
-  cursor:pointer;
-  padding:0.5rem 0;
-  border-bottom:1px dashed rgba(184,115,51,0.06);
-  font-weight:700;
-  color:var(--royal-copper) !important;
+/* -------------------------------------------------- */
+/* UTILITY                                             */
+/* -------------------------------------------------- */
+.hidden { display: none !important; }
+.center { text-align: center; }
+
+/* -------------------------------------------------- */
+/* RESPONSIVE                                          */
+/* -------------------------------------------------- */
+@media (max-width: 900px) {
+  #rr-container { padding: .75rem; }
 }
 
-/* Descriptive paragraph inside dropdown content */
-.dropdown-content .desc {
-  display:block;
-  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  color: var(--royal-copper);
-  background: rgba(184,115,51,0.03);
-  border-left: 3px solid rgba(184,115,51,0.12);
-  padding:0.6rem 0.9rem;
-  margin-top:0.5rem;
-  border-radius:6px;
-  line-height:1.45;
-  max-width:60ch;
-}
-
-/* Keep the royal-list chips visible below the description */
-.dropdown-content .royal-list {
-  margin-top:0.6rem;
-}
-
-/* Smooth open/close animation */
-.dropdown-content {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 260ms ease, opacity 200ms ease;
-  opacity: 0;
-}
-.dropdown-content.show {
-  opacity: 1;
-  max-height: 400px; /* enough for description + chips */
-}
-
-/* Small caret indicator on header */
-.dropdown-header::after {
-  content: "▾";
-  font-size:0.9rem;
-  color: var(--royal-copper);
-  transition: transform 200ms ease;
-}
-.dropdown-header[aria-expanded="true"]::after {
-  transform: rotate(-180deg);
-}
-
-/* Ensure links remain orange cursive */
-a { color: var(--royal-orange) !important; }
-
-/* Keep inputs and modal body readable in copper */
-input, textarea, select, ::placeholder, #doc-modal-body { color: var(--royal-copper) !important; }
-
-/* Buttons: copper background, black text */
-button, .bubble-btn {
-  background: linear-gradient(180deg, var(--royal-copper), #c08a52) !important;
-  color: #0b0b0b !important;
+@media (max-width: 640px) {
+  #rr-header { flex-wrap: wrap; }
 }
