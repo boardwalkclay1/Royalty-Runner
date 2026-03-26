@@ -6,11 +6,13 @@ const RR_SERVICES = [
     name: "ASCAP",
     type: "Performance Rights (US)",
     url: "https://www.ascap.com/join",
+    allowEmbed: false, // ASCAP blocks iframe
     tag: "Songwriter & Publisher PRO",
-    desc: "ASCAP collects performance royalties when your music is played on radio, TV, live venues, and streaming platforms in the US.",
+    desc: "ASCAP collects performance royalties when your music is played publicly in the US.",
     notes: [
-      "Have your legal name, stage name, and contact info ready.",
-      "You can register as a writer and later as a publisher if needed."
+      "ASCAP blocks iframe embedding for security.",
+      "Royalty Runner will open ASCAP in a secure external window.",
+      "Use the auto-fill panel to copy your info quickly."
     ]
   },
   {
@@ -18,11 +20,13 @@ const RR_SERVICES = [
     name: "BMI",
     type: "Performance Rights (US)",
     url: "https://www.bmi.com/join",
+    allowEmbed: false, // BMI blocks iframe
     tag: "Songwriter & Publisher PRO",
-    desc: "BMI is another US PRO that collects performance royalties for songwriters and publishers.",
+    desc: "BMI collects performance royalties for songwriters and publishers in the US.",
     notes: [
-      "Choose one US PRO as your primary home (ASCAP or BMI).",
-      "Use the same legal name and email you use across registrations."
+      "BMI blocks iframe embedding for security.",
+      "Royalty Runner will open BMI in a secure external window.",
+      "Use the auto-fill panel to copy your info quickly."
     ]
   },
   {
@@ -30,11 +34,12 @@ const RR_SERVICES = [
     name: "The MLC",
     type: "Mechanical Royalties (US)",
     url: "https://www.themlc.com/members",
+    allowEmbed: true,
     tag: "Mechanical Royalties",
-    desc: "The Mechanical Licensing Collective pays mechanical royalties from US digital services like Spotify, Apple Music, and more.",
+    desc: "The MLC pays mechanical royalties from US digital services like Spotify and Apple Music.",
     notes: [
       "You’ll need your songwriter/publisher info and banking details.",
-      "Make sure your works metadata matches your distributor and PRO."
+      "Make sure your metadata matches your distributor and PRO."
     ]
   },
   {
@@ -42,11 +47,12 @@ const RR_SERVICES = [
     name: "SoundExchange",
     type: "Digital Performance (US)",
     url: "https://www.soundexchange.com",
+    allowEmbed: true,
     tag: "Digital Performance Royalties",
-    desc: "SoundExchange collects and pays digital performance royalties for sound recordings (masters) from non-interactive streams.",
+    desc: "SoundExchange pays digital performance royalties for sound recordings.",
     notes: [
-      "Register both as an artist and as a rights owner if you control your masters.",
-      "Have ISRCs and release info ready for your catalog."
+      "Register as both artist and rights owner if you control your masters.",
+      "Have ISRCs and release info ready."
     ]
   },
   {
@@ -54,10 +60,11 @@ const RR_SERVICES = [
     name: "Songtrust",
     type: "Publishing Admin",
     url: "https://www.songtrust.com",
+    allowEmbed: true,
     tag: "Publishing Administration",
-    desc: "Songtrust helps you collect publishing royalties worldwide, including mechanicals and performance from many territories.",
+    desc: "Songtrust collects publishing royalties worldwide.",
     notes: [
-      "Useful if you don’t have a traditional publishing deal.",
+      "Useful if you don’t have a publishing deal.",
       "They will ask for splits, PRO info, and catalog details."
     ]
   },
@@ -66,11 +73,12 @@ const RR_SERVICES = [
     name: "DistroKid",
     type: "Distribution",
     url: "https://distrokid.com",
+    allowEmbed: true,
     tag: "Digital Distribution",
-    desc: "DistroKid distributes your music to major streaming platforms and stores, and routes master royalties back to you.",
+    desc: "DistroKid distributes your music to major streaming platforms.",
     notes: [
-      "Use consistent artist name and artwork across releases.",
-      "Keep your ISRCs and UPCs organized for future registrations."
+      "Use consistent artist name and artwork.",
+      "Keep your ISRCs and UPCs organized."
     ]
   }
 ];
@@ -79,18 +87,14 @@ const STORAGE_KEY = "rr_registration_progress_v1";
 
 function loadProgress() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return {};
-    return JSON.parse(raw) || {};
+    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
   } catch {
     return {};
   }
 }
 
 function saveProgress(progress) {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
-  } catch {}
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
 }
 
 function updateProgressUI(progress) {
@@ -98,18 +102,13 @@ function updateProgressUI(progress) {
   const done = RR_SERVICES.filter(s => progress[s.id]).length;
   const pct = total ? (done / total) * 100 : 0;
 
-  const countEl = document.getElementById("hub-progress-count");
-  const totalEl = document.getElementById("hub-progress-total");
-  const fillEl = document.getElementById("hub-progress-fill");
-
-  if (countEl) countEl.textContent = String(done);
-  if (totalEl) totalEl.textContent = String(total);
-  if (fillEl) fillEl.style.width = pct + "%";
+  document.getElementById("hub-progress-count").textContent = done;
+  document.getElementById("hub-progress-total").textContent = total;
+  document.getElementById("hub-progress-fill").style.width = pct + "%";
 }
 
 function renderServiceList(progress) {
   const wrap = document.getElementById("hub-services");
-  if (!wrap) return;
   wrap.innerHTML = "";
 
   RR_SERVICES.forEach(service => {
@@ -118,26 +117,13 @@ function renderServiceList(progress) {
     item.className = "service-item";
     item.dataset.id = service.id;
 
-    const name = document.createElement("div");
-    name.className = "service-name";
-    name.textContent = service.name;
-
-    const type = document.createElement("div");
-    type.className = "service-type";
-    type.textContent = service.type;
-
-    const status = document.createElement("div");
-    status.className = "service-status";
-    if (progress[service.id]) {
-      status.classList.add("complete");
-      status.textContent = "Completed";
-    } else {
-      status.textContent = "Not completed";
-    }
-
-    item.appendChild(name);
-    item.appendChild(type);
-    item.appendChild(status);
+    item.innerHTML = `
+      <div class="service-name">${service.name}</div>
+      <div class="service-type">${service.type}</div>
+      <div class="service-status ${progress[service.id] ? "complete" : ""}">
+        ${progress[service.id] ? "Completed" : "Not completed"}
+      </div>
+    `;
 
     item.addEventListener("click", () => selectService(service.id));
     wrap.appendChild(item);
@@ -148,68 +134,65 @@ let currentServiceId = null;
 
 function selectService(id) {
   const service = RR_SERVICES.find(s => s.id === id);
-  if (!service) return;
   currentServiceId = id;
 
   document.querySelectorAll(".service-item").forEach(el => {
     el.classList.toggle("active", el.dataset.id === id);
   });
 
-  const titleEl = document.getElementById("hub-detail-title");
-  const descEl = document.getElementById("hub-detail-desc");
-  const tagEl = document.getElementById("hub-detail-tag");
+  document.getElementById("hub-detail-title").textContent = service.name;
+  document.getElementById("hub-detail-desc").textContent = service.desc;
+  document.getElementById("hub-detail-tag").textContent = service.tag;
+
   const notesList = document.getElementById("hub-notes-list");
+  notesList.innerHTML = "";
+  service.notes.forEach(n => {
+    const li = document.createElement("li");
+    li.textContent = n;
+    notesList.appendChild(li);
+  });
+
   const frame = document.getElementById("hub-embed-frame");
   const overlay = document.getElementById("hub-embed-overlay");
-  const markBtn = document.getElementById("hub-mark-complete");
 
-  if (titleEl) titleEl.textContent = service.name;
-  if (descEl) descEl.textContent = service.desc;
-  if (tagEl) tagEl.textContent = service.tag;
-
-  if (notesList) {
-    notesList.innerHTML = "";
-    (service.notes || []).forEach(n => {
-      const li = document.createElement("li");
-      li.textContent = n;
-      notesList.appendChild(li);
-    });
+  if (service.allowEmbed) {
+    overlay.style.display = "none";
+    frame.src = service.url;
+  } else {
+    overlay.style.display = "flex";
+    frame.src = "about:blank";
+    window.open(service.url, "_blank");
   }
-
-  if (overlay) overlay.style.display = "none";
-  if (frame) frame.src = service.url;
 
   const progress = loadProgress();
-  if (markBtn) {
-    markBtn.disabled = !!progress[service.id];
-  }
+  document.getElementById("hub-mark-complete").disabled = !!progress[service.id];
 }
 
 function markCurrentComplete() {
   if (!currentServiceId) return;
+
   const progress = loadProgress();
   progress[currentServiceId] = true;
   saveProgress(progress);
+
   updateProgressUI(progress);
   renderServiceList(progress);
 
-  const markBtn = document.getElementById("hub-mark-complete");
-  if (markBtn) markBtn.disabled = true;
+  document.getElementById("hub-mark-complete").disabled = true;
 }
 
 function initMenu() {
   const btn = document.getElementById("rr-menu-btn");
   const panel = document.getElementById("rr-menu-panel");
-  if (!btn || !panel) return;
+
   btn.addEventListener("click", () => {
-    const visible = panel.style.display === "flex";
-    panel.style.display = visible ? "none" : "flex";
+    panel.style.display = panel.style.display === "flex" ? "none" : "flex";
   });
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  const yearEl = document.getElementById("copyright-year");
-  if (yearEl) yearEl.textContent = new Date().getFullYear();
+  document.getElementById("copyright-year").textContent =
+    new Date().getFullYear();
 
   initMenu();
 
@@ -217,6 +200,7 @@ document.addEventListener("DOMContentLoaded", () => {
   updateProgressUI(progress);
   renderServiceList(progress);
 
-  const markBtn = document.getElementById("hub-mark-complete");
-  if (markBtn) markBtn.addEventListener("click", markCurrentComplete);
+  document
+    .getElementById("hub-mark-complete")
+    .addEventListener("click", markCurrentComplete);
 });
