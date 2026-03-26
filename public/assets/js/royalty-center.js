@@ -1,206 +1,163 @@
-// Save as: assets/js/royalty-center.js
-
-const RR_SERVICES = [
+/* ============================
+   PLATFORM DATA
+============================ */
+const RR_PLATFORMS = [
   {
     id: "ascap",
     name: "ASCAP",
-    type: "Performance Rights (US)",
     url: "https://www.ascap.com/join",
-    allowEmbed: false, // ASCAP blocks iframe
-    tag: "Songwriter & Publisher PRO",
-    desc: "ASCAP collects performance royalties when your music is played publicly in the US.",
+    tag: "PRO",
+    desc: "ASCAP collects performance royalties for songwriters and publishers.",
     notes: [
-      "ASCAP blocks iframe embedding for security.",
-      "Royalty Runner will open ASCAP in a secure external window.",
-      "Use the auto-fill panel to copy your info quickly."
+      "You will need your legal name.",
+      "Have your IPI number ready.",
+      "ASCAP requires a one-time signup fee."
     ]
   },
   {
     id: "bmi",
     name: "BMI",
-    type: "Performance Rights (US)",
     url: "https://www.bmi.com/join",
-    allowEmbed: false, // BMI blocks iframe
-    tag: "Songwriter & Publisher PRO",
-    desc: "BMI collects performance royalties for songwriters and publishers in the US.",
+    tag: "PRO",
+    desc: "BMI collects performance royalties for writers and publishers.",
     notes: [
-      "BMI blocks iframe embedding for security.",
-      "Royalty Runner will open BMI in a secure external window.",
-      "Use the auto-fill panel to copy your info quickly."
-    ]
-  },
-  {
-    id: "mlc",
-    name: "The MLC",
-    type: "Mechanical Royalties (US)",
-    url: "https://www.themlc.com/members",
-    allowEmbed: true,
-    tag: "Mechanical Royalties",
-    desc: "The MLC pays mechanical royalties from US digital services like Spotify and Apple Music.",
-    notes: [
-      "You’ll need your songwriter/publisher info and banking details.",
-      "Make sure your metadata matches your distributor and PRO."
+      "BMI is free for songwriters.",
+      "You must provide your legal name and address."
     ]
   },
   {
     id: "soundexchange",
     name: "SoundExchange",
-    type: "Digital Performance (US)",
     url: "https://www.soundexchange.com",
-    allowEmbed: true,
-    tag: "Digital Performance Royalties",
-    desc: "SoundExchange pays digital performance royalties for sound recordings.",
+    tag: "Neighboring Rights",
+    desc: "SoundExchange collects digital performance royalties for artists and labels.",
     notes: [
-      "Register as both artist and rights owner if you control your masters.",
-      "Have ISRCs and release info ready."
-    ]
-  },
-  {
-    id: "songtrust",
-    name: "Songtrust",
-    type: "Publishing Admin",
-    url: "https://www.songtrust.com",
-    allowEmbed: true,
-    tag: "Publishing Administration",
-    desc: "Songtrust collects publishing royalties worldwide.",
-    notes: [
-      "Useful if you don’t have a publishing deal.",
-      "They will ask for splits, PRO info, and catalog details."
-    ]
-  },
-  {
-    id: "distrokid",
-    name: "DistroKid",
-    type: "Distribution",
-    url: "https://distrokid.com",
-    allowEmbed: true,
-    tag: "Digital Distribution",
-    desc: "DistroKid distributes your music to major streaming platforms.",
-    notes: [
-      "Use consistent artist name and artwork.",
-      "Keep your ISRCs and UPCs organized."
+      "You will need your legal name.",
+      "Upload a photo ID for verification."
     ]
   }
 ];
 
-const STORAGE_KEY = "rr_registration_progress_v1";
+/* ============================
+   STORAGE HELPERS
+============================ */
+const STORAGE_KEY = "rr_registration_progress";
 
 function loadProgress() {
   try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : {};
   } catch {
     return {};
   }
 }
 
-function saveProgress(progress) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+function saveProgress(data) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
 
-function updateProgressUI(progress) {
-  const total = RR_SERVICES.length;
-  const done = RR_SERVICES.filter(s => progress[s.id]).length;
-  const pct = total ? (done / total) * 100 : 0;
+/* ============================
+   DOM ELEMENTS
+============================ */
+const listEl = document.getElementById("hub-services");
+const titleEl = document.getElementById("hub-detail-title");
+const descEl = document.getElementById("hub-detail-desc");
+const tagEl = document.getElementById("hub-detail-tag");
+const notesEl = document.getElementById("hub-notes-list");
+const iframeEl = document.getElementById("hub-embed-frame");
+const overlayEl = document.getElementById("hub-embed-overlay");
+const completeBtn = document.getElementById("hub-mark-complete");
 
-  document.getElementById("hub-progress-count").textContent = done;
-  document.getElementById("hub-progress-total").textContent = total;
-  document.getElementById("hub-progress-fill").style.width = pct + "%";
-}
+const progressCountEl = document.getElementById("hub-progress-count");
+const progressTotalEl = document.getElementById("hub-progress-total");
+const progressFillEl = document.getElementById("hub-progress-fill");
 
-function renderServiceList(progress) {
-  const wrap = document.getElementById("hub-services");
-  wrap.innerHTML = "";
+const menuBtn = document.getElementById("rr-menu-btn");
+const menuPanel = document.getElementById("rr-menu-panel");
 
-  RR_SERVICES.forEach(service => {
-    const item = document.createElement("button");
-    item.type = "button";
-    item.className = "service-item";
-    item.dataset.id = service.id;
+/* ============================
+   RENDER PLATFORM LIST
+============================ */
+let selectedPlatform = null;
+let progress = loadProgress();
 
-    item.innerHTML = `
-      <div class="service-name">${service.name}</div>
-      <div class="service-type">${service.type}</div>
-      <div class="service-status ${progress[service.id] ? "complete" : ""}">
-        ${progress[service.id] ? "Completed" : "Not completed"}
-      </div>
-    `;
+function renderList() {
+  listEl.innerHTML = "";
+  RR_PLATFORMS.forEach(p => {
+    const div = document.createElement("div");
+    div.className = "hub-service-item";
+    div.textContent = p.name;
+    div.dataset.id = p.id;
 
-    item.addEventListener("click", () => selectService(service.id));
-    wrap.appendChild(item);
+    if (progress[p.id]) div.classList.add("active");
+
+    div.addEventListener("click", () => selectPlatform(p.id));
+    listEl.appendChild(div);
   });
+
+  progressTotalEl.textContent = RR_PLATFORMS.length;
 }
 
-let currentServiceId = null;
+renderList();
 
-function selectService(id) {
-  const service = RR_SERVICES.find(s => s.id === id);
-  currentServiceId = id;
+/* ============================
+   SELECT PLATFORM
+============================ */
+function selectPlatform(id) {
+  const p = RR_PLATFORMS.find(x => x.id === id);
+  if (!p) return;
 
-  document.querySelectorAll(".service-item").forEach(el => {
+  selectedPlatform = p;
+
+  // highlight
+  document.querySelectorAll(".hub-service-item").forEach(el => {
     el.classList.toggle("active", el.dataset.id === id);
   });
 
-  document.getElementById("hub-detail-title").textContent = service.name;
-  document.getElementById("hub-detail-desc").textContent = service.desc;
-  document.getElementById("hub-detail-tag").textContent = service.tag;
+  // detail panel
+  titleEl.textContent = p.name;
+  descEl.textContent = p.desc;
+  tagEl.textContent = p.tag;
 
-  const notesList = document.getElementById("hub-notes-list");
-  notesList.innerHTML = "";
-  service.notes.forEach(n => {
-    const li = document.createElement("li");
-    li.textContent = n;
-    notesList.appendChild(li);
-  });
+  // notes
+  notesEl.innerHTML = p.notes.map(n => `<li>${n}</li>`).join("");
 
-  const frame = document.getElementById("hub-embed-frame");
-  const overlay = document.getElementById("hub-embed-overlay");
+  // enable button
+  completeBtn.disabled = false;
 
-  if (service.allowEmbed) {
-    overlay.style.display = "none";
-    frame.src = service.url;
-  } else {
-    overlay.style.display = "flex";
-    frame.src = "about:blank";
-    window.open(service.url, "_blank");
-  }
-
-  const progress = loadProgress();
-  document.getElementById("hub-mark-complete").disabled = !!progress[service.id];
+  // load iframe
+  iframeEl.src = p.url;
+  overlayEl.style.display = "none";
 }
 
-function markCurrentComplete() {
-  if (!currentServiceId) return;
+/* ============================
+   MARK COMPLETE
+============================ */
+completeBtn.addEventListener("click", () => {
+  if (!selectedPlatform) return;
 
-  const progress = loadProgress();
-  progress[currentServiceId] = true;
+  progress[selectedPlatform.id] = true;
   saveProgress(progress);
+  updateProgress();
+  renderList();
+});
 
-  updateProgressUI(progress);
-  renderServiceList(progress);
+/* ============================
+   PROGRESS BAR
+============================ */
+function updateProgress() {
+  const done = Object.keys(progress).length;
+  const total = RR_PLATFORMS.length;
 
-  document.getElementById("hub-mark-complete").disabled = true;
+  progressCountEl.textContent = done;
+  progressFillEl.style.width = `${(done / total) * 100}%`;
 }
 
-function initMenu() {
-  const btn = document.getElementById("rr-menu-btn");
-  const panel = document.getElementById("rr-menu-panel");
+updateProgress();
 
-  btn.addEventListener("click", () => {
-    panel.style.display = panel.style.display === "flex" ? "none" : "flex";
-  });
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("copyright-year").textContent =
-    new Date().getFullYear();
-
-  initMenu();
-
-  const progress = loadProgress();
-  updateProgressUI(progress);
-  renderServiceList(progress);
-
-  document
-    .getElementById("hub-mark-complete")
-    .addEventListener("click", markCurrentComplete);
+/* ============================
+   MENU PANEL
+============================ */
+menuBtn.addEventListener("click", () => {
+  menuPanel.classList.toggle("open");
 });
