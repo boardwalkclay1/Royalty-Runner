@@ -1,225 +1,106 @@
-/* Royalty Runner — Copper on Black Theme
-   Cleaned, optimized, non-duplicated, production-ready
-*/
+/* Royalty Runner — Copper on Black Landing Page */
 
-/* -------------------------------------------------- */
-/* VARIABLES                                           */
-/* -------------------------------------------------- */
+/* VARIABLES */
 :root {
   --bg-black: #070707;
   --panel-black: #0b0b0b;
   --royal-copper: #b87333;
   --royal-orange: #ff8c42;
   --muted-copper: #c08a52;
-  --card-border: rgba(255,255,255,0.04);
   --radius: 8px;
-  --shadow: 0 6px 18px rgba(0,0,0,0.6);
   --max-width: 1100px;
 }
 
-/* -------------------------------------------------- */
-/* BASE                                                */
-/* -------------------------------------------------- */
-@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600&display=swap');
-
-* { box-sizing: border-box; }
-
-html, body { height: 100%; }
-
+/* BASE */
 body {
   margin: 0;
   background: linear-gradient(180deg, var(--bg-black), #0a0a0a);
+  font-family: "Inter", sans-serif;
   color: var(--royal-copper);
-  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  line-height: 1.45;
 }
 
-/* -------------------------------------------------- */
-/* GLOBAL TEXT OVERRIDE                                */
-/* -------------------------------------------------- */
-body, body * {
-  color: var(--royal-copper) !important;
-}
-
-/* -------------------------------------------------- */
-/* LAYOUT                                              */
-/* -------------------------------------------------- */
 #rr-container {
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 1rem;
+  padding: 1.5rem;
 }
 
-.section-card, header, footer, .panel {
-  background: var(--panel-black);
-  border: 1px solid var(--card-border);
-  border-radius: var(--radius);
-  padding: 1rem;
-  box-shadow: var(--shadow);
+/* HEADINGS */
+.cursive, h1, h2, h3 {
+  font-family: "Playfair Display", serif;
+  color: var(--royal-copper);
 }
 
-/* -------------------------------------------------- */
-/* HEADINGS                                            */
-/* -------------------------------------------------- */
-.cursive, h1, h2, h3, h4 {
-  font-family: "Playfair Display", "Dancing Script", serif;
-  color: var(--royal-copper) !important;
-  margin: 0 0 .5rem 0;
-  letter-spacing: .6px;
-}
-
-h1 { font-size: 1.25rem; font-weight: 700; }
-h2 { font-size: 1.8rem; font-weight: 700; }
-h3 { font-size: 1.1rem; font-weight: 600; }
-
-/* -------------------------------------------------- */
-/* TEXT ELEMENTS                                       */
-/* -------------------------------------------------- */
-p, li, label, input, textarea, select {
-  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  font-size: .98rem;
-  color: var(--muted-copper) !important;
-}
-
-.text-black { color: #0b0b0b !important; }
-
-/* -------------------------------------------------- */
-/* LINKS                                               */
-/* -------------------------------------------------- */
-a {
-  color: var(--royal-orange) !important;
-  text-decoration: none;
-  font-weight: 600;
-}
-
-a:hover { text-decoration: underline; }
-
-/* -------------------------------------------------- */
-/* NAVIGATION                                          */
-/* -------------------------------------------------- */
+/* HEADER */
 #rr-header {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 1rem;
-  padding: .75rem;
+  padding: 1rem 1.5rem;
 }
 
-#rr-menu-btn {
-  background: transparent;
-  border: 0;
+#rr-nav a {
+  margin-left: 1rem;
   color: var(--royal-copper);
-  font-size: 1.2rem;
-  cursor: pointer;
-}
-
-#rr-nav {
-  display: flex;
-  gap: 1rem;
+  text-decoration: none;
+  font-weight: 600;
 }
 
 #rr-nav a.active {
   border-bottom: 2px solid var(--royal-orange);
 }
 
-/* -------------------------------------------------- */
-/* BUTTONS                                             */
-/* -------------------------------------------------- */
-button, .bubble-btn {
-  background: linear-gradient(180deg, var(--royal-copper), #c08a52) !important;
-  color: #0b0b0b !important;
-  border: none;
-  padding: .45rem .7rem;
+/* HERO */
+.hero {
+  text-align: center;
+  margin: 2rem 0;
+}
+
+.tagline {
+  color: var(--muted-copper);
+  font-size: 1.05rem;
+}
+
+/* TALENT LIST (NO BLOCKS) */
+.talent-list {
+  list-style-type: disc;
+  padding-left: 1.4rem;
+  margin-top: 1rem;
+  font-family: "Playfair Display", serif;
+  font-size: 1.1rem;
+  line-height: 1.7;
+}
+
+.talent-list li {
+  margin-bottom: 0.4rem;
+  color: var(--royal-copper);
+}
+
+/* QUICK ACCESS BUTTONS */
+.quick-links {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.quick-btn {
+  background: linear-gradient(180deg, var(--royal-copper), var(--muted-copper));
+  color: #0b0b0b;
+  padding: 0.7rem 1.2rem;
   border-radius: 6px;
-  cursor: pointer;
+  text-decoration: none;
   font-weight: 700;
   box-shadow: 0 4px 10px rgba(184,115,51,0.18);
 }
 
-button:hover { transform: translateY(-1px); }
-
-/* -------------------------------------------------- */
-/* INPUTS                                              */
-/* -------------------------------------------------- */
-input, textarea, select {
-  width: 100%;
-  padding: .5rem;
-  border-radius: 6px;
-  border: 1px solid rgba(255,255,255,0.04);
-  background: #0b0b0b;
+.quick-btn:hover {
+  transform: translateY(-2px);
 }
 
-input::placeholder, textarea::placeholder {
-  color: rgba(192,138,82,0.6) !important;
-}
-
-/* -------------------------------------------------- */
-/* DROPDOWNS                                           */
-/* -------------------------------------------------- */
-.dropdown-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: .5rem 0;
-  cursor: pointer;
-  border-bottom: 1px dashed rgba(184,115,51,0.06);
-  font-weight: 700;
-}
-
-.dropdown-header::after {
-  content: "▾";
-  font-size: .9rem;
-  transition: transform .2s ease;
-}
-
-.dropdown-header[aria-expanded="true"]::after {
-  transform: rotate(-180deg);
-}
-
-.dropdown-content {
-  max-height: 0;
-  overflow: hidden;
-  opacity: 0;
-  transition: max-height .25s ease, opacity .2s ease;
-}
-
-.dropdown-content.show {
-  max-height: 400px;
-  opacity: 1;
-}
-
-.dropdown-content .desc {
-  background: rgba(184,115,51,0.03);
-  border-left: 3px solid rgba(184,115,51,0.12);
-  padding: .6rem .9rem;
-  border-radius: 6px;
-  margin-top: .5rem;
-  line-height: 1.45;
-}
-
-/* Preserve orange cursive for dropdown lists */
-.dropdown-content,
-.dropdown-content *,
-.royal-list,
-.royal-list * {
-  color: var(--royal-orange) !important;
-  font-family: "Dancing Script", cursive !important;
-}
-
-/* -------------------------------------------------- */
-/* UTILITY                                             */
-/* -------------------------------------------------- */
-.hidden { display: none !important; }
-.center { text-align: center; }
-
-/* -------------------------------------------------- */
-/* RESPONSIVE                                          */
-/* -------------------------------------------------- */
-@media (max-width: 900px) {
-  #rr-container { padding: .75rem; }
-}
-
-@media (max-width: 640px) {
-  #rr-header { flex-wrap: wrap; }
+/* FOOTER */
+footer {
+  text-align: center;
+  padding: 1rem;
+  color: var(--muted-copper);
 }
